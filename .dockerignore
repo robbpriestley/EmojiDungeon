@@ -1,0 +1,10 @@
+.*
+bin
+obj
+.git
+Meta
+build
+.gitignore
+Migrations
+Dockerfile
+Controllers/.*

@@ -4,13 +4,11 @@ FROM microsoft/dotnet:latest
 # http://blogs.msmvps.com/theproblemsolver/2016/03/01/turbocharging-docker-build/
 # Fixed bug. If "COPY . ./app/" like example gave, it incorrecly creates additional subdirectory.
 
-COPY ./service.csproj ./service/
-WORKDIR ./service/
+COPY ./LevelGenerator.csproj ./LevelGenerator/
+WORKDIR ./LevelGenerator/
 RUN dotnet restore
-COPY . /service/
+COPY . /LevelGenerator/
 RUN dotnet build
 
-ARG ENVIRONMENT
-ENV ASPNETCORE_ENVIRONMENT $ENVIRONMENT
 EXPOSE 5000/tcp
 ENTRYPOINT ["dotnet", "run"]
