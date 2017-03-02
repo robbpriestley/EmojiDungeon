@@ -1,4 +1,7 @@
 bin
 obj
+wwwroot
 Reference
 .DS_Store
+version.txt
+secrets.json
