@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using DigitalWizardry.LevelGenerator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -9,15 +11,28 @@ namespace LevelGenerator
 {
     public class Startup
     {
+		public IConfigurationRoot Configuration { get; }
+		
 		public Startup(IHostingEnvironment env)
         {
             // This line of code can be used to view the directory structure in Docker.
             // ListDirectory(Directory.GetParent(env.WebRootPath).FullName);
+
+			var builder = new ConfigurationBuilder()
+            	.SetBasePath(env.ContentRootPath)
+				.AddJsonFile("Secrets.json", optional: false);
+			Configuration = builder.Build();
 		}
 			    
 		public void ConfigureServices(IServiceCollection services)
         {
 			services.AddMvc();
+
+			services.Configure<Secrets>(secrets =>
+			{
+				secrets.BasicAuthUsername = Configuration["Secrets:BasicAuthUsername"];
+				secrets.BasicAuthPassword = Configuration["Secrets:BasicAuthPassword"];
+			});
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
