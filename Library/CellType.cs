@@ -33,7 +33,7 @@ namespace DigitalWizardry.LevelGenerator
         	ForceGrowthCompatible = true;
 		}
 
-		bool connectsTo(CellType otherCell, Direction direction)
+		public bool ConnectsTo(CellType otherCell, Direction direction)
 		{    
 			if (otherCell.IsEmpty)
 			{
@@ -59,7 +59,7 @@ namespace DigitalWizardry.LevelGenerator
 			return false;
 		}
 
-		bool compatibleWith(CellType otherCell, Direction direction)
+		public bool CompatibleWith(CellType otherCell, Direction direction)
 		{
 			/*
 				Another cell is compatible with the current cell if

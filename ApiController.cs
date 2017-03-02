@@ -22,7 +22,12 @@ namespace DigitalWizardry.LevelGenerator
 				return new UnauthorizedResult();
 			}
 			
-			return Utility.SerializedJsonObjectResult("hello");
+			Coords startCoords = new Coords(3, 0, 7, 7);
+			Level level = new Level(1, 7, 7, startCoords);
+			string visualize = level.VisualizeAsText();
+
+			return new ObjectResult(visualize);
+			//return Utility.SerializedJsonObjectResult(visualize);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 namespace DigitalWizardry.LevelGenerator
 {	
 	public class Coords
-	{
+	{	
 		public int X;
 		public int Y;
 				
@@ -12,7 +12,7 @@ namespace DigitalWizardry.LevelGenerator
 
 		public Direction Direction;  // Sneaky, it has a dir for utility purposes sometimes :-)
 
-		public Coords(int Xin, int Yin)
+		public Coords(int Xin, int Yin, int gridWidth, int gridHeight)
 		{
 			X = Xin;
 			Y = Yin;
@@ -27,12 +27,12 @@ namespace DigitalWizardry.LevelGenerator
 				AdjacentEdgeDown = true;
 			}
 			
-			if (X + 1 == Globals.GridWidth) 
+			if (X + 1 == gridWidth) 
 			{
 				AdjacentEdgeRight = true;
 			}
 			
-			if (Y + 1 == Globals.GridHeight) 
+			if (Y + 1 == gridHeight) 
 			{
 				AdjacentEdgeUp = true;
 			}
