@@ -1,0 +1,10 @@
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/Microsoft.DiaSymReader.Native.x86.dll
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/Microsoft.DiaSymReader.Native.amd64.dll
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/LevelGenerator.deps.json
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/LevelGenerator.runtimeconfig.json
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/LevelGenerator.runtimeconfig.dev.json
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/LevelGenerator.dll
+/Users/wizard/TEMP/LevelGenerator/bin/Debug/netcoreapp1.1/LevelGenerator.pdb
+/Users/wizard/TEMP/LevelGenerator/obj/Debug/netcoreapp1.1/LevelGenerator.AssemblyInfo.cs
+/Users/wizard/TEMP/LevelGenerator/obj/Debug/netcoreapp1.1/LevelGenerator.dll
+/Users/wizard/TEMP/LevelGenerator/obj/Debug/netcoreapp1.1/LevelGenerator.pdb
