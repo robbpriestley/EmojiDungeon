@@ -1,6 +1,9 @@
+// Current issues: 1) non-square grids either crash or render weird
+//                 2) no rooms, but the code for it is in the archive /Users/wizard/Documents/Archive/Game Concepts/New School
+
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DigitalWizardry.LevelGenerator
 {	
