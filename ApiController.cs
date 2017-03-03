@@ -15,15 +15,15 @@ namespace DigitalWizardry.LevelGenerator
 
 		[HttpGet]
 		[Route("level")]
-		public IActionResult Level()
+		public IActionResult Level(int width, int height)
 		{
 			if (!BasicAuthentication.Authenticate(Secrets, Request))
 			{
 				return new UnauthorizedResult();
 			}
 			
-			Coords startCoords = new Coords(3, 0, 7, 7);
-			Level level = new Level(1, 7, 7, startCoords);
+			Coords startCoords = new Coords(1, 1);
+			Level level = new Level(width, height, startCoords);
 			string visualize = level.VisualizeAsText();
 
 			return new ObjectResult(visualize);

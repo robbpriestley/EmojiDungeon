@@ -269,8 +269,10 @@ namespace DigitalWizardry.LevelGenerator
 		}
 
 		// Edge: meaning the extreme edge of the dungeon level.
-		public static List<CellType> GetTypes(Coords coords)
+		public static List<CellType> GetTypes(Coords coords, int gridWidth, int gridHeight)
 		{
+			coords.SetEdges(gridWidth, gridHeight);
+			
 			List<CellType> types = new List<CellType>();
 			
 			if (coords.AdjacentEdgeUp && !coords.AdjacentEdgeLeft && !coords.AdjacentEdgeRight) 
