@@ -1,5 +1,9 @@
-// Current issues: 1) non-square grids either crash or render weird
+// Current issues: 1) non-square grids either crash or render weird (unsolved areas)
 //                 2) no rooms, but the code for it is in the archive /Users/wizard/Documents/Archive/Game Concepts/New School
+// Strategy: square grids currently work, so for demonstration purposes this is OK. The issues with the non-
+//           square grids is concerning, but it probably makes sense to go ahead and port the rooms code in
+//           and double-check everything, then debug everything later if this is really something that should
+//           get built out into a product.
 
 using System;
 using System.Text;
