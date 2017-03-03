@@ -570,8 +570,6 @@ namespace DigitalWizardry.LevelGenerator
 			Cell cell;
 			string padding;
 			StringBuilder line, grid = new StringBuilder();
-
-			grid.AppendLine();  // Initial spacer.
 	
 			// Because it is console printing, start with the "top" of the dungeon, and work down.
 			for (int Y = GridHeight - 1; Y >= 0; Y--) 
@@ -610,8 +608,6 @@ namespace DigitalWizardry.LevelGenerator
 				else
 					grid.Append(" "); 
 			}
-			
-			grid.Append("\n\n");
 
 			return grid.ToString();
 		}
