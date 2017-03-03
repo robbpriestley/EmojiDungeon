@@ -489,7 +489,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableUp && cell.Y + 1 < GridHeight)
 			{
 				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
-
+				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellAbove.Visited)
 					Solve(cellAbove);
 			}
@@ -498,7 +498,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 			{
 				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
-				
+				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellBelow.Visited)
 					Solve(cellBelow);
 			}
@@ -507,7 +507,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 			{
 				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
-				
+				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellLeft.Visited)
 					Solve(cellLeft);
 			}
@@ -516,7 +516,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableRight && cell.X + 1 < GridWidth)
 			{
 				Cell cellRight = CellAt(cell.X + 1, cell.Y);
-				
+				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellRight.Visited)
 					Solve(cellRight);
 			}
