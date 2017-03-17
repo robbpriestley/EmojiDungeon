@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace DigitalWizardry.LevelGenerator
 {	
 	public enum Direction
