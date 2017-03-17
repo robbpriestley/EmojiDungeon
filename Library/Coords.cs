@@ -4,7 +4,6 @@ namespace DigitalWizardry.LevelGenerator
 	{	
 		public int X;
 		public int Y;
-				
 		public bool AdjacentEdgeUp;
 		public bool AdjacentEdgeDown;
 		public bool AdjacentEdgeLeft;

@@ -69,7 +69,8 @@ namespace DigitalWizardry.LevelGenerator
 			List<CellType> types = CellTypes.GetTypes(StartCoords, GridWidth, GridHeight);
 
 			CellType newType = RandomCellType(types);
-			Cell newCell = new Cell(StartCoords.X, StartCoords.Y, newType);
+			// RP: Should the next be CellDescriptions.Corridor_TBD? Or something else?
+			Cell newCell = new Cell(StartCoords.X, StartCoords.Y, newType, CellDescriptions.Corridor_TBD);
 
 			SetDungeonCellValue(StartCoords.X, StartCoords.Y, newCell);
 		}
@@ -78,6 +79,7 @@ namespace DigitalWizardry.LevelGenerator
 		{    
 			Cell cell;
 			bool modified = false;
+			CellDescription descr = CellDescriptions.Corridor_TBD;
 			
 			// As long as the dungeon is not considered complete, keep adding stuff to it.
 			do 
@@ -94,7 +96,7 @@ namespace DigitalWizardry.LevelGenerator
 						{
 							// Attach a new random cell to current cell, if possible. If the cell has 
 							// available connections but nothing can be added to it, consider it blocked.
-							if (AttachNewCell(cell)) 
+							if (AttachNewCell(cell, descr)) 
 								modified = true;
 							else  
 								cell.AttachBlocked = true;
@@ -107,7 +109,7 @@ namespace DigitalWizardry.LevelGenerator
 			} while (!CompleteCheck(modified));
 		}
 
-		private bool AttachNewCell(Cell cell)
+		private bool AttachNewCell(Cell cell, CellDescription descr)
 		{
 			bool attachSuccessful = false;
 			Coords coords = RandomAttachCoords(cell);
@@ -130,7 +132,7 @@ namespace DigitalWizardry.LevelGenerator
 				
 					// The new cell needs to be compatible with each adjacent cell.
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
-						newCell = new Cell(coords.X, coords.Y, newType);
+						newCell = new Cell(coords.X, coords.Y, newType, descr);
 				}
 				
 				SetDungeonCellValue(coords.X, coords.Y, newCell);
@@ -409,6 +411,7 @@ namespace DigitalWizardry.LevelGenerator
 			bool typeMatch = false;
 			
 			CellType newType = null;
+			CellDescription descr = null;
 			List<Cell> cells = ForceGrowthCells();
 			
 			while (!success && cells.Count > 0) 
@@ -431,6 +434,7 @@ namespace DigitalWizardry.LevelGenerator
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
 					{
 						// It is? Cool.
+						descr = cell.Descr;
 						typeMatch = true;
 					}
 				}
@@ -438,7 +442,7 @@ namespace DigitalWizardry.LevelGenerator
 				if (typeMatch) 
 				{
 					// Now set the new cell.
-					Cell newCell = new Cell(coords.X, coords.Y, newType);
+					Cell newCell = new Cell(coords.X, coords.Y, newType, descr);
 					SetDungeonCellValue(coords.X, coords.Y, newCell);
 					success = true;
 				}

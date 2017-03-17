@@ -4,6 +4,17 @@ namespace DigitalWizardry.LevelGenerator
 	{
 		Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight, NoDir
 	}
+	
+	public enum DoorType
+	{
+    	RegularDoor, Portcullis, SecretDoor
+	}
+
+	public enum RoomType
+	{
+    	Round, Regular, IrregularUL, IrregularUR, IrregularDL, IrregularDR
+	}
+
 	public class Globals
 	{	
 		// The empty cell is re-used everywhere to save memory. It exists outside of "normal space" because its coords are -1,-1.
@@ -12,7 +23,8 @@ namespace DigitalWizardry.LevelGenerator
 		public static void Initialize()
 		{
 			CellTypes.Initialize();
-			EmptyCell = new Cell(-1, -1, CellTypes.emptyCell);
+			CellDescriptions.Initialize();
+			EmptyCell = new Cell(-1, -1, CellTypes.emptyCell, CellDescriptions.Empty);
 		}
 	}
 }
