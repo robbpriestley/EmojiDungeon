@@ -22,6 +22,9 @@ namespace DigitalWizardry.LevelGenerator
 		private Cell DownCell;  // The dead-end cell chosen to be replaced with a down stairs.
 		private Double MaxDistance;
 		private Double DownCellDistance;
+		private int RoomCount;
+		private int MinesCount;
+		private int CatacombsCount;
 		private List<Room> Rooms;
 		private List<Cell> CellsWithLockedDoors;
 		private int BuildPasses;  // Number of discarded attempts before arriving at a completed level.
@@ -61,10 +64,15 @@ namespace DigitalWizardry.LevelGenerator
 				try 
 				{
 					BuildPasses++;
-			
+					
 					Initialize();
+					PlaceRooms();
 					GenerateLevel();
+					//PlaceDoors();
 					LevelSolve();
+					//PlaceKeys();
+					//PlaceDownStairs();
+					//AddDescriptions();
 					levelComplete = true;  // i.e. no exceptions...
 				}
 				catch (LevelGenerateException) 
@@ -405,7 +413,53 @@ namespace DigitalWizardry.LevelGenerator
 		}
 			
 		#endregion
-		
+		#region Rooms
+
+		private void PlaceRooms()
+		{	
+			Rooms = new List<Room>();
+			
+			CalcRooms();
+			// [self roomsCounts:&regularCount mines:&minesCount catacombs:&catacombsCount];
+			// [self placeMines:minesCount];
+			// [self placeRegularRooms:regularCount];
+			// [self mergeRooms];
+			// [self placeRoundRoom];
+			// [self cleanRoomScraps];
+			// [self cleanRoomsArray];
+			// [self connectRooms];
+			// [self connectMines];
+			// [self cleanRoomsArray];
+			// [self convertRoomsToCatacombs:catacombsCount];
+		}
+
+		private void CalcRooms()
+		{
+			int rand = 0;
+			MinesCount = 0;
+
+			rand = R.Next(100);
+			
+			if (rand >= 85 && rand <= 99)
+				MinesCount = 1;
+	 
+			CatacombsCount = 0;
+
+			rand = R.Next(100);
+			
+			if (rand >= 70 && rand < 92)
+				CatacombsCount = 1;
+			else if (rand >= 92 && rand < 98)
+				CatacombsCount = 2;
+			else if (rand >= 98)
+				CatacombsCount = 3;
+
+			int rooms = R.Next(MaxRooms - MinRooms + 1) + MinRooms;  // MinRooms ~ MaxRooms
+			
+			RoomCount = rooms - MinesCount;
+		}
+
+		#endregion
 		#region Accessors
 
 		private Cell CellAt(int X, int Y)
@@ -641,9 +695,17 @@ namespace DigitalWizardry.LevelGenerator
 					grid.Append(" "); 
 			}
 
-			return grid.ToString() + Environment.NewLine +
+			return grid.ToString();
+		}
+
+		public string Stats()
+		{
+			return Environment.NewLine +
 			       "Build Passes: " + BuildPasses.ToString() + Environment.NewLine +
-				   "Build Time: " + BuildTime.ToString();
+				   "Build Time: " + BuildTime.ToString() + Environment.NewLine +
+				   "Room Count: " + RoomCount.ToString() + Environment.NewLine +
+				   "Mines Count: " + MinesCount.ToString() + Environment.NewLine +
+				   "Catacombs Count: " + CatacombsCount.ToString();
 		}
 
 		#endregion

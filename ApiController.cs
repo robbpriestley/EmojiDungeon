@@ -24,9 +24,10 @@ namespace DigitalWizardry.LevelGenerator
 			
 			Coords startCoords = new Coords(1, 1);
 			Level level = new Level(width, height, startCoords);
-			string visualize = level.VisualizeAsText();
+			string output = level.VisualizeAsText();
+			output += level.Stats();
 
-			return new ObjectResult(visualize);
+			return new ObjectResult(output);
 			//return Utility.SerializedJsonObjectResult(visualize);
 		}
 	}
