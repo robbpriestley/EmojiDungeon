@@ -19,6 +19,25 @@ namespace DigitalWizardry.LevelGenerator
 		private int SequenceNumber;
 		private Coords StartCoords;
 		private List<Cell> Grid;
+		private Cell DownCell;  // The dead-end cell chosen to be replaced with a down stairs.
+		private Double MaxDistance;
+		private Double DownCellDistance;
+		private List<Room> Rooms;
+		private List<Cell> CellsWithLockedDoors;
+		private int BuildPasses;  // Number of discarded attempts before arriving at a completed level.
+		private TimeSpan BuildTime;  // How long in total did it take to build this level?
+
+		// *** CONSTANTS ***
+		private int MinRooms = 10;
+		private int MaxRooms = 15;
+		private int MinRoomDimension = 2;
+		private int MaxRoomDimension = 2;
+		private int MinMinesDimension = 6;
+		private int MaxMinesDimension = 10;
+		private int MinCatacombsVolume = 12;
+		private int RoomExitProb = 20;
+		private int DoorLockedProb = 35;
+		private int DoorOpenProb = 20;
 
 		public Level(int width, int height, Coords startCoords)
 		{
@@ -34,14 +53,14 @@ namespace DigitalWizardry.LevelGenerator
 
 		private void Start()
 		{
-			int buildPasses = 0;
 			bool levelComplete = false;
+			DateTime start = DateTime.Now;
 
 			do
 			{
 				try 
 				{
-					buildPasses++;
+					BuildPasses++;
 			
 					Initialize();
 					GenerateLevel();
@@ -54,6 +73,8 @@ namespace DigitalWizardry.LevelGenerator
 				}
 
 			} while (!levelComplete);
+
+			BuildTime = DateTime.Now - start;
 		}
 
 		private void Initialize()
@@ -620,7 +641,9 @@ namespace DigitalWizardry.LevelGenerator
 					grid.Append(" "); 
 			}
 
-			return grid.ToString();
+			return grid.ToString() + Environment.NewLine +
+			       "Build Passes: " + BuildPasses.ToString() + Environment.NewLine +
+				   "Build Time: " + BuildTime.ToString();
 		}
 
 		#endregion
