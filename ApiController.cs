@@ -15,7 +15,7 @@ namespace DigitalWizardry.LevelGenerator
 
 		[HttpGet]
 		[Route("level")]
-		public IActionResult Level(int width, int height)
+		public IActionResult Level()
 		{
 			if (!BasicAuthentication.Authenticate(Secrets, Request))
 			{
@@ -23,7 +23,7 @@ namespace DigitalWizardry.LevelGenerator
 			}
 			
 			Coords startCoords = new Coords(1, 1);
-			Level level = new Level(width, height, startCoords);
+			Level level = new Level(startCoords);
 			string output = level.VisualizeAsText();
 			output += level.Stats();
 

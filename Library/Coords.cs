@@ -11,15 +11,12 @@ namespace DigitalWizardry.LevelGenerator
 
 		public Direction Direction;  // Sneaky, it has a dir for utility purposes sometimes :-)
 
-		public Coords(int Xin, int Yin)
+		public Coords(int x, int y)
 		{
-			X = Xin;
-			Y = Yin;
+			X = x;
+			Y = y;
 			Direction = Direction.NoDir;
-		}
 
-		public void SetEdges(int gridWidth, int gridHeight)
-		{
 			if (X == 0) 
 			{
 				AdjacentEdgeLeft = true;
@@ -30,12 +27,12 @@ namespace DigitalWizardry.LevelGenerator
 				AdjacentEdgeDown = true;
 			}
 			
-			if (X + 1 == gridWidth) 
+			if (X + 1 == Constants.GridWidth) 
 			{
 				AdjacentEdgeRight = true;
 			}
 			
-			if (Y + 1 == gridHeight) 
+			if (Y + 1 == Constants.GridHeight) 
 			{
 				AdjacentEdgeUp = true;
 			}

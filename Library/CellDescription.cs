@@ -50,17 +50,17 @@ namespace DigitalWizardry.LevelGenerator
 			Descrs.Add(Cavern_Flooded);
 		}
 
-		public bool IsTBD(CellDescription descr)
+		public static bool IsTBD(CellDescription descr)
 		{
 			return descr == Room_TBD || descr == Corridor_TBD || descr == Catacombs_TBD;
 		}
 
-		public bool IsMines(CellDescription descr)
+		public static bool IsMines(CellDescription descr)
 		{
 			return descr == Mines_Horiz || descr == Mines_Vert || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
 		}
 
-		public bool IsFlooded(CellDescription descr)
+		public static bool IsFlooded(CellDescription descr)
 		{
 			return descr == Constructed_Flooded || descr == Cavern_Flooded || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
 		}

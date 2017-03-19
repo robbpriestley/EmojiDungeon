@@ -13,8 +13,6 @@ namespace DigitalWizardry.LevelGenerator
 {	
 	public class Level
 	{
-		private int GridWidth;
-		private int GridHeight;
 		private Random R;
 		private int SequenceNumber;
 		private Coords StartCoords;
@@ -30,27 +28,11 @@ namespace DigitalWizardry.LevelGenerator
 		private int BuildPasses;  // Number of discarded attempts before arriving at a completed level.
 		private TimeSpan BuildTime;  // How long in total did it take to build this level?
 
-		// *** CONSTANTS ***
-		private int MinRooms = 10;
-		private int MaxRooms = 15;
-		private int MinRoomDimension = 2;
-		private int MaxRoomDimension = 2;
-		private int MinMinesDimension = 6;
-		private int MaxMinesDimension = 10;
-		private int MinCatacombsVolume = 12;
-		private int RoomExitProb = 20;
-		private int DoorLockedProb = 35;
-		private int DoorOpenProb = 20;
-
-		public Level(int width, int height, Coords startCoords)
+		public Level(Coords startCoords)
 		{
 			R = new Random();
-			GridWidth = width;
-			GridHeight = height;
 			StartCoords = startCoords;
-			
 			Globals.Initialize();
-		
 			Start();
 		}
 
@@ -90,12 +72,12 @@ namespace DigitalWizardry.LevelGenerator
 			Grid = new List<Cell>();
 
 			// Fill in each cell with the "empty cell" object.
-			for (int i = 0; i < GridWidth * GridHeight; i++)
+			for (int i = 0; i < Constants.GridWidth * Constants.GridHeight; i++)
 			{
 				Grid.Add(Globals.EmptyCell);
 			}
 
-			List<CellType> types = CellTypes.GetTypes(StartCoords, GridWidth, GridHeight);
+			List<CellType> types = CellTypes.GetTypes(StartCoords);
 
 			CellType newType = RandomCellType(types);
 			// RP: Should the next be CellDescriptions.Corridor_TBD? Or something else?
@@ -115,9 +97,9 @@ namespace DigitalWizardry.LevelGenerator
 			{
 				modified = false;
 				
-				for (int Y = 0; Y < GridHeight; Y++) 
+				for (int Y = 0; Y < Constants.GridHeight; Y++) 
 				{
-					for (int X = 0; X < GridWidth; X++) 
+					for (int X = 0; X < Constants.GridWidth; X++) 
 					{
 						cell = CellAt(X, Y);
 						
@@ -146,7 +128,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (coords != null)
 			{
 				// Get a disposable array of constructed corridor dungeon cell types.
-				List<CellType> types = CellTypes.GetTypes(coords, GridWidth, GridHeight);
+				List<CellType> types = CellTypes.GetTypes(coords);
 				
 				// Choose a new cell type to attach.
 				Cell newCell = null;
@@ -178,7 +160,7 @@ namespace DigitalWizardry.LevelGenerator
 		{
 			Cell cellUp, cellDown, cellLeft, cellRight;
 			
-			if (cell.Y + 1 < GridHeight)
+			if (cell.Y + 1 < Constants.GridHeight)
 			{
 				cellUp = CellAt(cell.X, cell.Y + 1);
 				if (cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
@@ -208,7 +190,7 @@ namespace DigitalWizardry.LevelGenerator
 				}
 			}
 			
-			if (cell.X + 1 < GridWidth)
+			if (cell.X + 1 < Constants.GridWidth)
 			{
 				cellRight = CellAt(cell.X + 1, cell.Y);
 				if (cell.Type.ConnectsTo(cellRight.Type, Direction.Right))
@@ -235,7 +217,7 @@ namespace DigitalWizardry.LevelGenerator
 			// random and return it. If there are no potentials at all, return null.
 			
 			// Cell above.
-			if (cell.Type.ConnectsUp && cell.Y + 1 < GridHeight)
+			if (cell.Type.ConnectsUp && cell.Y + 1 < Constants.GridHeight)
 				if (CellAt(cell.X, cell.Y + 1).Type.IsEmpty)
 					coordPotentials.Add(new Coords(cell.X, cell.Y + 1));
 			
@@ -250,7 +232,7 @@ namespace DigitalWizardry.LevelGenerator
 					coordPotentials.Add(new Coords(cell.X - 1, cell.Y));
 			
 			// Cell right.
-			if (cell.Type.ConnectsRight && cell.X + 1 < GridWidth)
+			if (cell.Type.ConnectsRight && cell.X + 1 < Constants.GridWidth)
 				if (CellAt(cell.X + 1, cell.Y).Type.IsEmpty)
 					coordPotentials.Add(new Coords(cell.X + 1, cell.Y));
 		
@@ -349,7 +331,7 @@ namespace DigitalWizardry.LevelGenerator
 			
 			Cell cellUp, cellDown, cellLeft, cellRight;
 			
-			if (coords.Y + 1 < GridHeight)
+			if (coords.Y + 1 < Constants.GridHeight)
 			{
 				cellUp = CellAt(coords.X, coords.Y + 1);
 				if (!newCellType.CompatibleWith(cellUp.Type, Direction.Up))
@@ -370,7 +352,7 @@ namespace DigitalWizardry.LevelGenerator
 					return false;
 			}
 			
-			if (coords.X + 1 < GridWidth)
+			if (coords.X + 1 < Constants.GridWidth)
 			{
 				cellRight = CellAt(coords.X + 1, coords.Y);
 				if (!newCellType.CompatibleWith(cellRight.Type, Direction.Right))
@@ -420,8 +402,7 @@ namespace DigitalWizardry.LevelGenerator
 			Rooms = new List<Room>();
 			
 			CalcRooms();
-			// [self roomsCounts:&regularCount mines:&minesCount catacombs:&catacombsCount];
-			// [self placeMines:minesCount];
+			PlaceMines();
 			// [self placeRegularRooms:regularCount];
 			// [self mergeRooms];
 			// [self placeRoundRoom];
@@ -441,37 +422,271 @@ namespace DigitalWizardry.LevelGenerator
 			rand = R.Next(100);
 			
 			if (rand >= 85 && rand <= 99)
+			{
 				MinesCount = 1;
+			}
 	 
 			CatacombsCount = 0;
 
 			rand = R.Next(100);
 			
 			if (rand >= 70 && rand < 92)
+			{
 				CatacombsCount = 1;
+			}
 			else if (rand >= 92 && rand < 98)
+			{	
 				CatacombsCount = 2;
+			}
 			else if (rand >= 98)
+			{
 				CatacombsCount = 3;
+			}
 
-			int rooms = R.Next(MaxRooms - MinRooms + 1) + MinRooms;  // MinRooms ~ MaxRooms
+			int rooms = R.Next(Constants.MaxRoom - Constants.MinRooms + 1) + Constants.MinRooms;  // MinRooms ~ MaxRooms
 			
 			RoomCount = rooms - MinesCount;
 		}
+
+		private void PlaceMines()
+		{
+			int attempts = 0;
+			int count = MinesCount;  // Preserve original count.
+			int maxAttempts = Constants.GridWidth * Constants.GridHeight;
+			
+			while (count > 0 && attempts <= maxAttempts) 
+			{
+				bool horiz = RandomBool();
+			
+				if (horiz)
+				{
+					if (RandomRoom(CellDescriptions.Mines_Horiz, Constants.MaxMinesHeight, Constants.MaxMinesWidth, Constants.MinMinesHeight, Constants.MinMinesWidth))
+					{
+						count--;
+						attempts = 0;
+					}
+					else
+					{
+						attempts++;
+					}
+				}
+				else
+				{
+					if (RandomRoom(CellDescriptions.Mines_Vert, Constants.MaxMinesWidth, Constants.MaxMinesHeight, Constants.MinMinesWidth, Constants.MinMinesHeight))
+					{
+						count--;
+						attempts = 0;
+					}
+					else
+					{
+						attempts++;
+					}
+				}
+			}
+		}
+
+		private bool RandomRoom(CellDescription descr, int max_w, int max_h, int min_w, int min_h)
+		{
+			int width = R.Next(max_w - min_w + 1) + min_w;
+			int height = R.Next(max_h - min_h + 1) + min_h;
+			
+			Coords coords = RandomCell(true);  // Get a random empty cell as the attach point.
+			
+			if (!RoomFits(coords, width, height, false))
+				return false;
+			else
+			{
+				if (descr == CellDescriptions.Room_TBD)
+				{
+					bool irregularlyShapedRoom = RandomBool();
+					
+					// if (irregularlyShapedRoom && width > 2 && height > 2)
+					// 	[self buildIrregularlyShapedRoom:coords width:width height:height];
+					// else
+					// 	[self buildRoom:Regular coords:coords width:width height:height];
+				}
+				else 
+				{
+					// [self buildMines:coords width:width height:height desc:desc];
+					BuildMines(coords, width, height, descr);
+				}
+			}
+			return true;
+		}
+
+		// Returns YES if the room fits into the dungeon entirely within allowable, currently-empty cells.
+		private bool RoomFits(Coords coords, int width, int height, bool round)
+		{
+			Cell cell = null;
+			bool fits = true;  // Innocent until proven guilty.
+			
+			if (coords.X + width >  Constants.GridWidth || coords.Y + height > Constants.GridHeight)
+				fits = false;
+			else
+			{
+				for (int y = coords.Y; y < coords.Y + height && fits == true; y++) 
+				{
+					for (int x = coords.X; x < coords.X + width; x++) 
+					{
+						cell = CellAt(x, y);
+						
+						if 
+						(
+							CellDescriptions.IsMines(cell.Descr) ||
+							(
+								y > StartCoords.Y - 2 && y < StartCoords.Y + 2 && 
+								x > StartCoords.X - 2 && x < StartCoords.X + 2
+								// Maintain a 2-cell margin around the start cell to allow it to be connected.
+							) 
+						) 
+						{
+							fits = false;
+							break;
+						}
+						else if (round && !cell.Type.IsEmpty)
+						{
+							fits = false;
+							break;
+						}
+					}
+				}
+			}
+			return fits;
+		}
+
+		private void BuildMines(Coords coords, int width, int height, CellDescription descr)
+		{
+			CellType newType = null;
+			
+			for (int y = coords.Y; y < coords.Y + height; y++) 
+			{
+				for (int x = coords.X; x < coords.X + width; x++) 
+				{
+					if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+						newType = CellTypes.elbUR;
+					else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+						newType = CellTypes.elbUL;
+					else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+						newType = CellTypes.elbDR;
+					else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+						newType = CellTypes.elbDL;
+					else if (x == coords.X)                                            // Left wall.
+						newType = MinesWall(x, y, Direction.Left, descr);
+					else if (x == coords.X + width - 1)                                // Right wall.
+						newType = MinesWall(x, y, Direction.Right, descr);   
+					else if (y == coords.Y)                                            // Bottom wall.
+						newType = MinesWall(x, y, Direction.Down, descr);
+					else if (y == coords.Y + height - 1)                               // Top wall.
+						newType = MinesWall(x, y, Direction.Up, descr);
+					else if (descr == CellDescriptions.Mines_Horiz)
+						newType = CellTypes.horiz;
+					else if (descr == CellDescriptions.Mines_Vert)
+						newType = CellTypes.vert;
+					
+					Cell currentCell = CellAt(x, y);
+					
+					if (currentCell.Type.IsEmpty)
+					{
+						Cell newCell = new Cell(x, y, newType, descr);
+						SetDungeonCellValue(x, y, newCell);
+					}
+				}
+			}
+		}
+
+		private CellType MinesWall(int X, int Y, Direction dir, CellDescription desc)
+		{
+			CellType type = null;
+		
+			// Room exits can only occur if the room wall in question is at least 1 cell
+			// from the dungeon edge, to allow the resulting corridors to grow or be "capped".
+			
+			if (dir == Direction.Up)                             
+			{
+				if (desc == CellDescriptions.Mines_Horiz)
+					type = CellTypes.horiz;    // No exit for horizontal mine.
+				else if (Y + 1 < Constants.GridHeight)
+					type = CellTypes.inter;    // Exit for vertical mine.
+				else
+					type = CellTypes.juncDLR;  // No exit for vertical mine.
+			}
+			else if (dir == Direction.Down)                                            
+			{
+				if (desc == CellDescriptions.Mines_Horiz)
+					type = CellTypes.horiz;    // No exit for horizontal mine.
+				else if (Y - 1 >= 0)
+					type = CellTypes.inter;    // Exit for vertical mine.
+				else
+					type = CellTypes.juncULR;  // No exit for vertical mine.
+			}
+			else if (dir == Direction.Left)                                              
+			{        
+				if (desc == CellDescriptions.Mines_Vert)
+					type = CellTypes.vert;    // No exit for vertical mine.
+				else if (X - 1 >= 0)
+					type = CellTypes.inter;    // Exit for horizontal mine.
+				else
+					type = CellTypes.juncUDR;  // No exit for horizontal mine.
+			}                                
+			else if (dir == Direction.Right)                                  
+			{
+				if (desc == CellDescriptions.Mines_Vert)
+					type = CellTypes.vert;    // No exit for vertical mine.
+				else if (X + 1 < Constants.GridHeight)
+					type = CellTypes.inter;    // Exit for horizontal mine.
+				else
+					type = CellTypes.juncUDL;  // No exit for horizontal mine.
+			}
+			
+			return type;
+		}
+
 
 		#endregion
 		#region Accessors
 
 		private Cell CellAt(int X, int Y)
 		{
-			return Grid[GridWidth * X + Y];
+			return Grid[Constants.GridWidth * X + Y];
 		}
 
 		private void SetDungeonCellValue(int X, int Y, Cell cell)
 		{
-			int i = GridWidth * X + Y;
+			int i = Constants.GridWidth * X + Y;
 			Grid[i] = cell;
 			RecordNewAttachment(cell);
+		}
+
+		// Returns a random cell from the dungeon level. If empty == YES, then the random
+		// cell will be empty. If empty == NO, then the random cell will be occupied.
+		private Coords RandomCell(bool empty)
+		{
+			Coords coords = null;
+			
+			while (coords == null) 
+			{
+				int x = R.Next(Constants.GridWidth);
+				int y = R.Next(Constants.GridHeight);
+				
+				Cell cell = CellAt(x, y);
+				
+				if (empty)  // Cell must be occupied.
+				{
+					if (cell.Type.IsEmpty) 
+					{
+						coords = new Coords(x, y);
+					}
+				}
+				else  // Cell must be occupied.
+				{
+					if (!cell.Type.IsEmpty) 
+					{
+						coords = new Coords(x, y);
+					}
+				}
+			}
+			
+			return coords;
 		}
 			
 		#endregion
@@ -495,7 +710,7 @@ namespace DigitalWizardry.LevelGenerator
 				Coords coords = new Coords(cell.X, cell.Y);
 				
 				// Attempt to replace it from the standard types.
-				List<CellType> types = CellTypes.GetTypes(coords, GridWidth, GridHeight);
+				List<CellType> types = CellTypes.GetTypes(coords);
 				types.Remove(cell.Type);  // ...but replace it with something different.
 				
 				while (!typeMatch) 
@@ -554,8 +769,8 @@ namespace DigitalWizardry.LevelGenerator
 			
 			Solve(CellAt(StartCoords.X, StartCoords.Y));
 			
-			for (int Y = 0; Y < GridHeight; Y++) 
-				for (int X = 0; X < GridWidth; X++)
+			for (int Y = 0; Y < Constants.GridHeight; Y++) 
+				for (int X = 0; X < Constants.GridWidth; X++)
 					if (!CellAt(X, Y).Visited)
 						throw new LevelGenerateException();
 			
@@ -569,7 +784,7 @@ namespace DigitalWizardry.LevelGenerator
 			cell.Visited = true;
 			
 			// Cell above.
-			if (cell.Type.TraversableUp && cell.Y + 1 < GridHeight)
+			if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
 			{
 				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
 				// Method connectsCheck was commented out here. Required for rooms?
@@ -596,7 +811,7 @@ namespace DigitalWizardry.LevelGenerator
 			}
 			
 			// Cell right.
-			if (cell.Type.TraversableRight && cell.X + 1 < GridWidth)
+			if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
 			{
 				Cell cellRight = CellAt(cell.X + 1, cell.Y);
 				// Method connectsCheck was commented out here. Required for rooms?
@@ -607,9 +822,9 @@ namespace DigitalWizardry.LevelGenerator
 
 		private void CircularPassagewayCheck()
 		{
-			for (int Y = 0; Y < GridHeight - 1; Y++) 
+			for (int Y = 0; Y < Constants.GridHeight - 1; Y++) 
 			{
-				for (int X = 0; X < GridWidth - 1; X++)
+				for (int X = 0; X < Constants.GridWidth - 1; X++)
 				{
 					Cell cell1 = CellAt(X, Y);
 					Cell cell2 = CellAt(X, Y + 1);
@@ -634,20 +849,25 @@ namespace DigitalWizardry.LevelGenerator
 
 		#region Utility
 
+		private bool RandomBool()
+		{
+			return R.Next(2) == 0 ? false : true;
+		}
+
 		private int CalcPercentFilled()
 		{
 			int filledCellCount = 0;
 			
-			for (int X = 0; X < GridWidth; X++)
+			for (int X = 0; X < Constants.GridWidth; X++)
 			{
-				for (int Y = 0; Y < GridHeight; Y++) 
+				for (int Y = 0; Y < Constants.GridHeight; Y++) 
 				{
 					if (!CellAt(X, Y).Type.IsEmpty)
 						filledCellCount++;
 				}
 			}
 			
-			return (filledCellCount * 100) / (GridWidth * GridHeight);
+			return (filledCellCount * 100) / (Constants.GridWidth * Constants.GridHeight);
 		}
 		
 		public string VisualizeAsText()
@@ -658,11 +878,11 @@ namespace DigitalWizardry.LevelGenerator
 			StringBuilder line, grid = new StringBuilder();
 	
 			// Because it is console printing, start with the "top" of the dungeon, and work down.
-			for (int Y = GridHeight - 1; Y >= 0; Y--) 
+			for (int Y = Constants.GridHeight - 1; Y >= 0; Y--) 
 			{
 				line = new StringBuilder();
 				
-				for (X = 0; X < GridWidth * 2; X++) 
+				for (X = 0; X < Constants.GridWidth * 2; X++) 
 				{
 					cell = CellAt(X / 2, Y);
 					line.Append(X % 2 == 0 ? cell.Type.TextRep : cell.Type.TextRep2);
@@ -677,7 +897,7 @@ namespace DigitalWizardry.LevelGenerator
 			
 			grid.Append("  ");
 			
-			for (X = 0; X < GridWidth * 2; X++) 
+			for (X = 0; X < Constants.GridWidth * 2; X++) 
 			{
 				if (X % 2 == 0)
 					grid.Append((X/2)/10);
@@ -687,7 +907,7 @@ namespace DigitalWizardry.LevelGenerator
 			
 			grid.Append("\n  ");
 			
-			for (X = 0; X < GridWidth * 2; X++) 
+			for (X = 0; X < Constants.GridWidth * 2; X++) 
 			{
 				if (X % 2 == 0)
 					grid.Append((X/2) % 10);
