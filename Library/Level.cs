@@ -13,10 +13,10 @@ namespace DigitalWizardry.LevelGenerator
 {	
 	public class Level
 	{
-		private Random R;
-		private int SequenceNumber;
-		private Coords StartCoords;
 		private List<Cell> Grid;
+		private Random R;
+		private Coords StartCoords;
+		private int SequenceNumber;
 		private Cell DownCell;  // The dead-end cell chosen to be replaced with a down stairs.
 		private Double MaxDistance;
 		private Double DownCellDistance;
@@ -97,26 +97,27 @@ namespace DigitalWizardry.LevelGenerator
 			{
 				modified = false;
 				
-				for (int Y = 0; Y < Constants.GridHeight; Y++) 
+				for (int y = 0; y < Constants.GridHeight; y++) 
 				{
-					for (int X = 0; X < Constants.GridWidth; X++) 
+					for (int x = 0; x < Constants.GridWidth; x++) 
 					{
-						cell = CellAt(X, Y);
+						cell = CellAt(x, y);
 						
 						if (!cell.Type.IsEmpty && !cell.AttachBlocked && cell.AvailableConnections > 0)
 						{
 							// Attach a new random cell to current cell, if possible. If the cell has 
 							// available connections but nothing can be added to it, consider it blocked.
 							if (AttachNewCell(cell, descr)) 
+							{
 								modified = true;
+							}
 							else  
+							{
 								cell.AttachBlocked = true;
+							}
 						}
 					}
 				}
-				
-				//Console.WriteLine(VisualizeAsText());
-
 			} while (!CompleteCheck(modified));
 		}
 
@@ -137,13 +138,17 @@ namespace DigitalWizardry.LevelGenerator
 				while (newCell == null) 
 				{
 					if (types.Count == 0) 
+					{
 						return false;  // Whoops, there are no more possibilities.
+					}
 					
 					newType = RandomCellType(types);
 				
 					// The new cell needs to be compatible with each adjacent cell.
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
+					{
 						newCell = new Cell(coords.X, coords.Y, newType, descr);
+					}
 				}
 				
 				SetDungeonCellValue(coords.X, coords.Y, newCell);
@@ -163,6 +168,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Y + 1 < Constants.GridHeight)
 			{
 				cellUp = CellAt(cell.X, cell.Y + 1);
+
 				if (cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
 				{
 					cell.AvailableConnections--;
@@ -173,6 +179,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Y - 1 >= 0)
 			{
 				cellDown = CellAt(cell.X, cell.Y - 1);
+
 				if (cell.Type.ConnectsTo(cellDown.Type, Direction.Down))
 				{
 					cell.AvailableConnections--;
@@ -183,6 +190,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.X - 1 >= 0)
 			{
 				cellLeft = CellAt(cell.X - 1, cell.Y);
+
 				if (cell.Type.ConnectsTo(cellLeft.Type, Direction.Left))
 				{
 					cell.AvailableConnections--;
@@ -193,6 +201,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.X + 1 < Constants.GridWidth)
 			{
 				cellRight = CellAt(cell.X + 1, cell.Y);
+
 				if (cell.Type.ConnectsTo(cellRight.Type, Direction.Right))
 				{
 					cell.AvailableConnections--;
@@ -218,26 +227,44 @@ namespace DigitalWizardry.LevelGenerator
 			
 			// Cell above.
 			if (cell.Type.ConnectsUp && cell.Y + 1 < Constants.GridHeight)
+			{
 				if (CellAt(cell.X, cell.Y + 1).Type.IsEmpty)
+				{
 					coordPotentials.Add(new Coords(cell.X, cell.Y + 1));
+				}
+			}
 			
 			// Cell below.
 			if (cell.Type.ConnectsDown && cell.Y - 1 >= 0)
+			{
 				if (CellAt(cell.X, cell.Y - 1).Type.IsEmpty)
+				{
 					coordPotentials.Add(new Coords(cell.X, cell.Y - 1));
+				}
+			}
 		
 			// Cell left.
 			if (cell.Type.ConnectsLeft && cell.X - 1 >= 0)
+			{
 				if (CellAt(cell.X - 1, cell.Y).Type.IsEmpty)
+				{
 					coordPotentials.Add(new Coords(cell.X - 1, cell.Y));
+				}
+			}
 			
 			// Cell right.
 			if (cell.Type.ConnectsRight && cell.X + 1 < Constants.GridWidth)
+			{
 				if (CellAt(cell.X + 1, cell.Y).Type.IsEmpty)
+				{
 					coordPotentials.Add(new Coords(cell.X + 1, cell.Y));
+				}
+			}
 		
 			if (coordPotentials.Count == 0)
+			{
 				return null;
+			}
 			else
 			{
 				int randomIndex = R.Next(coordPotentials.Count);
@@ -312,7 +339,6 @@ namespace DigitalWizardry.LevelGenerator
 		private Cell RandomForceGrowthCell(List<Cell> forceGrowthCells)
 		{
 			// Pick a cell randomly, and also eliminate it as a future candidate...
-			
 			Cell cell = forceGrowthCells[R.Next(forceGrowthCells.Count)];
 			forceGrowthCells.Remove(cell);
 			return cell;
@@ -335,28 +361,36 @@ namespace DigitalWizardry.LevelGenerator
 			{
 				cellUp = CellAt(coords.X, coords.Y + 1);
 				if (!newCellType.CompatibleWith(cellUp.Type, Direction.Up))
+				{
 					return false;
+				}
 			}
 			
 			if (coords.Y - 1 >= 0)
 			{
 				cellDown = CellAt(coords.X, coords.Y - 1);
 				if (!newCellType.CompatibleWith(cellDown.Type, Direction.Down))
+				{
 					return false;
+				}
 			}
 			
 			if (coords.X - 1 >= 0)
 			{
 				cellLeft = CellAt(coords.X - 1, coords.Y);
 				if (!newCellType.CompatibleWith(cellLeft.Type, Direction.Left))
+				{
 					return false;
+				}
 			}
 			
 			if (coords.X + 1 < Constants.GridWidth)
 			{
 				cellRight = CellAt(coords.X + 1, coords.Y);
 				if (!newCellType.CompatibleWith(cellRight.Type, Direction.Right))
+				{
 					return false;
+				}
 			}
 			
 			return true;
@@ -375,7 +409,9 @@ namespace DigitalWizardry.LevelGenerator
 				int percentFilled = CalcPercentFilled();
 				
 				if (percentFilled >= 100)
+				{
 					complete = true;
+				}
 				else
 				{
 					if (!ForceGrowth())  // Modify a random cell to allow more growth.
@@ -485,15 +521,17 @@ namespace DigitalWizardry.LevelGenerator
 			}
 		}
 
-		private bool RandomRoom(CellDescription descr, int max_w, int max_h, int min_w, int min_h)
+		private bool RandomRoom(CellDescription descr, int maxWidth, int maxHeight, int minWidth, int minHeight)
 		{
-			int width = R.Next(max_w - min_w + 1) + min_w;
-			int height = R.Next(max_h - min_h + 1) + min_h;
+			int width = R.Next(maxWidth - minWidth + 1) + minWidth;
+			int height = R.Next(maxHeight - minHeight + 1) + minHeight;
 			
 			Coords coords = RandomCell(true);  // Get a random empty cell as the attach point.
 			
 			if (!RoomFits(coords, width, height, false))
+			{
 				return false;
+			}
 			else
 			{
 				if (descr == CellDescriptions.Room_TBD)
@@ -521,7 +559,9 @@ namespace DigitalWizardry.LevelGenerator
 			bool fits = true;  // Innocent until proven guilty.
 			
 			if (coords.X + width >  Constants.GridWidth || coords.Y + height > Constants.GridHeight)
+			{
 				fits = false;
+			}
 			else
 			{
 				for (int y = coords.Y; y < coords.Y + height && fits == true; y++) 
@@ -563,25 +603,45 @@ namespace DigitalWizardry.LevelGenerator
 				for (int x = coords.X; x < coords.X + width; x++) 
 				{
 					if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+					{
 						newType = CellTypes.elbUR;
+					}
 					else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+					{
 						newType = CellTypes.elbUL;
+					}
 					else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+					{
 						newType = CellTypes.elbDR;
+					}
 					else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+					{
 						newType = CellTypes.elbDL;
+					}
 					else if (x == coords.X)                                            // Left wall.
+					{
 						newType = MinesWall(x, y, Direction.Left, descr);
+					}
 					else if (x == coords.X + width - 1)                                // Right wall.
+					{
 						newType = MinesWall(x, y, Direction.Right, descr);   
+					}
 					else if (y == coords.Y)                                            // Bottom wall.
+					{
 						newType = MinesWall(x, y, Direction.Down, descr);
+					}
 					else if (y == coords.Y + height - 1)                               // Top wall.
+					{
 						newType = MinesWall(x, y, Direction.Up, descr);
+					}
 					else if (descr == CellDescriptions.Mines_Horiz)
+					{
 						newType = CellTypes.horiz;
+					}
 					else if (descr == CellDescriptions.Mines_Vert)
+					{
 						newType = CellTypes.vert;
+					}
 					
 					Cell currentCell = CellAt(x, y);
 					
@@ -594,7 +654,7 @@ namespace DigitalWizardry.LevelGenerator
 			}
 		}
 
-		private CellType MinesWall(int X, int Y, Direction dir, CellDescription desc)
+		private CellType MinesWall(int x, int y, Direction dir, CellDescription desc)
 		{
 			CellType type = null;
 		
@@ -604,55 +664,78 @@ namespace DigitalWizardry.LevelGenerator
 			if (dir == Direction.Up)                             
 			{
 				if (desc == CellDescriptions.Mines_Horiz)
+				{
 					type = CellTypes.horiz;    // No exit for horizontal mine.
-				else if (Y + 1 < Constants.GridHeight)
+				}
+				else if (y + 1 < Constants.GridHeight)
+				{
 					type = CellTypes.inter;    // Exit for vertical mine.
+				}
 				else
+				{
 					type = CellTypes.juncDLR;  // No exit for vertical mine.
+				}
 			}
 			else if (dir == Direction.Down)                                            
 			{
 				if (desc == CellDescriptions.Mines_Horiz)
+				{
 					type = CellTypes.horiz;    // No exit for horizontal mine.
-				else if (Y - 1 >= 0)
+				}
+				else if (y - 1 >= 0)
+				{
 					type = CellTypes.inter;    // Exit for vertical mine.
+				}
 				else
+				{
 					type = CellTypes.juncULR;  // No exit for vertical mine.
+				}
 			}
 			else if (dir == Direction.Left)                                              
 			{        
 				if (desc == CellDescriptions.Mines_Vert)
+				{
 					type = CellTypes.vert;    // No exit for vertical mine.
-				else if (X - 1 >= 0)
+				}
+				else if (x - 1 >= 0)
+				{
 					type = CellTypes.inter;    // Exit for horizontal mine.
+				}
 				else
+				{
 					type = CellTypes.juncUDR;  // No exit for horizontal mine.
+				}
 			}                                
 			else if (dir == Direction.Right)                                  
 			{
 				if (desc == CellDescriptions.Mines_Vert)
+				{
 					type = CellTypes.vert;    // No exit for vertical mine.
-				else if (X + 1 < Constants.GridHeight)
+				}
+				else if (x + 1 < Constants.GridHeight)
+				{
 					type = CellTypes.inter;    // Exit for horizontal mine.
+				}
 				else
+				{
 					type = CellTypes.juncUDL;  // No exit for horizontal mine.
+				}
 			}
 			
 			return type;
 		}
 
-
 		#endregion
 		#region Accessors
 
-		private Cell CellAt(int X, int Y)
+		private Cell CellAt(int x, int y)
 		{
-			return Grid[Constants.GridWidth * X + Y];
+			return Grid[Constants.GridWidth * x + y];
 		}
 
-		private void SetDungeonCellValue(int X, int Y, Cell cell)
+		private void SetDungeonCellValue(int x, int y, Cell cell)
 		{
-			int i = Constants.GridWidth * X + Y;
+			int i = Constants.GridWidth * x + y;
 			Grid[i] = cell;
 			RecordNewAttachment(cell);
 		}
@@ -716,7 +799,9 @@ namespace DigitalWizardry.LevelGenerator
 				while (!typeMatch) 
 				{
 					if (types.Count == 0) 
+					{
 						break;  // If nothing replaces it, start over.
+					}
 					
 					newType = RandomDungeonCellType(types);  // Candidate new cell type.
 					
@@ -770,9 +855,15 @@ namespace DigitalWizardry.LevelGenerator
 			Solve(CellAt(StartCoords.X, StartCoords.Y));
 			
 			for (int Y = 0; Y < Constants.GridHeight; Y++) 
+			{
 				for (int X = 0; X < Constants.GridWidth; X++)
+				{
 					if (!CellAt(X, Y).Visited)
+					{
 						throw new LevelGenerateException();
+					}
+				}
+			}
 			
 			CircularPassagewayCheck();
 		}
@@ -789,7 +880,9 @@ namespace DigitalWizardry.LevelGenerator
 				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
 				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellAbove.Visited)
+				{
 					Solve(cellAbove);
+				}
 			}
 
 			// Cell below.
@@ -798,7 +891,9 @@ namespace DigitalWizardry.LevelGenerator
 				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
 				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellBelow.Visited)
+				{
 					Solve(cellBelow);
+				}
 			}
 			
 			// Cell left.
@@ -807,7 +902,9 @@ namespace DigitalWizardry.LevelGenerator
 				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
 				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellLeft.Visited)
+				{
 					Solve(cellLeft);
+				}
 			}
 			
 			// Cell right.
@@ -816,7 +913,9 @@ namespace DigitalWizardry.LevelGenerator
 				Cell cellRight = CellAt(cell.X + 1, cell.Y);
 				// Method connectsCheck was commented out here. Required for rooms?
 				if (!cellRight.Visited)
+				{
 					Solve(cellRight);
+				}
 			}
 		}
 
@@ -858,12 +957,14 @@ namespace DigitalWizardry.LevelGenerator
 		{
 			int filledCellCount = 0;
 			
-			for (int X = 0; X < Constants.GridWidth; X++)
+			for (int x = 0; x < Constants.GridWidth; x++)
 			{
-				for (int Y = 0; Y < Constants.GridHeight; Y++) 
+				for (int y = 0; y < Constants.GridHeight; y++) 
 				{
-					if (!CellAt(X, Y).Type.IsEmpty)
+					if (!CellAt(x, y).Type.IsEmpty)
+					{
 						filledCellCount++;
+					}
 				}
 			}
 			
@@ -872,45 +973,45 @@ namespace DigitalWizardry.LevelGenerator
 		
 		public string VisualizeAsText()
 		{
-			int X;
+			int x;
 			Cell cell;
 			string padding;
 			StringBuilder line, grid = new StringBuilder();
 	
 			// Because it is console printing, start with the "top" of the dungeon, and work down.
-			for (int Y = Constants.GridHeight - 1; Y >= 0; Y--) 
+			for (int y = Constants.GridHeight - 1; y >= 0; y--) 
 			{
 				line = new StringBuilder();
 				
-				for (X = 0; X < Constants.GridWidth * 2; X++) 
+				for (x = 0; x < Constants.GridWidth * 2; x++) 
 				{
-					cell = CellAt(X / 2, Y);
-					line.Append(X % 2 == 0 ? cell.Type.TextRep : cell.Type.TextRep2);
+					cell = CellAt(x / 2, y);
+					line.Append(x % 2 == 0 ? cell.Type.TextRep : cell.Type.TextRep2);
 				}
 				
-				padding = (Y < 10) ? "0" : "";  // For co-ordinate printing.
+				padding = (y < 10) ? "0" : "";  // For co-ordinate printing.
 				
-				grid.AppendLine(padding + Y + line.ToString());
+				grid.AppendLine(padding + y + line.ToString());
 			}
 			
 			// Now print X co-ordinate names at the bottom.
 			
 			grid.Append("  ");
 			
-			for (X = 0; X < Constants.GridWidth * 2; X++) 
+			for (x = 0; x < Constants.GridWidth * 2; x++) 
 			{
-				if (X % 2 == 0)
-					grid.Append((X/2)/10);
+				if (x % 2 == 0)
+					grid.Append((x/2)/10);
 				else
 					grid.Append(" "); 
 			}
 			
 			grid.Append("\n  ");
 			
-			for (X = 0; X < Constants.GridWidth * 2; X++) 
+			for (x = 0; x < Constants.GridWidth * 2; x++) 
 			{
-				if (X % 2 == 0)
-					grid.Append((X/2) % 10);
+				if (x % 2 == 0)
+					grid.Append((x/2) % 10);
 				else
 					grid.Append(" "); 
 			}
