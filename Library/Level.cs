@@ -50,7 +50,7 @@ namespace DigitalWizardry.LevelGenerator
 					PlaceRooms();
 					GenerateLevel();
 					//PlaceDoors();
-					LevelSolve();
+					//LevelSolve();
 					//PlaceKeys();
 					//PlaceDownStairs();
 					//AddDescriptions();
@@ -82,7 +82,7 @@ namespace DigitalWizardry.LevelGenerator
 			// RP: Should the next be CellDescriptions.Corridor_TBD? Or something else?
 			Cell newCell = new Cell(StartCoords.X, StartCoords.Y, newType, CellDescriptions.Corridor_TBD);
 
-			SetDungeonCellValue(StartCoords.X, StartCoords.Y, newCell);
+			SetCellValue(StartCoords.X, StartCoords.Y, newCell);
 		}
 
 		private void GenerateLevel()
@@ -150,7 +150,7 @@ namespace DigitalWizardry.LevelGenerator
 					}
 				}
 				
-				SetDungeonCellValue(coords.X, coords.Y, newCell);
+				SetCellValue(coords.X, coords.Y, newCell);
 				attachSuccessful = true;
 			}
 			
@@ -438,7 +438,7 @@ namespace DigitalWizardry.LevelGenerator
 			
 			CalcRooms();
 			PlaceMines();
-			// [self placeRegularRooms:regularCount];
+			PlaceRegularRooms();
 			// [self mergeRooms];
 			// [self placeRoundRoom];
 			// [self cleanRoomScraps];
@@ -478,9 +478,57 @@ namespace DigitalWizardry.LevelGenerator
 				CatacombsCount = 3;
 			}
 
-			int rooms = R.Next(Constants.MaxRoom - Constants.MinRooms + 1) + Constants.MinRooms;  // MinRooms ~ MaxRooms
+			int rooms = R.Next(Constants.MaxRooms - Constants.MinRooms + 1) + Constants.MinRooms;  // MinRooms ~ MaxRooms
 			
 			RoomCount = rooms - MinesCount;
+		}
+
+		private void PlaceRegularRooms()
+		{
+			int attempts = 0;
+			int roomsCount = RoomCount;
+			int maxAttempts = Constants.GridWidth * Constants.GridHeight;
+			
+			while (roomsCount > 0 && attempts <= maxAttempts) 
+			{
+				if (RandomRoom(CellDescriptions.Room_TBD, Constants.MaxRoomWidth, Constants.MaxRoomHeight, Constants.MinRoomWidth, Constants.MinRoomHeight))
+				{
+					roomsCount--;
+					attempts = 0;
+				}
+				else
+				{
+					attempts++;
+				}
+			}
+		}
+
+		private void PlaceRoundRoom()
+		{
+			bool placed = false;
+			int attempts = 0, maxAttempts = Constants.GridWidth * Constants.GridHeight;
+			
+			while (attempts <= maxAttempts) 
+			{
+				attempts++;
+				Coords coords = RandomCell(true);
+
+				if (!RoomFits(coords, 3, 3, true))
+				{
+					continue;
+				}
+				else
+				{
+					Rooms.Add(BuildRoom(RoomType.Round, coords, 3, 3));
+					placed = true;
+					break;
+				}
+			}
+			
+			if (!placed)
+			{
+				throw new LevelGenerateException();
+			}
 		}
 
 		private void PlaceMines()
@@ -537,14 +585,17 @@ namespace DigitalWizardry.LevelGenerator
 				{
 					bool irregularlyShapedRoom = RandomBool();
 					
-					// if (irregularlyShapedRoom && width > 2 && height > 2)
-					// 	[self buildIrregularlyShapedRoom:coords width:width height:height];
-					// else
-					// 	[self buildRoom:Regular coords:coords width:width height:height];
+					if (irregularlyShapedRoom && width > 2 && height > 2)
+					{
+						BuildIrregularlyShapedRoom(coords, width, height);
+					}
+					else
+					{
+						BuildRoom(RoomType.Regular, coords, width, height);
+					}
 				}
 				else 
 				{
-					// [self buildMines:coords width:width height:height desc:desc];
 					BuildMines(coords, width, height, descr);
 				}
 			}
@@ -591,6 +642,681 @@ namespace DigitalWizardry.LevelGenerator
 				}
 			}
 			return fits;
+		}
+
+		private Room BuildRoom(RoomType roomType, Coords coords, int width, int height)
+		{
+			CellDescription descr = roomType == RoomType.Round ? CellDescriptions.Constructed : CellDescriptions.Room_TBD;
+			
+			Room room = new Room(coords.X, coords.Y, descr);
+			
+			int widthReduce = 0, heightReduce = 0;
+			
+			if (roomType != RoomType.Regular && roomType != RoomType.Round) 
+			{
+				widthReduce = R.Next(width - 2) + 1;
+				heightReduce = R.Next(height - 2) + 1;
+			}
+			
+			for (int y = coords.Y; y < coords.Y + height; y++) 
+			{
+				for (int x = coords.X; x < coords.X + width; x++) 
+				{
+					CellType newType = null;
+					
+					switch (roomType) 
+					{                
+						case RoomType.IrregularUL:
+							newType = IrregRoomTypeUL(x, y, coords, width, height, widthReduce, heightReduce);
+							break;
+							
+						case RoomType.IrregularUR:
+							newType = IrregRoomTypeUR(x, y, coords, width, height, widthReduce, heightReduce);
+							break;
+						
+						case RoomType.IrregularDL:
+							newType = IrregRoomTypeDL(x, y, coords, width, height, widthReduce, heightReduce);
+							break;
+							
+						case RoomType.IrregularDR:
+							newType = IrregRoomTypeDR(x, y, coords, width, height, widthReduce, heightReduce);
+							break;
+						
+						case RoomType.Round:
+							newType = RoundRoomType(x, y, coords, width, height);
+							break;
+							
+						default:
+							newType = RegRoomType(x, y, coords, width, height);
+							break;
+					}
+					
+					if (newType == null)
+						continue;
+					
+					Cell currentCell = CellAt(x, y);
+					
+					if (IncompatibleCornerTypes(currentCell.Type, newType))
+					{
+						DeleteRoom(room);
+						return null;
+					}
+					
+					Cell newCell = new Cell(x, y, newType, descr);
+					SetCellValue(x, y, newCell);
+					
+					if (roomType == RoomType.Round)
+					{
+						newCell.Merged = true;
+						newCell.DescrWeight = 0;
+					}
+					
+					if (newType == CellTypes.roomSpace || newType == CellTypes.fountain)
+					{
+						room.Space.Add(newCell);
+					}
+					else
+					{
+						room.Walls.Add(newCell);
+					}
+				}
+			}
+			
+			return room;
+		}
+
+		private CellType RegRoomType(int x, int y, Coords coords, int width, int height)
+		{
+			CellType newType = null;
+			
+			if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+			{
+				newType = CellTypes.roomWallDL;
+			}
+			else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+			{
+				newType = CellTypes.roomWallDR;
+			}
+			else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+			{
+				newType = CellTypes.roomWallUL;
+			}
+			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+			{
+				newType = CellTypes.roomWallUR;
+			}
+			else if (x == coords.X)                                            // Left wall.
+			{
+				newType = CellTypes.roomWallL;
+			}
+			else if (x == coords.X + width - 1)                                // Right wall.
+			{
+				newType = CellTypes.roomWallR;   
+			}
+			else if (y == coords.Y)                                            // Bottom wall.
+			{
+				newType = CellTypes.roomWallD;
+			}
+			else if (y == coords.Y + height - 1)                               // Top wall.
+			{
+				newType = CellTypes.roomWallU;
+			}
+			else
+			{
+				newType = CellTypes.roomSpace;
+			}
+			
+			return newType;
+		}
+
+		private CellType RoundRoomType(int x, int y, Coords coords, int width, int height)
+		{
+			CellType newType = null;
+			
+			if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+			{
+				newType = CellTypes.roomWallDL_Round;
+			}
+			else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+			{
+				newType = CellTypes.roomWallDR_Round;
+			}
+			else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+			{
+				newType = CellTypes.roomWallUL_Round;
+			}
+			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+			{
+				newType = CellTypes.roomWallUR_Round;
+			}
+			else if (x == coords.X && x == 0)                                  // Left wall.
+			{
+				newType = CellTypes.roomWallL_Round;
+			}
+			else if (x == coords.X)                                            // Left exit.
+			{
+				newType = CellTypes.roomExitL_Round;
+			}
+			else if (x == coords.X + width - 1 && x == Constants.GridWidth - 1)      // Right wall.
+			{
+				newType = CellTypes.roomWallR_Round; 
+			}
+			else if (x == coords.X + width - 1)                                // Right exit.
+			{
+				newType = CellTypes.roomExitR_Round;  
+			}
+			else if (y == coords.Y && y == 0)                                  // Bottom wall.
+			{
+				newType = CellTypes.roomWallD_Round;
+			}
+			else if (y == coords.Y)                                            // Bottom exit.
+			{
+				newType = CellTypes.roomExitD_Round;
+			}
+			else if (y == coords.Y + height - 1 && y == Constants.GridHeight - 1)    // Top wall.
+			{
+				newType = CellTypes.roomWallU_Round;
+			}
+			else if (y == coords.Y + height - 1)                               // Top exit.
+			{
+				newType = CellTypes.roomExitU_Round;
+			}
+			else
+			{
+				newType = CellTypes.fountain;
+			}
+			
+			return newType;
+		}
+
+		private void BuildIrregularlyShapedRoom(Coords coords, int width, int height)
+		{
+			int quadrant = R.Next(4);
+			
+			switch (quadrant) 
+			{
+				case 0:
+					/*
+					   +-+
+					   | |
+					+--+ |
+					|    |
+					+----+
+					*/
+					BuildRoom(RoomType.IrregularUL, coords, width, height);
+					break;
+				
+				case 1:
+					/*
+					+-+
+					| |
+					| +--+
+					|    |
+					+----+
+					*/
+					BuildRoom(RoomType.IrregularUR, coords, width, height);
+					break;
+					
+				case 2:
+					/*
+					+----+
+					|    |
+					+--+ |
+					   | |
+					   +-+
+					*/
+					BuildRoom(RoomType.IrregularDL, coords, width, height);
+					break;
+					
+				case 3:
+					/*
+					+----+
+					|    |
+					| +--+
+					| |
+					+-+
+					*/
+					BuildRoom(RoomType.IrregularDR, coords, width, height);
+					break;
+			}
+		}
+
+		/*
+		   +-+
+		   | |
+		+--+ |
+		|    |
+		+----+
+		*/
+		private CellType IrregRoomTypeUL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
+		{
+			CellType newType = null;
+			
+			if (y >= coords.Y && y < coords.Y + height - heightReduce - 1)         // Normal room section.
+			{
+				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x == coords.X)                                            // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - 1)                                // Right wall.
+				{
+					newType = CellTypes.roomWallR;   
+				}
+				else if (y == coords.Y)                                            // Bottom wall.
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else if (y == coords.Y + height - 1)                               // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y == coords.Y + height - heightReduce - 1)  
+			{
+				if (x == coords.X)                                                
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                
+				{
+					newType = CellTypes.roomWallDRinv;
+				}
+				else if (x == coords.X + width - 1)                                
+				{
+					newType = CellTypes.roomWallR;
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1) 
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y > coords.Y + height - heightReduce - 1 && y < coords.Y + height - 1) 
+			{
+				if (x == coords.X + width - 1)                                            
+				{
+					newType = CellTypes.roomWallR;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                
+				{
+					newType = CellTypes.roomWallL; 
+				}
+				else if (x > coords.X + width - widthReduce - 1)   
+				{
+					newType = CellTypes.roomSpace;
+				}
+				//else Empty.
+			}
+			else
+			{
+				if (x == coords.X + width - 1)                                            
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x == coords.X + width - widthReduce - 1)               
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x > coords.X + width - widthReduce - 1)  
+				{
+					newType = CellTypes.roomWallU;
+				}
+				//else Empty.
+			}
+			
+			return newType;
+		}
+
+		/*
+		+-+
+		| |
+		| +--+
+		|    |
+		+----+
+		*/
+		private CellType IrregRoomTypeUR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
+		{
+			CellType newType = null;
+			
+			if (y >= coords.Y && y < coords.Y + height - heightReduce - 1)         // Normal room section.
+			{
+				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x == coords.X)                                            // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - 1)                                // Right wall.
+				{
+					newType = CellTypes.roomWallR;   
+				}
+				else if (y == coords.Y)                                            // Bottom wall.
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else if (y == coords.Y + height - 1)                               // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y == coords.Y + height - heightReduce - 1)  
+			{
+				if (x == coords.X)                                                 // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                  // Bottom-left corner inv.
+				{
+					newType = CellTypes.roomWallDLinv;
+				}
+				else if (x == coords.X + width - 1)                                // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)   // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y > coords.Y + height - heightReduce - 1 && y < coords.Y + height - 1) 
+			{
+				if (x == coords.X)                                                 // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                  // Right wall.
+				{
+					newType = CellTypes.roomWallR; 
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   // Room space.
+				{
+					newType = CellTypes.roomSpace;
+				}
+				//else Empty.
+			}
+			else
+			{
+				if (x == coords.X)                                                 // Top-left corner.
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                  // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				//else Empty.
+			}
+			
+			return newType;
+		}
+
+
+		/*
+		+----+
+		|    |
+		+--+ |
+		   | |
+		   +-+
+		*/
+		private CellType IrregRoomTypeDL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
+		{
+			CellType newType = null;
+			
+			if (y > coords.Y + height - heightReduce - 1)                          // Normal room section.
+			{
+				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x == coords.X)                                            // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - 1)                                // Right wall.
+				{
+					newType = CellTypes.roomWallR;   
+				}
+				else if (y == coords.Y)                                            // Bottom wall.
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else if (y == coords.Y + height - 1)                               // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y == coords.Y + height - heightReduce - 1)  
+			{
+				if (x == coords.X)                                                
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                
+				{
+					newType = CellTypes.roomWallURinv;
+				}
+				else if (x == coords.X + width - 1)                              
+				{
+					newType = CellTypes.roomWallR;
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y > coords.Y && y < coords.Y + height - heightReduce - 1) 
+			{
+				if (x == coords.X + width - 1)                                                
+				{
+					newType = CellTypes.roomWallR;
+				}
+				else if (x == coords.X + width - widthReduce - 1)               
+				{
+					newType = CellTypes.roomWallL; 
+				}
+				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)  
+				{
+					newType = CellTypes.roomSpace;
+				}
+				//else Empty.
+			}
+			else
+			{
+				if (x == coords.X + width - 1)                                                 
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x == coords.X + width - widthReduce - 1)           
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)  
+				{
+					newType = CellTypes.roomWallD;
+				}
+				//else Empty.
+			}
+			
+			return newType;
+		}
+
+
+		/*
+		+----+
+		|    |
+		| +--+
+		| |
+		+-+
+		*/
+		private CellType IrregRoomTypeDR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
+		{
+			CellType newType = null;
+			
+			if (y > coords.Y + height - heightReduce - 1)                          // Normal room section.
+			{
+				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+				{
+					newType = CellTypes.roomWallUL;
+				}
+				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+				{
+					newType = CellTypes.roomWallUR;
+				}
+				else if (x == coords.X)                                            // Left wall.
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - 1)                                // Right wall.
+				{
+					newType = CellTypes.roomWallR;   
+				}
+				else if (y == coords.Y)                                            // Bottom wall.
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else if (y == coords.Y + height - 1)                               // Top wall.
+				{
+					newType = CellTypes.roomWallU;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y == coords.Y + height - heightReduce - 1)  
+			{
+				if (x == coords.X)                                                
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)                
+				{
+					newType = CellTypes.roomWallULinv;
+				}
+				else if (x == coords.X + width - 1)                              
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)   
+				{
+					newType = CellTypes.roomWallD;
+				}
+				else
+				{
+					newType = CellTypes.roomSpace;
+				}
+			}
+			else if (y > coords.Y && y < coords.Y + height - heightReduce - 1) 
+			{
+				if (x == coords.X)                                                
+				{
+					newType = CellTypes.roomWallL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)               
+				{
+					newType = CellTypes.roomWallR; 
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1)  
+				{
+					newType = CellTypes.roomSpace;
+				}
+				//else Empty.
+			}
+			else
+			{
+				if (x == coords.X)                                                 
+				{
+					newType = CellTypes.roomWallDL;
+				}
+				else if (x == coords.X + width - widthReduce - 1)           
+				{
+					newType = CellTypes.roomWallDR;
+				}
+				else if (x > coords.X && x < coords.X + width - widthReduce - 1)  
+				{
+					newType = CellTypes.roomWallD;
+				}
+				//else Empty.
+			}
+			
+			return newType;
 		}
 
 		private void BuildMines(Coords coords, int width, int height, CellDescription descr)
@@ -647,7 +1373,7 @@ namespace DigitalWizardry.LevelGenerator
 					if (currentCell.Type.IsEmpty)
 					{
 						Cell newCell = new Cell(x, y, newType, descr);
-						SetDungeonCellValue(x, y, newCell);
+						SetCellValue(x, y, newCell);
 					}
 				}
 			}
@@ -724,6 +1450,558 @@ namespace DigitalWizardry.LevelGenerator
 			return type;
 		}
 
+		// Kerplunk, the rooms are all superimposed. Each room needs to be outlined properly with no gaps.
+		private void MergeRooms()
+		{
+			for (int y = 0; y < Constants.GridHeight; y++)
+			{
+				for (int x = 0; x < Constants.GridWidth; x++)
+				{
+					Cell cell = CellAt(x, y);
+					
+					if (cell.Type == CellTypes.roomWallDL && !cell.Merged)
+					{
+						try 
+						{
+							Room room = TraverseRoomOutline(x, y);
+							
+							if (room != null)
+							{
+								CleanRoom(x, y, room);
+							}
+						}
+						catch (Exception) 
+						{
+							// Anything that's this bad that happens here, start over...
+							throw new LevelGenerateException();
+						}
+					}
+				}
+			}
+		}
+
+		private Room TraverseRoomOutline(int startX, int startY)
+		{
+			Direction dir = Direction.Up;
+			int newX = 0, newY = 0;
+			int x = startX, y = startY;
+			Room room = new Room(startX, startY, CellDescriptions.Room_TBD);
+			Cell currentCell, cellUp, cellDown, cellLeft, cellRight;
+			
+			do
+			{        
+				// Since the room "plunking" process, and the outline traverse process aren't 
+				// perfect systems, a protection is required for the infrequent, but typical,   
+				// times when the traverse attempts to exceed the size of the dungeon level.
+				if (y < 0 || y >= Constants.GridHeight || x < 0 || x >= Constants.GridWidth)
+				{
+					throw new LevelGenerateException();
+				}
+				
+				currentCell = CellAt(x, y);
+				CellType newType = currentCell.Type;  // Default.
+				
+				// Arriving back at an already merged cell in the same room means that the rooms cannot  
+				// be properly merged. This is usually due to a "missing" wall cells occurring due to 
+				// the way the "sub-rooms" were "plunked" down on the level. Irrecoverable. Abort.
+				if (currentCell.Merged && room.Walls.Contains(currentCell))
+				{
+					throw new LevelGenerateException();
+				}
+				
+				cellUp = y + 1 >= 0 && y + 1 < Constants.GridHeight && x >= 0 && x < Constants.GridWidth 
+						? CellAt(x, y + 1) : null;
+				
+				cellDown  = y - 1 >= 0 && y - 1 < Constants.GridHeight && x >= 0 && x < Constants.GridWidth             
+						? CellAt(x, y - 1) : null;
+				
+				cellLeft  = x - 1 >= 0 && x - 1 < Constants.GridWidth && y >= 0 && y < Constants.GridWidth 
+						? CellAt(x - 1, y) : null;
+				
+				cellRight = x + 1 >= 0 && x + 1 < Constants.GridWidth && y >= 0 && y < Constants.GridWidth 
+						? CellAt(x + 1, y) : null;
+				
+				if (x == startX && y == startY)
+				{
+					newType = RandomRoomCorner(x, y, Direction.DownLeft);
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Up && cellLeft != null && cellLeft.Type.RoomConnectsRight)
+				{
+					newType = CellTypes.roomWallURinv;
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir == Direction.Up && cellUp != null && cellUp.Type.RoomConnectsDown)
+				{
+					newType = RandomRoomWall(x, y, Direction.Left);
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Up && cellRight != null && cellRight.Type.RoomConnectsLeft)
+				{
+					newType = RandomRoomCorner(x, y, Direction.UpLeft);
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir == Direction.Up && (currentCell.Type == CellTypes.roomWallUL || currentCell.Type == CellTypes.roomWallULinv))
+				{
+					newType = RandomRoomCorner(x, y, Direction.UpLeft);
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir == Direction.Up)
+				{
+					newType = RandomRoomWall(x, y, Direction.Left);
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Left && cellDown != null && cellDown.Type.RoomConnectsUp)
+				{
+					newType = CellTypes.roomWallULinv;
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				else if (dir == Direction.Left && cellLeft != null && cellLeft.Type.RoomConnectsRight)
+				{
+					newType = RandomRoomWall(x, y, Direction.Down);
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir == Direction.Left && cellUp != null && cellUp.Type.RoomConnectsDown)
+				{
+					newType = RandomRoomCorner(x, y, Direction.DownLeft);
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Left && (currentCell.Type == CellTypes.roomWallDL || currentCell.Type == CellTypes.roomWallDLinv))
+				{
+					newType = RandomRoomCorner(x, y, Direction.DownLeft);
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Left)
+				{
+					newType = RandomRoomWall(x, y, Direction.Down);
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir == Direction.Right && cellUp != null && cellUp.Type.RoomConnectsDown)
+				{
+					newType = CellTypes.roomWallDRinv;
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir == Direction.Right && cellRight != null && cellRight.Type.RoomConnectsLeft)
+				{
+					newType = RandomRoomWall(x, y, Direction.Up);
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir == Direction.Right && cellDown != null && cellDown.Type.RoomConnectsUp)
+				{
+					newType = RandomRoomCorner(x, y, Direction.UpRight);
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				else if (dir == Direction.Right && (currentCell.Type == CellTypes.roomWallUR || currentCell.Type == CellTypes.roomWallURinv))
+				{
+					newType = RandomRoomCorner(x, y, Direction.UpRight);
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				else if (dir == Direction.Right)
+				{
+					newType = RandomRoomWall(x, y, Direction.Up);
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir == Direction.Down && cellRight != null && cellRight.Type.RoomConnectsLeft)
+				{
+					newType = CellTypes.roomWallDLinv;
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir == Direction.Down && cellDown != null && cellDown.Type.RoomConnectsUp)
+				{
+					newType = RandomRoomWall(x, y, Direction.Right);
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				else if (dir == Direction.Down && cellLeft != null && cellLeft.Type.RoomConnectsRight)
+				{
+					newType = RandomRoomCorner(x, y, Direction.DownRight);
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir == Direction.Down && (currentCell.Type == CellTypes.roomWallDR || currentCell.Type == CellTypes.roomWallDRinv))
+				{
+					newType = RandomRoomCorner(x, y, Direction.DownRight);
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir == Direction.Down)
+				{
+					newType = RandomRoomWall(x, y, Direction.Right);
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				
+				Cell newCell = new Cell(x, y, newType, CellDescriptions.Room_TBD);
+				newCell.Merged = true;
+				SetCellValue(x, y, newCell);
+				room.Walls.Add(newCell);
+				
+				x = newX;
+				y = newY;
+				
+			} while (!(x == startX && y == startY));
+			
+			Rooms.Add(room);
+			return room;
+		}
+
+		// After traversing the room outline to merge a set of rooms, immediately "clean" the room to remove
+		// any old remnants of room walls. It is especially important to clean any roomWallDL sections, or
+		// mergeRooms will think that it is the start point of a new room, which it actually isn't...
+		private void CleanRoom(int startX, int startY, Room room)
+		{
+			Direction dir = Direction.Up;
+			int newX = 0, newY = 0;
+			int x = startX, y = startY + 1;
+			Cell currentCell, cellUp, cellDown, cellLeft, cellRight;
+			
+			while (!(x == startX && y == startY))
+			{
+				int up = 1;
+				currentCell = y < Constants.GridHeight ? CellAt(x, y) : null;
+				cellUp = y + up < Constants.GridHeight ? CellAt(x, y = up) : null;
+				
+				if (CellTypes.IsCleanStartWall(currentCell.Type))
+				{
+					while (!cellUp.Merged)
+					{
+						CellType newType = CellTypes.roomSpace;
+						Cell newCell = new Cell(x, y, newType, CellDescriptions.Room_TBD);
+						newCell.Merged = true;
+						SetCellValue(x, y + up, newCell);
+						room.Space.Add(newCell);
+						up += 1;
+						currentCell = CellAt(x, y + up);
+						cellUp = y + up < Constants.GridHeight ? CellAt(x, y + up) : null;
+					}
+				}
+				
+				cellUp    = y + 1 < Constants.GridHeight ? CellAt(x, y + 1) : null;
+				cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
+				cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
+				cellRight = x + 1 < Constants.GridWidth  ? CellAt(x + 1, y) : null;
+				
+				if (dir != Direction.Right && cellLeft != null && cellLeft.Type.RoomConnectsRight && cellLeft.Merged)
+				{
+					newX = x - 1;
+					newY = y;
+					dir = Direction.Left;
+				}
+				else if (dir != Direction.Down && cellUp != null && cellUp.Type.RoomConnectsDown && cellUp.Merged)
+				{
+					newX = x;
+					newY = y + 1;
+					dir = Direction.Up;
+				}
+				else if (dir != Direction.Left && cellRight != null && cellRight.Type.RoomConnectsLeft && cellRight.Merged)
+				{
+					newX = x + 1;
+					newY = y;
+					dir = Direction.Right;
+				}
+				else if (dir != Direction.Up && cellDown != null && cellDown.Type.RoomConnectsUp && cellDown.Merged)
+				{
+					newX = x;
+					newY = y - 1;
+					dir = Direction.Down;
+				}
+				
+				if (x == newX && y == newY)  // Going nowhere? This room is bitched.
+				{
+					throw new LevelGenerateException();
+				}
+				else
+				{
+					x = newX;
+					y = newY;
+				}
+			}
+		}
+
+		private void CleanRoomScraps()
+		{
+			for (int y = 0; y < Constants.GridHeight; y++) 
+			{
+				for (int x = 0; x < Constants.GridWidth; x++) 
+				{
+					Cell cell = CellAt(x, y);
+					
+					if (CellTypes.IsRoomType(cell.Type) && !cell.Merged)
+					{
+						ReplaceDungeonCellValue(x, y, Globals.EmptyCell);
+					}
+				}
+			}
+		}
+
+		// Remove any bits and pieces left over from the room placement and merge process.
+		private void CleanRoomsArray()
+		{
+			List<Cell> junk = new List<Cell>();
+			
+			foreach (Room room in Rooms) 
+			{
+				foreach (Cell wall in room.Walls) 
+				{
+					if (!Grid.Contains(wall))
+					{
+						junk.Add(wall);
+					}
+				}
+				
+				foreach (Cell space in room.Space) 
+				{
+					if (!Grid.Contains(space))
+					{
+						junk.Add(space);
+					}
+				}
+			}
+			
+			foreach (Room room in Rooms) 
+			{
+				foreach (Cell junkCell in junk) 
+				{
+					room.Walls.Remove(junkCell);
+					room.Space.Remove(junkCell);
+				}
+			}
+		}
+
+		// Need a piece of wall? Then room wall or room exit?
+		private CellType RandomRoomWall(int x, int y, Direction dir)
+		{
+			CellType type = null;
+			bool exit = R.Next(100) + 1 <= Constants.RoomExitProb;
+			
+			// Room exits can only occur if the room wall in question is at least 1 cell
+			// from the dungeon edge, to allow the resulting corridors to grow or be "capped".
+			
+			if (dir == Direction.Up)                             
+			{
+				if (exit && y + 1 < Constants.GridHeight)
+					type = CellTypes.roomExitU; 
+				else
+					type = CellTypes.roomWallU;
+			}
+			else if (dir == Direction.Down)                                            
+			{
+				if (exit && y - 1 >= 0)
+					type = CellTypes.roomExitD;
+				else
+					type = CellTypes.roomWallD;
+			}
+			else if (dir == Direction.Left)                                              
+			{
+				if (exit && x - 1 >= 0) 
+					type = CellTypes.roomExitL; 
+				else
+					type = CellTypes.roomWallL;
+			}                                
+			else if (dir == Direction.Right)                                  
+			{
+				if (exit && x + 1 < Constants.GridHeight) 
+					type = CellTypes.roomExitR;
+				else
+					type = CellTypes.roomWallR;
+			}
+			
+			return type;
+		}
+
+		private CellType RandomRoomCorner(int x, int y, Direction dir)
+		{
+			CellType type = null;
+			bool exit = R.Next(100) + 1 <= Constants.RoomExitProb;
+			List<CellType> possibleExitTypes = new List<CellType>();
+			
+			// Room exits can only occur if the room wall in question is at least 1 cell
+			// from the dungeon edge, to allow the resulting corridors to grow or be "capped".
+			
+			if (dir == Direction.UpLeft)                             
+			{
+				if (!exit) 
+				{
+					return CellTypes.roomWallUL;
+				}
+				
+				if (y + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUL_U);
+				}
+				
+				if (x - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUL_L);
+				}
+				
+				if (x - 1 >= 0 && y + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUL_UL);
+				}
+				
+				if (possibleExitTypes.Count > 0)
+				{
+					type = possibleExitTypes[R.Next(possibleExitTypes.Count)];
+				}
+				else
+				{
+					type = CellTypes.roomWallUL;  // No exits fit.
+				}
+			}
+			else if (dir == Direction.UpRight)                                            
+			{
+				if (!exit) 
+				{
+					return CellTypes.roomWallUR;
+				}
+				
+				if (y + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUR_U);
+				}
+				
+				if (x + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUR_R);
+				}
+				
+				if (x + 1 < Constants.GridHeight && y + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitUR_UR);
+				}
+				
+				if (possibleExitTypes.Count > 0)
+				{
+					type = possibleExitTypes[R.Next(possibleExitTypes.Count)];
+				}
+				else
+				{
+					type = CellTypes.roomWallUR;  // No exits fit.
+				}
+			}
+			else if (dir == Direction.DownLeft)                                              
+			{
+				if (!exit) 
+				{
+					return CellTypes.roomWallDL;
+				}
+				
+				if (y - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDL_D);
+				}
+				
+				if (x - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDL_L);
+				}
+				
+				if (x - 1 >= 0 && y - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDL_DL);
+				}
+				
+				if (possibleExitTypes.Count > 0)
+				{
+					type = possibleExitTypes[R.Next(possibleExitTypes.Count)];
+				}
+				else
+				{
+					type = CellTypes.roomWallDL;  // No exits fit.
+				}
+			}                                
+			else if (dir == Direction.DownRight)                                  
+			{
+				if (!exit) 
+				{
+					return CellTypes.roomWallDR;
+				}
+				
+				if (y - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDR_D);
+				}
+				
+				if (x + 1 < Constants.GridHeight)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDR_R);
+				}
+				
+				if (x + 1 < Constants.GridHeight && y - 1 >= 0)
+				{
+					possibleExitTypes.Add(CellTypes.roomExitDR_DR);
+				}
+				
+				if (possibleExitTypes.Count > 0)
+				{
+					type = possibleExitTypes[R.Next(possibleExitTypes.Count)];
+				}
+				else
+				{
+					type = CellTypes.roomWallDR;  // No exits fit.
+				}
+			}
+			
+			return type;
+		}
+
+		private bool IncompatibleCornerTypes(CellType currentType, CellType newType)
+		{
+			return 
+			(currentType == CellTypes.roomWallUL && newType == CellTypes.roomWallDR) ||
+			(currentType == CellTypes.roomWallUR && newType == CellTypes.roomWallDL) ||
+			(currentType == CellTypes.roomWallDL && newType == CellTypes.roomWallUR) ||
+			(currentType == CellTypes.roomWallDR && newType == CellTypes.roomWallUL);
+		}
+
+		private void DeleteRoom(Room room)
+		{
+			foreach (Cell wall in room.Walls) 
+			{
+				int i = (Constants.GridWidth * wall.X) + wall.Y;
+				Grid[i] = Globals.EmptyCell;
+			}
+		}
+
 		#endregion
 		#region Accessors
 
@@ -732,11 +2010,27 @@ namespace DigitalWizardry.LevelGenerator
 			return Grid[Constants.GridWidth * x + y];
 		}
 
-		private void SetDungeonCellValue(int x, int y, Cell cell)
+		private void SetCellValue(int x, int y, Cell cell)
 		{
 			int i = Constants.GridWidth * x + y;
 			Grid[i] = cell;
 			RecordNewAttachment(cell);
+		}
+
+		private void SetDungeonCellValue(int x, int y, Cell cell)
+		{
+			int i = (Constants.GridWidth * x) + y;
+			Grid[i] = cell;
+			RecordNewAttachment(cell);
+		}
+
+
+		// This is intended to be used only for special rooms durring the rooms connect phase to 
+		// avoid screwing up the available connections count of when converting room exits to walls.
+		private void ReplaceDungeonCellValue(int x, int y, Cell cell)
+		{
+			int i = (Constants.GridWidth * x) + y;
+			Grid[i] = cell;
 		}
 
 		// Returns a random cell from the dungeon level. If empty == YES, then the random
@@ -817,7 +2111,7 @@ namespace DigitalWizardry.LevelGenerator
 				{
 					// Now set the new cell.
 					Cell newCell = new Cell(coords.X, coords.Y, newType, descr);
-					SetDungeonCellValue(coords.X, coords.Y, newCell);
+					SetCellValue(coords.X, coords.Y, newCell);
 					success = true;
 				}
 			}
