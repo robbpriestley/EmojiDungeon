@@ -4,8 +4,8 @@ namespace DigitalWizardry.LevelGenerator
 	{
 		public const int GridWidth = 13;
 		public const int GridHeight = 13;
-		public const int MinRooms = 1;
-		public const int MaxRooms = 1;
+		public const int MinRooms = 3;
+		public const int MaxRooms = 6;
 		public const int MinRoomWidth = 2;
 		public const int MinRoomHeight = 2;
 		public const int MaxRoomWidth = 4;

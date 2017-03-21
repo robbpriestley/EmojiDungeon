@@ -3,6 +3,7 @@
 //           square grids is concerning, but it probably makes sense to go ahead and port the rooms code in
 //           and double-check everything, then debug everything later if this is really something that should
 //           get built out into a product.
+// Console.WriteLine(VisualizeAsText() + Stats());
 
 using System;
 using System.Text;
@@ -439,6 +440,7 @@ namespace DigitalWizardry.LevelGenerator
 			CalcRooms();
 			PlaceMines();
 			PlaceRegularRooms();
+			MergeRooms();
 			// [self mergeRooms];
 			// [self placeRoundRoom];
 			// [self cleanRoomScraps];
@@ -1697,7 +1699,7 @@ namespace DigitalWizardry.LevelGenerator
 			{
 				int up = 1;
 				currentCell = y < Constants.GridHeight ? CellAt(x, y) : null;
-				cellUp = y + up < Constants.GridHeight ? CellAt(x, y = up) : null;
+				cellUp = y + up < Constants.GridHeight ? CellAt(x, y + up) : null;
 				
 				if (CellTypes.IsCleanStartWall(currentCell.Type))
 				{
