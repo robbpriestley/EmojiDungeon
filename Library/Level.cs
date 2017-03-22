@@ -445,9 +445,9 @@ namespace DigitalWizardry.LevelGenerator
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
-			// [self connectMines];
-			// [self cleanRoomsArray];
-			// [self convertRoomsToCatacombs:catacombsCount];
+			ConnectMines();
+			CleanRoomsArray();
+			ConvertRoomsToCatacombs();
 		}
 
 		private void CalcRooms()
@@ -2457,6 +2457,97 @@ namespace DigitalWizardry.LevelGenerator
 			}
 		}
 
+		private void ConnectMines()
+		{
+			for (int y = 0; y < Constants.GridHeight; y++)
+			{
+				for (int x = 0; x < Constants.GridWidth; x++)
+				{
+					Cell cell = CellAt(x, y);
+					
+					if (cell.Type == CellTypes.inter)
+					{
+						Cell cellUp, cellDown, cellLeft, cellRight;
+							
+						cellUp    = y + 1 < Constants.GridHeight ? CellAt(x, y + 1) : null;
+						cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
+						cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
+						cellRight = x + 1 < Constants.GridWidth  ? CellAt(x + 1, y) : null;
+						
+						if (!cellUp.Type.IsEmpty && !cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
+						{
+							ConnectRoomCells(cellUp, x, y + 1, Direction.Up);
+						}
+						else if (!cellDown.Type.IsEmpty && !cell.Type.ConnectsTo(cellDown.Type, Direction.Down))
+						{
+							ConnectRoomCells(cellDown, x, y - 1, Direction.Down);
+						}
+						else if (!cellLeft.Type.IsEmpty && !cell.Type.ConnectsTo(cellLeft.Type, Direction.Left))
+						{
+							ConnectRoomCells(cellLeft, x - 1, y, Direction.Left);
+						}
+						else if (!cellRight.Type.IsEmpty && !cell.Type.ConnectsTo(cellRight.Type, Direction.Right))
+						{
+							ConnectRoomCells(cellRight, x + 1, y, Direction.Right);
+						}
+					}
+				}
+			}
+		}
+
+		private void ConvertRoomsToCatacombs()
+		{
+			List<Room> rooms = new List<Room>();
+
+			foreach (Room room in Rooms)
+			{
+				rooms.Add(room);  // Make a copy of the Rooms list.
+			}
+			
+			int added = 0;
+			
+			do 
+			{
+				if (rooms.Count > 0)
+				{
+					Room room = rooms[R.Next(rooms.Count)];
+					rooms.Remove(room);
+					
+					int volume = room.Walls.Count + room.Space.Count;
+					
+					if (room.Descr == CellDescriptions.Room_TBD && volume >= Constants.MinCatacombsVolume) 
+					{
+						ConvertRoomToCatacombs(room);
+						added++;
+					}
+				}
+				else
+				{
+					return;
+				}
+				
+			} while (added < CatacombsCount);
+		}
+
+		private void ConvertRoomToCatacombs(Room room)
+		{
+			foreach (Cell cell in room.Walls) 
+			{
+				CellType newType = CellTypes.ConvRoomTypeToCatacomb(cell.Type);
+				Cell newCell = new Cell(cell.X, cell.Y, newType, CellDescriptions.Catacombs_TBD);
+				newCell.IsCatacombs = true;
+				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
+			}
+			
+			foreach (Cell cell in room.Space) 
+			{
+				CellType newType = CellTypes.ConvRoomTypeToCatacomb(cell.Type);
+				Cell newCell =  new Cell(cell.X, cell.Y, newType, CellDescriptions.Catacombs_TBD);
+				newCell.IsCatacombs = true;
+				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
+			}
+		}
+
 		private void DeleteRoom(Room room)
 		{
 			foreach (Cell wall in room.Walls) 
@@ -2530,7 +2621,6 @@ namespace DigitalWizardry.LevelGenerator
 		}
 			
 		#endregion
-
 		#region Force Growth
 			
 		// Replace a random, non-empty, compatible cell with a different cell to see if that makes the
