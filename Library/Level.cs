@@ -441,11 +441,10 @@ namespace DigitalWizardry.LevelGenerator
 			PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
-			// [self mergeRooms];
-			// [self placeRoundRoom];
-			// [self cleanRoomScraps];
-			// [self cleanRoomsArray];
-			// [self connectRooms];
+			//PlaceRoundRoom();
+			CleanRoomScraps();
+			CleanRoomsArray();
+			ConnectRooms();
 			// [self connectMines];
 			// [self cleanRoomsArray];
 			// [self convertRoomsToCatacombs:catacombsCount];
@@ -1993,6 +1992,469 @@ namespace DigitalWizardry.LevelGenerator
 			(currentType == CellTypes.roomWallUR && newType == CellTypes.roomWallDL) ||
 			(currentType == CellTypes.roomWallDL && newType == CellTypes.roomWallUR) ||
 			(currentType == CellTypes.roomWallDR && newType == CellTypes.roomWallUL);
+		}
+
+		// Any existing room exit should be connected to any adjacent room section belonging to another room.
+		// We don't need to worry about existing exits that, just by chance, happened to be adjacent to one of
+		// the exits from another room, because SetCellValue() already takes care of that! 👍
+		private void ConnectRooms()
+		{
+			foreach (Room room in Rooms) 
+			{
+				Direction dir = Direction.Up;
+				int x = room.X, y = room.Y;
+				int newX = x, newY = y;
+				Cell cellUp, cellDown, cellLeft, cellRight;
+				
+				AssertExit(room);
+				
+				do
+				{
+					ConnectCells(x, y);
+					
+					cellUp    = y + 1 < Constants.GridHeight ? CellAt(x, y + 1) : null;
+					cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
+					cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
+					cellRight = x + 1 < Constants.GridWidth  ? CellAt(x + 1, y) : null;
+					
+					if (dir != Direction.Right && cellLeft != null && cellLeft.Type.RoomConnectsRight)
+					{
+						newX = x - 1;
+						newY = y;
+						dir = Direction.Left;
+					}
+					else if (dir != Direction.Down && cellUp != null && cellUp.Type.RoomConnectsDown)
+					{
+						newX = x;
+						newY = y + 1;
+						dir = Direction.Up;
+					}
+					else if (dir != Direction.Left && cellRight != null && cellRight.Type.RoomConnectsLeft)
+					{
+						newX = x + 1;
+						newY = y;
+						dir = Direction.Right;
+					}
+					else if (dir != Direction.Up && cellDown != null && cellDown.Type.RoomConnectsUp)
+					{
+						newX = x;
+						newY = y - 1;
+						dir = Direction.Down;
+					}
+					
+					if (x == newX && y == newY)  // Going nowhere? This room is bitched.
+					{
+						throw new LevelGenerateException();
+					}
+					else
+					{
+						x = newX;
+						y = newY;
+					}
+				}
+				while (!(x == room.X && y == room.Y));
+			}
+		}
+
+		private void ConnectCells(int x, int y)
+		{
+			Cell cell = CellAt(x, y);
+			
+			if (!CellTypes.IsRoomExit(cell.Type))
+			{
+				return;
+			}
+			
+			// The room wall section is an unconnected exit if the cell has an available connection.
+			if (cell.Type.ConnectsLeft && x - 1 >= 0 && cell.AvailableConnections > 0)                                 
+			{
+				ConnectRoomCells(cell, x - 1, y, Direction.Left);
+			}
+			
+			if (cell.Type.ConnectsRight && x + 1 < Constants.GridWidth && cell.AvailableConnections > 0)
+			{
+				ConnectRoomCells(cell, x + 1, y, Direction.Right);
+			}
+			
+			if (cell.Type.ConnectsDown && y - 1 >= 0 && cell.AvailableConnections > 0)
+			{
+				ConnectRoomCells(cell, x, y - 1, Direction.Down);
+			}
+			
+			if (cell.Type.ConnectsUp && y + 1 < Constants.GridHeight && cell.AvailableConnections > 0)
+			{
+				ConnectRoomCells(cell, x, y + 1, Direction.Up);
+			}
+		}
+
+		private bool AssertExit(Room room)
+		{
+			List<Cell> walls = new List<Cell>();
+			
+			// Populate a disposable array of wall cells from the room. If any of 
+			// those walls are exits, the exit is obviously asserted already.
+			
+			bool exitPossible = false;
+			
+			foreach (Cell cell in room.Walls)
+			{
+				if (cell.Type.IsRoomExit)
+				{
+					return true;
+				}
+				else if (Grid.Contains(cell))
+				// Some cells are still in the room.walls array even though they are no longer in the dungeon
+				// level, because they were "plunked upon" by other room cells. Do not consider those for exits.
+				{
+					if (cell.Type.RoomExitCompatible)
+					{
+						if (!cell.ExitImpossible)
+						{
+							exitPossible = true;
+							walls.Add(cell);
+						}
+					}
+				}
+			}
+			
+			// So, there's no exit to the room, but an exit hasn't been ruled out. Try to force one.
+			bool exitForced = false;
+
+			while (!exitForced) 
+			{
+				// If none of the walls is an exit, and all have been previously recorded as it being 
+				// impossible to place an exit there, the room cannot be reached. Start over.
+				if (!exitPossible || walls.Count == 0) 
+				{
+					throw new LevelGenerateException();
+				}
+				
+				Cell cell = walls[R.Next(walls.Count)];
+				
+				Direction directionOK = Direction.NoDir;
+				
+				if (CellTypes.IsRoomCorner(cell.Type))
+				{
+					directionOK = RoomCellsAdjacentOK(cell);
+				}
+				else
+				{
+					directionOK = RoomCellAdjacentOK(cell);
+				}
+				
+				if (directionOK != Direction.NoDir) 
+				{
+					directionOK = FilterDirection(directionOK);
+					CellType newType = CellTypes.ConvRoomWallToExit(cell.Type, directionOK);
+					
+					Cell newCell = new Cell(cell.X, cell.Y, newType, CellDescriptions.Room_TBD);
+					
+					SetDungeonCellValue(cell.X, cell.Y, newCell);
+					room.Walls.Add(newCell);
+					
+					exitForced = true;
+				}
+				else
+				{
+					cell.ExitImpossible = true;
+				}
+				
+				walls.Remove(cell);
+			}
+
+			return true;
+		}
+
+
+		// When forcing a room exit and the room wall section in question is a corner, and both directions
+		// are available, there is a random chance of either or both the directions being receiving an exit.
+		private Direction FilterDirection(Direction dir)
+		{
+			Direction filterDir = dir;
+			int r = R.Next(3);
+			
+			if (dir == Direction.Up || dir == Direction.Down || dir == Direction.Left || dir == Direction.Right)
+			{
+				filterDir = dir;  // No change.
+			}
+			else if (dir == Direction.UpLeft)
+			{
+				if (r == 1)
+				{
+					filterDir = Direction.Up;
+				}
+				else if (r == 2)
+				{
+					filterDir = Direction.Left;
+				}
+				else  // rando == 3
+				{
+					filterDir = Direction.UpLeft;
+				}
+			}
+			else if (dir == Direction.UpRight)
+			{
+				if (r == 1)
+				{
+					filterDir = Direction.Up;
+				}
+				else if (r == 2)
+				{
+					filterDir = Direction.Right;
+				}
+				else  // r == 3
+				{
+					filterDir = Direction.UpRight;
+				}
+			}
+			else if (dir == Direction.DownLeft)
+			{
+				if (r == 1)
+				{
+					filterDir = Direction.Down;
+				}
+				else if (r == 2)
+				{
+					filterDir = Direction.Left;
+				}
+				else  // r == 3
+				{
+					filterDir = Direction.DownLeft;
+				}
+			}
+			else if (dir == Direction.DownRight)
+			{
+				if (r == 1)
+				{
+					filterDir = Direction.Down;
+				}
+				else if (r == 2)
+				{
+					filterDir = Direction.Right;
+				}
+				else  // r == 3
+				{
+					filterDir = Direction.DownRight;
+				}
+			}
+			
+			return filterDir;
+		}
+
+		private Direction RoomCellAdjacentOK(Cell cell)
+		{
+			Cell adjacentCell = null;
+			Direction dir = CellTypes.RoomWallDirection(cell.Type);
+				
+			if (dir == Direction.Up && cell.Y + 1 < Constants.GridHeight)
+			{
+				adjacentCell = CellAt(cell.X, cell.Y + 1);
+			}
+			else if (dir == Direction.Down && cell.Y - 1 >= 0)
+			{
+				adjacentCell = CellAt(cell.X, cell.Y - 1);
+			}
+			else if (dir == Direction.Left && cell.X - 1 >= 0)
+			{
+				adjacentCell = CellAt(cell.X - 1, cell.Y);
+			}
+			else if (dir == Direction.Right && cell.X + 1 < Constants.GridWidth)
+			{
+				adjacentCell = CellAt(cell.X + 1, cell.Y);
+			}
+				
+			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || (adjacentCell.Type.RoomExitCompatible && adjacentCell.Descr == CellDescriptions.Room_TBD)))
+			{
+				return dir;
+			}
+			else
+			{
+				return Direction.NoDir;
+			}
+		}
+
+		// RP: 2017-03-22. Fixed what appeared to be a copy-paste bug in this method where the CellAt() calls 
+		// didn't match coords with the conditional checks immediately above them.
+		private Direction RoomCellsAdjacentOK(Cell cell)
+		{
+			bool okUp = false, okDown = false, okLeft = false, okRight = false;
+			Cell adjCellUp, adjCellDown, adjCellLeft, adjCellRight;
+			
+			Direction dir = CellTypes.RoomWallDirection(cell.Type);
+				
+			if (dir == Direction.UpLeft || dir == Direction.UpRight)
+			{
+				if (cell.Y + 1 < Constants.GridHeight)
+				{
+					adjCellUp = CellAt(cell.X, cell.Y + 1);
+
+					if (adjCellUp.Type.IsEmpty || (adjCellUp.Type.RoomExitCompatible && adjCellUp.Descr == CellDescriptions.Room_TBD))
+					{
+						okUp = true;
+					}
+				}
+			}
+			
+			if (dir == Direction.DownLeft || dir == Direction.DownRight)
+			{
+				if (cell.Y - 1 >= 0)
+				{
+					adjCellDown = CellAt(cell.X, cell.Y - 1);
+
+					if (adjCellDown.Type.IsEmpty || (adjCellDown.Type.RoomExitCompatible && adjCellDown.Descr == CellDescriptions.Room_TBD))
+					{
+						okDown = true;
+					}
+				}
+			}
+			
+			if (dir == Direction.UpLeft || dir == Direction.DownLeft)
+			{
+				if (cell.X - 1 >= 0)
+				{
+					adjCellLeft = CellAt(cell.X - 1, cell.Y);
+					if (adjCellLeft.Type.IsEmpty || (adjCellLeft.Type.RoomExitCompatible && adjCellLeft.Descr == CellDescriptions.Room_TBD))
+					{
+						okLeft = true;
+					}
+				}
+			}
+			
+			if (dir == Direction.UpRight || dir == Direction.DownRight)
+			{
+				if (cell.X + 1 < Constants.GridWidth)
+				{
+					adjCellRight = CellAt(cell.X + 1, cell.Y);
+					if (adjCellRight.Type.IsEmpty || (adjCellRight.Type.RoomExitCompatible && adjCellRight.Descr == CellDescriptions.Room_TBD))
+					{
+						okRight = true;
+					}
+				}
+			}
+			
+			if (okUp && okLeft)
+			{
+				dir = Direction.UpLeft;
+			}
+			else if (okUp && okRight)
+			{
+				dir = Direction.UpRight;
+			}
+			else if (okDown && okLeft)
+			{
+				dir = Direction.DownLeft;
+			}
+			else if (okDown && okRight)
+			{
+				dir = Direction.DownRight;
+			}
+			else if (okUp)
+			{
+				dir = Direction.Up;
+			}
+			else if (okDown)
+			{
+				dir = Direction.Down;
+			}
+			else if (okLeft)
+			{
+				dir = Direction.Left;
+			}
+			else if (okRight)
+			{
+				dir = Direction.Right;
+			}
+			else
+			{
+				dir = Direction.NoDir;
+			}
+			
+			return dir;
+		}
+
+		// Formerly known as "connectRoomCellsIfPossible" (and it's still not possible sometimes...)
+		// Given a cell representing a section of room wall, it must connect to any adjacent section of 
+		// room wall belonging to another room. The adjacent section is not an exit section, or we would
+		// not even be here, so force the other section to have an exit and connect the two sections.
+		// Now, if the adjacent section happens to be a room corner or something that the existing exit
+		// cannot connect to, the exit must be converted into an ordinary room section to avoid clashing.
+		private void ConnectRoomCells(Cell cell, int adjX, int adjY, Direction dir)
+		{
+			Cell newCell;
+			CellType newType;
+			Cell adjacent = CellAt(adjX, adjY);
+			
+			// No point in trying to force connect two special rooms, they won't join anyways.
+			if (CellDescriptions.IsMines(cell.Descr) && CellDescriptions.IsMines(adjacent.Descr))
+			{
+				throw new LevelGenerateException();
+			}
+			
+			if (adjacent.Type.IsEmpty || cell.Type.ConnectsTo(adjacent.Type, dir))
+			{
+				return;
+			}
+			else if (adjacent.Type.RoomExitCompatible)
+			{
+				newType = CellTypes.ConvRoomWallToExit(adjacent.Type, OppositeDir(dir));
+				newCell = new Cell(adjX, adjY, newType, adjacent.Descr);
+				SetCellValue(adjX, adjY, newCell);
+				AddNewCellToRoom(adjacent, newCell);
+			}
+			else
+			{
+				newType = CellTypes.ConvRoomExitToWall(cell.Type, dir, cell.Descr);
+				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
+				
+				if (CellDescriptions.IsMines(newCell.Descr)) 
+				{
+					ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
+				}
+				else
+				{
+					SetDungeonCellValue(cell.X, cell.Y, newCell);
+					AddNewCellToRoom(cell, newCell);
+				}
+			}
+		}
+
+		// Need to convert direction from the context of connectRoomCells when 
+		// altering the OTHER room's cell. Don't need the corner directions, right?
+		private Direction OppositeDir(Direction dir)
+		{
+			Direction opposite;
+			
+			if (dir == Direction.Up)
+			{
+				opposite = Direction.Down;
+			}
+			else if (dir == Direction.Down)
+			{
+				opposite = Direction.Up;
+			}
+			else if (dir == Direction.Left)
+			{
+				opposite = Direction.Right;
+			}
+			else //if (dir == Direction.Right)
+			{
+				opposite = Direction.Left;
+			}
+		
+			return opposite;
+		}
+
+		// Add a new cell to a room without knowing exactly which room it is to begin with...
+		private void AddNewCellToRoom(Cell existingCell, Cell newCell)
+		{
+			foreach (Room room in Rooms) 
+			{
+				if (room.Walls.Contains(existingCell))
+				{
+					room.Walls.Add(newCell);
+					return;
+				}
+			}
 		}
 
 		private void DeleteRoom(Room room)

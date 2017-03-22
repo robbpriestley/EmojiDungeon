@@ -2,10 +2,10 @@ namespace DigitalWizardry.LevelGenerator
 {	
 	public class Constants
 	{
-		public const int GridWidth = 13;
-		public const int GridHeight = 13;
-		public const int MinRooms = 3;
-		public const int MaxRooms = 6;
+		public const int GridWidth = 15;
+		public const int GridHeight = 15;
+		public const int MinRooms = 10;
+		public const int MaxRooms = 15;
 		public const int MinRoomWidth = 2;
 		public const int MinRoomHeight = 2;
 		public const int MaxRoomWidth = 4;
