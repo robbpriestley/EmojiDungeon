@@ -441,7 +441,7 @@ namespace DigitalWizardry.LevelGenerator
 			PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
-			//PlaceRoundRoom();
+			PlaceRoundRoom();
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
@@ -506,29 +506,34 @@ namespace DigitalWizardry.LevelGenerator
 
 		private void PlaceRoundRoom()
 		{
-			bool placed = false;
-			int attempts = 0, maxAttempts = Constants.GridWidth * Constants.GridHeight;
-			
-			while (attempts <= maxAttempts) 
-			{
-				attempts++;
-				Coords coords = RandomCell(true);
+			bool place = Constants.PlaceRoundRoom;  // This is just to trick the compiler into not issuing an unreachable code warning for the code below.
 
-				if (!RoomFits(coords, 3, 3, true))
-				{
-					continue;
-				}
-				else
-				{
-					Rooms.Add(BuildRoom(RoomType.Round, coords, 3, 3));
-					placed = true;
-					break;
-				}
-			}
-			
-			if (!placed)
+			if (place)
 			{
-				throw new LevelGenerateException();
+				bool placed = false;
+				int attempts = 0, maxAttempts = Constants.GridWidth * Constants.GridHeight;
+				
+				while (attempts <= maxAttempts) 
+				{
+					attempts++;
+					Coords coords = RandomCell(true);
+
+					if (!RoomFits(coords, 3, 3, true))
+					{
+						continue;
+					}
+					else
+					{
+						Rooms.Add(BuildRoom(RoomType.Round, coords, 3, 3));
+						placed = true;
+						break;
+					}
+				}
+				
+				if (!placed)
+				{
+					throw new LevelGenerateException();
+				}
 			}
 		}
 

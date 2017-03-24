@@ -15,6 +15,7 @@ namespace DigitalWizardry.LevelGenerator
 		public const int MaxMinesWidth = 4;
 		public const int MaxMinesHeight = 8;
 		public const int MinCatacombsVolume = 12;
+		public const bool PlaceRoundRoom = false;
 		public const int RoomExitProb = 20;
 		public const int DoorLockedProb = 35;
 		public const int DoorOpenProb = 20;
