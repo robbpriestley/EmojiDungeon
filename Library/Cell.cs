@@ -20,6 +20,8 @@ namespace DigitalWizardry.LevelGenerator
 		public CellDescription Descr;
 		public List<CellDoor> Doors;
 		
+		public Cell(){}
+		
 		public Cell(int x, int y, CellType type, CellDescription descr)
 		{
 				X = x;
@@ -27,6 +29,35 @@ namespace DigitalWizardry.LevelGenerator
 				Type = type;
 				Descr = descr;
 				AvailableConnections = Type.InitialAvailableConnections;
+		}
+
+		// Copy constructor. Creates a deep copy clone of the source.
+		public Cell(Cell source) : this()
+		{
+			this.X = source.X;
+			this.Y = source.Y;
+			this.HasKey = source.HasKey;
+			this.Sequence = source.Sequence;
+			this.Merged = source.Merged;
+			this.Visited = source.Visited;
+			this.IsCatacombs = source.IsCatacombs;
+			this.ExitImpossible = source.ExitImpossible;
+			this.SourceCoords = source.SourceCoords == null ? null : new Coords(source.SourceCoords);
+			this.AttachBlocked = source.AttachBlocked;
+			this.AvailableConnections = source.AvailableConnections;
+			this.DescrWeight = source.DescrWeight;
+			this.Type = source.Type;    // This does not require deep copy.
+			this.Descr = source.Descr;  // This does not require deep copy.
+			
+			if (source.Doors != null)
+			{
+				this.Doors = new List<CellDoor>();
+
+				foreach (CellDoor door in source.Doors)
+				{
+					this.Doors.Add(new CellDoor(door));
+				}
+			}
 		}
 	}
 }

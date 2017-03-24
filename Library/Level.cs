@@ -438,16 +438,16 @@ namespace DigitalWizardry.LevelGenerator
 			Rooms = new List<Room>();
 			
 			CalcRooms();
-			//PlaceMines();
+			PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
 			//PlaceRoundRoom();
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
-			//ConnectMines();
-			//CleanRoomsArray();
-			//ConvertRoomsToCatacombs();
+			ConnectMines();
+			CleanRoomsArray();
+			ConvertRoomsToCatacombs();
 		}
 
 		private void CalcRooms()
@@ -1705,7 +1705,7 @@ namespace DigitalWizardry.LevelGenerator
 					while (!cellUp.Merged)
 					{
 						CellType newType = CellTypes.roomSpace;
-						Cell newCell = new Cell(x, y, newType, CellDescriptions.Room_TBD);
+						Cell newCell = new Cell(x, y + up, newType, CellDescriptions.Room_TBD);
 						newCell.Merged = true;
 						SetCellValue(x, y + up, newCell);
 						room.Space.Add(newCell);
@@ -2497,12 +2497,12 @@ namespace DigitalWizardry.LevelGenerator
 
 		private void ConvertRoomsToCatacombs()
 		{
-			List<Room> rooms = new List<Room>();
-
-			foreach (Room room in Rooms)
+			if (CatacombsCount == 0)
 			{
-				rooms.Add(room);  // Make a copy of the Rooms list.
+				return;
 			}
+			
+			List<Room> rooms = CloneRoomsList();
 			
 			int added = 0;
 			
@@ -2527,6 +2527,24 @@ namespace DigitalWizardry.LevelGenerator
 				}
 				
 			} while (added < CatacombsCount);
+		}
+
+		// Make a deep copy clone of the Rooms list.
+		private List<Room> CloneRoomsList()
+		{
+			List<Room> rooms = null;
+			
+			if (Rooms != null)
+			{
+				rooms = new List<Room>();
+
+				foreach (Room room in Rooms)
+				{
+					rooms.Add(new Room(room));
+				}
+			}
+
+			return rooms;
 		}
 
 		private void ConvertRoomToCatacombs(Room room)

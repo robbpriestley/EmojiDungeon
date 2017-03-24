@@ -11,6 +11,8 @@ namespace DigitalWizardry.LevelGenerator
 
 		public Direction Direction;  // Sneaky, it has a dir for utility purposes sometimes :-)
 
+		public Coords(){}
+		
 		public Coords(int x, int y)
 		{
 			X = x;
@@ -36,6 +38,17 @@ namespace DigitalWizardry.LevelGenerator
 			{
 				AdjacentEdgeUp = true;
 			}
+		}
+
+		// Copy constructor. Creates a deep copy clone of the source.
+		public Coords(Coords source) : this()
+		{		
+			this.X = source.X;
+			this.Y = source.Y;
+			this.AdjacentEdgeUp = source.AdjacentEdgeUp;
+			this.AdjacentEdgeDown = source.AdjacentEdgeDown;
+			this.AdjacentEdgeLeft = source.AdjacentEdgeLeft;
+			this.AdjacentEdgeRight = source.AdjacentEdgeRight;
 		}
 
 		bool IsOppositeDirTo(Coords otherCoords)
