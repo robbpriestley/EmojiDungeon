@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -14,8 +16,8 @@ namespace DigitalWizardry.LevelGenerator
 		}
 
 		[HttpGet]
-		[Route("level")]
-		public IActionResult Level()
+		[Route("dungeon")]
+		public IActionResult Dungeon()
 		{
 			if (!BasicAuthentication.Authenticate(Secrets, Request))
 			{
@@ -23,11 +25,13 @@ namespace DigitalWizardry.LevelGenerator
 			}
 			
 			Coords startCoords = new Coords(1, 1);
-			Level level = new Level(startCoords);
-			string output = level.VisualizeAsText();
-			output += level.Stats();
+			Level level = new Level(0, startCoords);
+			StringBuilder output = new StringBuilder();
+			output.AppendLine(level.VisualizeAsText());
+			output.AppendLine(level.Stats() + Environment.NewLine);
+			//output.AppendLine(level.VisualizeAsTextWithDescription());
 
-			return new ObjectResult(output);
+			return new ObjectResult(output.ToString());
 			//return Utility.SerializedJsonObjectResult(visualize);
 		}
 	}

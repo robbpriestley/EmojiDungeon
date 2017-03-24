@@ -8,9 +8,19 @@ namespace DigitalWizardry.LevelGenerator
 		public int WeightReduction;
 		public string TextRep;
 
+		public CellDescription(){}
+		
 		public CellDescription(string textRep)
 		{
 			TextRep = textRep;
+		}
+
+		// Copy constructor. Creates a deep copy clone of the source.
+		public CellDescription(CellDescription source) : this()
+		{
+			this.Weight = source.Weight;
+			this.WeightReduction = source.WeightReduction;
+			this.TextRep = source.TextRep;
 		}
 	}
 

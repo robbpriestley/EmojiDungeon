@@ -15,6 +15,7 @@ namespace DigitalWizardry.LevelGenerator
 	public class Level
 	{
 		private List<Cell> Grid;
+		private int LevelNumber;  // Zero-indexed level identifier for multi-level dungeons.
 		private Random R;
 		private Coords StartCoords;
 		private int SequenceNumber;
@@ -29,11 +30,13 @@ namespace DigitalWizardry.LevelGenerator
 		private int BuildPasses;  // Number of discarded attempts before arriving at a completed level.
 		private TimeSpan BuildTime;  // How long in total did it take to build this level?
 
-		public Level(Coords startCoords)
+		public Level(int levelNumber, Coords startCoords)
 		{
-			R = new Random();
-			StartCoords = startCoords;
+			this.R = new Random();
+			this.LevelNumber = levelNumber;
+			this.StartCoords = startCoords;
 			Globals.Initialize();
+			MaxDistance = Math.Abs(Math.Sqrt(Math.Pow(Constants.GridWidth - 1, 2) + Math.Pow(Constants.GridHeight - 1, 2)));
 			Start();
 		}
 
@@ -55,12 +58,12 @@ namespace DigitalWizardry.LevelGenerator
 					LevelSolve();
 					PlaceKeys();
 					PlaceDownStairs();
-					//AddDescriptions();
-					levelComplete = true;  // i.e. no exceptions...
+					AddDescriptions();
+					levelComplete = true;  // i.e. No exceptions...
 				}
 				catch (LevelGenerateException) 
 				{
-					levelComplete = false;   // Try again.
+					levelComplete = false;  // Try again.
 				}
 
 			} while (!levelComplete);
@@ -78,15 +81,30 @@ namespace DigitalWizardry.LevelGenerator
 				Grid.Add(Globals.EmptyCell);
 			}
 
+			// The level 0 dungeon is outfitted with the start cell at bottom center.
+			if (this.LevelNumber == 0) 
+			{
+				this.StartCoords = PlaceEntrance();
+			}
+			else  // Otherwise, it "inherits" start cell (i.e. stairs down) from above.
+			{
+				// this.StartCoords = THIS NEEDS TO BE COMPLETED;
+			}
+
 			List<CellType> types = CellTypes.GetTypes(StartCoords);
 
-			CellType newType = RandomCellType(types);
-			// RP: Should the next be CellDescriptions.Corridor_TBD? Or something else?
-			Cell newCell = new Cell(StartCoords.X, StartCoords.Y, newType, CellDescriptions.Corridor_TBD);
-
-			SetCellValue(StartCoords.X, StartCoords.Y, newCell);
-
 			CellsWithLockedDoors = new List<Cell>();
+		}
+
+		// Set start cell at bottom centre.
+		private Coords PlaceEntrance()
+		{
+			int x = Constants.GridWidth / 2;
+			CellType startType = CellTypes.entrance;
+			Cell entrance = new Cell(x, 0, startType, CellDescriptions.Constructed);
+			entrance.DescrWeight = 100;
+			SetDungeonCellValue(x, 0, entrance);
+			return new Coords(x, 0);
 		}
 
 		private void GenerateLevel()
@@ -316,38 +334,6 @@ namespace DigitalWizardry.LevelGenerator
 			}
 			
 			return selected;
-		}
-
-		private CellType RandomDungeonCellType(List<CellType> types)
-		{
-			// Pick a cell type randomly, and also eliminate it as a candidate for the current
-			// cell to avoid re-testing it in the future if it is rejected. DungeonCellTypes
-			// have weights, so some are more likely to be picked than others.
-			
-			int total = 0;
-			
-			foreach (CellType type in types)
-			{
-				total += type.Weight;
-			}	
-			
-			int threshold = R.Next(total);
-			
-			CellType selectedType = null;
-			
-			foreach (CellType type in types)
-			{
-				threshold -= type.Weight;
-				
-				if (threshold < 0)
-				{
-					selectedType = type;
-					types.Remove(type);
-					break;
-				}
-			}
-			
-			return selectedType;
 		}
 
 		private Cell RandomForceGrowthCell(List<Cell> forceGrowthCells)
@@ -622,7 +608,7 @@ namespace DigitalWizardry.LevelGenerator
 			return true;
 		}
 
-		// Returns YES if the room fits into the dungeon entirely within allowable, currently-empty cells.
+		// Returns true if the room fits into the dungeon entirely within allowable, currently-empty cells.
 		private bool RoomFits(Coords coords, int width, int height, bool round)
 		{
 			Cell cell = null;
@@ -2859,8 +2845,8 @@ namespace DigitalWizardry.LevelGenerator
 			Grid[i] = cell;
 		}
 
-		// Returns a random cell from the dungeon level. If empty == YES, then the random
-		// cell will be empty. If empty == NO, then the random cell will be occupied.
+		// Returns a random cell from the dungeon level. If empty == true, then the random
+		// cell will be empty. If empty == false, then the random cell will be occupied.
 		private Coords RandomCell(bool empty)
 		{
 			Coords coords = null;
@@ -2921,7 +2907,7 @@ namespace DigitalWizardry.LevelGenerator
 						break;  // If nothing replaces it, start over.
 					}
 					
-					newType = RandomDungeonCellType(types);  // Candidate new cell type.
+					newType = RandomCellType(types);  // Candidate new cell type.
 					
 					// The new cell needs to be compatible with each adjacent cell.
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
@@ -3037,6 +3023,11 @@ namespace DigitalWizardry.LevelGenerator
 					Solve(cellRight);
 				}
 			}
+
+			if (CellTypes.IsDeadEnd(cell.Type)) 
+        	{
+				CheckForDownStairsPlacement(cell);
+			}
 		}
 
 		private void CheckForDownStairsPlacement(Cell cell)
@@ -3065,7 +3056,411 @@ namespace DigitalWizardry.LevelGenerator
 		}
 
 		#endregion
+		#region Descriptions
 
+		private void AddDescriptions()
+		{ 
+			bool forceChange = false;
+			
+			do 
+			{
+				bool changed = false;
+				
+				for (int Y = 0; Y < Constants.GridHeight; Y++)
+				{
+					for (int X = 0; X < Constants.GridWidth; X++)
+					{
+						Cell cell = CellAt(X, Y);
+						
+						if (CellDescriptions.IsTBD(cell.Descr))
+						{
+							int dominantWeight = -1;
+							CellDescription dominantDescr = CellDescriptions.Empty;  // Initialize to empty to satisfy compiler.
+							DominantDescr(cell, ref dominantWeight, ref dominantDescr);
+							
+							if (dominantWeight == -1 && !forceChange)
+							{
+								continue;
+							}
+							else
+							{
+								int weight = 0, randomPercent = RandomPercent();
+								CellDescription descr;
+								
+								if (randomPercent >= dominantWeight || forceChange)
+								{
+									descr = RandomCellDescr(dominantDescr, cell.Type);
+									weight = 100;
+								}
+								else
+								{
+									descr = dominantDescr;
+									
+									if (weight > 0)
+									{
+										weight = dominantWeight -= dominantDescr.WeightReduction;
+									}
+								}
+								
+								// Update descr for either entire room, or individual cell.
+								if (CellTypes.IsRoomType(cell.Type))
+								{
+									UpdateRoomDescr(cell, descr, weight);
+								}
+								else
+								{
+									cell.Descr = descr;
+									cell.DescrWeight = weight;
+								}
+								
+								changed = true;
+							}
+						}
+					}
+				}
+				
+				if (!changed)
+				{
+					forceChange = true;
+				}
+				else
+				{
+					forceChange = false;
+				}
+				
+			} while (!DescriptionsComplete());
+			
+		// 	[self completeFlooding];
+		}
+
+
+		private bool DescriptionsComplete()
+		{
+			bool complete = true;
+			
+			for (int y = 0; y < Constants.GridHeight; y++)
+			{
+				for (int x = 0; x < Constants.GridWidth; x++)
+				{
+					Cell cell = CellAt(x, y);
+					
+					if (CellDescriptions.IsTBD(cell.Descr)) 
+					{
+						complete = false;
+						break;
+					}
+				}
+			}
+			
+			return complete;
+		}
+
+
+		private void DominantDescr(Cell cell, ref int weight, ref CellDescription descr)
+		{    
+			Cell adjacentCell;
+			List<Cell> cells = new List<Cell>();
+			
+			// Cell above.
+			if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
+			{
+				adjacentCell = CellAt(cell.X, cell.Y + 1);
+				
+				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				{
+					cells.Add(adjacentCell);
+				}
+			}
+			
+			// Cell below.
+			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
+			{
+				adjacentCell = CellAt(cell.X, cell.Y - 1);
+				
+				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				{
+					cells.Add(adjacentCell);
+				}
+			}
+			
+			// Cell left.
+			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
+			{
+				adjacentCell = CellAt(cell.X - 1, cell.Y);
+				
+				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				{
+					cells.Add(adjacentCell);
+				}
+			}
+			
+			// Cell right.
+			if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
+			{
+				adjacentCell = CellAt(cell.X + 1, cell.Y);
+				
+				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				{
+					cells.Add(adjacentCell);
+				}
+			}
+			
+			if (cells.Count == 0)
+			{
+				return;
+			}
+
+			cells = cells.OrderByDescending(d => d.DescrWeight).ToList();
+			
+			int i = 0;
+			
+			if (cells[i].DescrWeight == 0)
+			{
+				// All weights are 0. Choose a key at random.
+				i = R.Next(cells.Count);
+			}
+
+			weight = cells[i].DescrWeight;
+			descr = cells[i].Descr;
+		}
+
+
+		// Incoming cell, locate room, and update all room cells with provided descr and weight.
+		private void UpdateRoomDescr(Cell cell, CellDescription descr, int weight)
+		{
+			Room updateRoom = null;
+			
+			foreach (Room room in Rooms) 
+			{
+				if (room.Walls.Contains(cell))
+				{
+					updateRoom = room;
+					break;
+				}
+				else if (room.Space.Contains(cell))
+				{
+					updateRoom = room;
+					break;
+				}
+			}
+			
+			foreach (Cell updateCell in updateRoom.Walls) 
+			{
+				updateCell.Descr = descr;
+				updateCell.DescrWeight = weight;
+			}
+			
+			foreach (Cell updateCell in updateRoom.Space) 
+			{
+				updateCell.Descr = descr;
+				updateCell.DescrWeight = weight;
+			}
+		}
+
+		private CellDescription RandomCellDescr(CellDescription previousDescr, CellType cellType)
+		{
+			// DungeonCellDescr objects have weights, so some are more likely to be picked than others.
+			
+			List<CellDescription> descrs = new List<CellDescription>();
+
+			foreach (CellDescription descr in CellDescriptions.Descrs)
+			{
+				descrs.Add(descr);  // Make a shallow copy clone of the descriptions.
+			}
+
+			descrs.Remove(previousDescr);
+			
+			// Flooding transitions can only occur with certain cell types.
+			
+			if (!CellTypes.IsFloodingTransition(cellType))
+			{
+				descrs.Remove(CellDescriptions.Constructed_Flooded);
+				descrs.Remove(CellDescriptions.Cavern_Flooded);
+			}
+			
+			int total = 0;
+			
+			foreach (CellDescription descr in descrs) 
+			{
+				total += descr.Weight;
+			}
+			
+			int threshold = R.Next(total);
+			
+			CellDescription randomDescr = null;
+			
+			foreach (CellDescription descr in descrs) 
+			{
+				threshold -= descr.Weight;
+				
+				if (threshold < 0)
+					break;
+			}
+			
+			return randomDescr;
+		}
+
+		private void CompleteFlooding()
+		{
+			bool changed = false;
+			
+			do 
+			{
+				changed = false;
+			
+				for (int y = 0; y < Constants.GridHeight; y++)
+				{
+					for (int x = 0; x < Constants.GridWidth; x++)
+					{
+						Cell cell = CellAt(x, y);
+						
+						if (CellDescriptions.IsFlooded(cell.Descr) && !CellTypes.IsFloodingTransition(cell.Type))
+						{
+							// Cell above.
+							if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
+								changed = FloodCell(x, y + 1) || changed;
+							
+							// Cell below.
+							if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
+								changed = FloodCell(x, y - 1) || changed;
+							
+							// Cell left.
+							if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
+								changed = FloodCell(x - 1, y) || changed;
+							
+							// Cell right.
+							if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
+								changed = FloodCell(x + 1, y) || changed;
+						}
+					}
+				}
+				
+			} while (changed);
+			
+			RemoveMiniFloods();
+		}
+
+		private bool FloodCell(int X, int Y)
+		{
+			bool changed = false;
+			Cell cell = CellAt(X, Y);
+			
+			if (!CellDescriptions.IsFlooded(cell.Descr))  // If the cell is not already flooded, then flood it.
+			{
+				if (CellTypes.IsFloodingIncompatible(cell.Type) || cell.Type == CellTypes.entrance)
+				{
+					throw new LevelGenerateException();  // Except when the cell cannot be flooded.
+				}
+				else
+				{
+					CellDescription descr = CellDescriptions.Empty;  // Initialize with empty to satisfy the compiler.
+					
+					if (cell.Descr == CellDescriptions.Constructed)
+					{
+						descr = CellDescriptions.Constructed_Flooded;
+					}
+					else if (cell.Descr == CellDescriptions.Cavern)
+					{
+						descr = CellDescriptions.Cavern_Flooded;
+					}
+					else if (cell.Descr == CellDescriptions.Mines_Horiz)
+					{
+						descr = CellDescriptions.Mines_Horiz_Flooded;
+					}
+					else if (cell.Descr == CellDescriptions.Mines_Vert)
+					{
+						descr = CellDescriptions.Mines_Vert_Flooded;
+					}
+					
+					// Update descr for either entire room, or individual cell.
+					if (CellTypes.IsRoomType(cell.Type))
+					{
+						UpdateRoomDescr(cell, descr, 0);
+					}
+					else
+					{
+						cell.Descr = descr;
+						cell.DescrWeight = 0;
+					}
+					
+					changed = true;
+				}
+			}
+			
+			return changed;
+		}
+
+
+		// Floods must be at least two cells wide.
+		private void RemoveMiniFloods()
+		{
+			for (int y = 0; y < Constants.GridHeight; y++)
+			{
+				for (int x = 0; x < Constants.GridWidth; x++)
+				{
+					Cell adjacentCell, cell = CellAt(x, y);
+					
+					bool adjacentFlooded = false;
+					
+					if (CellDescriptions.IsFlooded(cell.Descr))
+					{
+						// Cell above.
+						if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
+						{
+							adjacentCell = CellAt(x, y + 1);
+							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+						}
+						
+						// Cell below.
+						if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
+						{
+							adjacentCell = CellAt(x, y - 1);
+							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+						}
+						
+						// Cell left.
+						if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
+						{
+							adjacentCell = CellAt(x - 1, y);
+							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+						}
+						
+						// Cell right.
+						if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
+						{
+							adjacentCell = CellAt(x + 1, y);
+							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+						}
+						
+						if (!adjacentFlooded)
+						{
+							CellDescription descr = CellDescriptions.Empty;  // Initialize with empty to satisfy the compiler.
+							
+							if (cell.Descr == CellDescriptions.Constructed_Flooded)
+							{
+								descr = CellDescriptions.Constructed;
+							}
+							else if (cell.Descr == CellDescriptions.Cavern_Flooded)
+							{
+								descr = CellDescriptions.Cavern;
+							}
+							else if (cell.Descr == CellDescriptions.Mines_Horiz_Flooded)
+							{
+								descr = CellDescriptions.Mines_Horiz;
+							}
+							else if (cell.Descr == CellDescriptions.Mines_Vert_Flooded)
+							{
+								descr = CellDescriptions.Mines_Vert;
+							}
+							
+							cell.Descr = descr;
+						}
+					}
+				}
+			}
+		}
+
+		#endregion
 		#region Utility
 
 		// Returns a random number 0 >= x < 100, representing percent.
@@ -3112,12 +3507,130 @@ namespace DigitalWizardry.LevelGenerator
 				for (x = 0; x < Constants.GridWidth * 2; x++) 
 				{
 					cell = CellAt(x / 2, y);
-					line.Append(x % 2 == 0 ? cell.Type.TextRep : cell.Type.TextRep2);
+
+					if (x % 2 == 0)
+					{  
+						if (cell.Doors != null)
+						{
+							if (cell.Doors.Count == 2)
+							{
+								line.Append("2");
+							}
+							else
+							{
+								CellDoor door = cell.Doors[0];
+								
+								if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == false)
+								{
+									line.Append("d");
+								}
+								else if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == true)
+								{
+									line.Append("o");
+								}
+								else if (door.Type == DoorType.RegularDoor && door.Locked == true)
+								{
+									line.Append("D");
+								}
+								else if (door.Type == DoorType.Portcullis && door.Locked == false && door.Open == false)
+								{
+									line.Append("p");
+								}
+								else if (door.Type == DoorType.Portcullis && door.Locked == false && door.Open == true)
+								{
+									line.Append("b");
+								}
+								else if (door.Type == DoorType.Portcullis && door.Locked == true)
+								{
+									line.Append("P");
+								}
+								else if (door.Type == DoorType.SecretDoor)
+								{
+									line.Append("s");
+								}
+							}
+						}
+						else if (cell.HasKey)
+						{
+								line.Append("K");
+						}
+						else
+						{
+							line.Append(cell.Type.TextRep);
+						}
+					}
+					else
+					{
+						line.Append(cell.Type.TextRep2);
+					}
+
+					// Or, quite simply:
+					// line.Append(x % 2 == 0 ? cell.Type.TextRep : cell.Type.TextRep2);
 				}
 				
 				padding = (y < 10) ? "0" : "";  // For co-ordinate printing.
 				
 				grid.AppendLine(padding + y + line.ToString());
+			}
+			
+			// Now print X co-ordinate names at the bottom.
+			
+			grid.Append("  ");
+			
+			for (x = 0; x < Constants.GridWidth * 2; x++) 
+			{
+				if (x % 2 == 0)
+					grid.Append((x/2)/10);
+				else
+					grid.Append(" "); 
+			}
+			
+			grid.Append("\n  ");
+			
+			for (x = 0; x < Constants.GridWidth * 2; x++) 
+			{
+				if (x % 2 == 0)
+					grid.Append((x/2) % 10);
+				else
+					grid.Append(" "); 
+			}
+
+			return grid.ToString();
+		}
+
+		public string VisualizeAsTextWithDescription()
+		{
+			string padding;
+			StringBuilder grid = new StringBuilder();
+			StringBuilder line = new StringBuilder();
+			Cell cell = CellAt(0, Constants.GridHeight - 1);
+			
+			int x;
+			
+			// Because it is console printing, start with the "top" of the dungeon, and work down.
+			for (int y = Constants.GridHeight - 1; y >= 0; y--) 
+			{
+				for (x = 0; x < Constants.GridWidth * 2; x++) 
+				{
+					if (x % 2 == 0)
+					{
+						cell = CellAt(x / 2, y);
+						line.Append(cell.Descr.TextRep);
+					}
+					else
+					{
+						line.Append(cell.Descr.TextRep);
+					}
+				}
+				
+				padding = (y < 10) ? "0" : "";  // For co-ordinate printing.
+
+				grid.AppendLine(padding + y + line.ToString());
+							
+				if (y >= 0)
+				{
+					line = new StringBuilder();
+				}
 			}
 			
 			// Now print X co-ordinate names at the bottom.

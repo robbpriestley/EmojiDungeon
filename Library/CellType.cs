@@ -214,7 +214,7 @@ namespace DigitalWizardry.LevelGenerator
 			entrance.TraversableUp = true;
 			entrance.TextRep = @"❍";
 			entrance.TextRep2 = @" ";
-			entrance.ForceGrowthCompatible = true;
+			entrance.ForceGrowthCompatible = false;
 			entrance.InitialAvailableConnections = 1;
 			
 			// *** END SPECIAL CELLS ***
