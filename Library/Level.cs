@@ -8,6 +8,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DigitalWizardry.LevelGenerator
 {	
@@ -17,9 +18,9 @@ namespace DigitalWizardry.LevelGenerator
 		private Random R;
 		private Coords StartCoords;
 		private int SequenceNumber;
-		private Cell DownCell;  // The dead-end cell chosen to be replaced with a down stairs.
 		private Double MaxDistance;
-		private Double DownCellDistance;
+		private Cell DownStairsCell;  // The dead-end cell chosen to be replaced with a down stairs.
+		private Double DownStairsCellDistance;
 		private int RoomCount;
 		private int MinesCount;
 		private int CatacombsCount;
@@ -50,8 +51,8 @@ namespace DigitalWizardry.LevelGenerator
 					Initialize();
 					PlaceRooms();
 					GenerateLevel();
-					//PlaceDoors();
-					//LevelSolve();
+					PlaceDoors();
+					LevelSolve();
 					//PlaceKeys();
 					//PlaceDownStairs();
 					//AddDescriptions();
@@ -84,6 +85,8 @@ namespace DigitalWizardry.LevelGenerator
 			Cell newCell = new Cell(StartCoords.X, StartCoords.Y, newType, CellDescriptions.Corridor_TBD);
 
 			SetCellValue(StartCoords.X, StartCoords.Y, newCell);
+
+			CellsWithLockedDoors = new List<Cell>();
 		}
 
 		private void GenerateLevel()
@@ -2581,6 +2584,240 @@ namespace DigitalWizardry.LevelGenerator
 		}
 
 		#endregion
+		#region Doors and Keys
+			
+		// Put in some random doors. Only certain cell descriptions "allow" doors. 
+		// Also, doors should not "cluster" up too much.
+		private void PlaceDoors()
+		{
+			Cell cell;
+			
+			for (int x = 0; x < Constants.GridWidth; x++)
+			{
+				for (int y = 0; y < Constants.GridHeight; y++) 
+				{
+					cell = CellAt(x, y);
+					
+					if (!CellDescriptions.IsMines(cell.Descr) && !(cell.Descr == CellDescriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
+					{
+						cell.Doors = RandomDoorSetup(cell);
+					}
+				}
+			}
+		}
+
+
+		// Don't allow two doors to appear side-by-side if the door is to be placed in a corridor.
+		// Also, don't allow a door to appear in the viscinity of the start cell, because it could
+		// end up being a locked door with no key before it in the dungeon level...
+		private bool SuppressDoor(Cell cell)
+		{
+			// Maintain a 2-cell margin around the start cell.
+			if (cell.Y > this.StartCoords.Y - 2 && cell.Y < this.StartCoords.Y + 2 && 
+				cell.X > this.StartCoords.X - 2 && cell.X < this.StartCoords.X + 2) 
+			{
+				return true;
+			}
+
+			// Cell above.
+			if (cell.Y + 1 < Constants.GridHeight)
+			{
+				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
+				
+				if (cellAbove.Doors != null && cellAbove.Doors.Count > 0)
+				{
+					return true;
+				}
+			}
+			
+			// Cell below.
+			if (cell.Y - 1 >= 0)
+			{
+				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
+				
+				if (cellBelow.Doors != null && cellBelow.Doors.Count > 0)
+				{
+					return true;
+				}
+			}
+			
+			// Cell left.
+			if (cell.X - 1 >= 0)
+			{
+				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
+				
+				if (cellLeft.Doors != null && cellLeft.Doors.Count > 0)
+				{
+					return true;
+				}
+			}
+			
+			// Cell right.
+			if (cell.X + 1 < Constants.GridWidth)
+			{
+				Cell cellRight = CellAt(cell.X + 1, cell.Y);
+				
+				if (cellRight.Doors != null && cellRight.Doors.Count > 0)
+				{
+					return true;
+				}
+			}
+			
+			return false;  // Made it this far...
+		}
+
+
+		private List<CellDoor> RandomDoorSetup(Cell cell)
+		{    
+			List<CellDoor> doors = null;
+			
+			if (cell.Type.ConnectsUp)
+			{
+				CellDoor door = RandomDoor(cell, Direction.Up);
+				
+				if (door != null)
+				{
+					if (doors == null)
+					{
+						doors = new List<CellDoor>();
+					}
+
+					doors.Add(door);
+				}
+			}
+			
+			if (cell.Type.ConnectsDown)
+			{
+				CellDoor door = RandomDoor(cell, Direction.Down);
+				
+				if (door != null)
+				{
+					if (doors == null)
+					{
+						doors = new List<CellDoor>();
+					}
+					
+					doors.Add(door);
+				}
+			}
+			
+			if (cell.Type.ConnectsLeft)
+			{
+				CellDoor door = RandomDoor(cell, Direction.Left);
+				
+				if (door != null)
+				{
+					if (doors == null)
+					{
+						doors = new List<CellDoor>();
+					}
+					
+					doors.Add(door);
+				}
+			}
+			
+			if (cell.Type.ConnectsRight)
+			{
+				CellDoor door = RandomDoor(cell, Direction.Right);
+				
+				if (door != null)
+				{
+					if (doors == null)
+					{
+						doors = new List<CellDoor>();
+					}
+					
+					doors.Add(door);
+				}
+			}
+			
+			return doors;
+		}
+
+
+		private CellDoor RandomDoor(Cell cell, Direction dir)
+		{    
+			if (RandomPercent() >= cell.Type.DoorProb)
+			{
+				return null;
+			}
+			
+			DoorType type;
+			bool open = false, locked = false;
+			
+			int random = RandomPercent();
+			
+			if (random >= 60 && random < 75)
+			{
+				type = DoorType.Portcullis;
+			}
+			else if (random >= 75)
+			{
+				type = DoorType.SecretDoor;
+			}
+			else
+			{
+				type = DoorType.RegularDoor;
+			}
+			
+			if (type == DoorType.RegularDoor || type == DoorType.Portcullis)
+			{
+				locked = RandomPercent() < Constants.DoorLockedProb;
+				
+				if (locked)
+				{
+					CellsWithLockedDoors.Add(cell);
+				}
+				else
+				{
+					open = RandomPercent() < Constants.DoorOpenProb;
+				}
+			}
+			
+			return new CellDoor(dir, open, locked, type);
+		}
+
+
+		private void PlaceKeys()
+		{
+			Cell keyCell;
+			List<Cell> potentials;
+
+			CellsWithLockedDoors = CellsWithLockedDoors.OrderBy(cell => cell.Sequence).ToList();
+			
+			foreach (Cell cell in CellsWithLockedDoors) 
+			{
+				foreach (CellDoor door in cell.Doors) 
+				{
+					potentials = KeyLocationPotentials(cell.Sequence);
+					keyCell = potentials[R.Next(potentials.Count)];  // Pick a key cell at random.
+					keyCell.HasKey = true;
+				}
+			}
+		}
+
+		private List<Cell> KeyLocationPotentials(int endSequence)
+		{
+			Cell cell;
+			List<Cell> potentials = new List<Cell>();
+			
+			for (int x = 0; x < Constants.GridWidth; x++)
+			{
+				for (int y = 0; y < Constants.GridHeight; y++) 
+				{
+					cell = CellAt(x, y);
+					
+					if (cell.Sequence >= 0 && cell.Sequence < endSequence && cell.Doors == null)
+					{
+						potentials.Add(cell);
+					}
+				}
+			}
+			
+			return potentials;
+		}
+
+		#endregion
 		#region Accessors
 
 		private Cell CellAt(int x, int y)
@@ -2716,39 +2953,41 @@ namespace DigitalWizardry.LevelGenerator
 
 		#region Solve
 		
-		// Ensure that every cell in the dungeon is "reachable". If not, start fresh.
-		// Also, check for anomalous disconnected cells. If any are found, scrap the level.
+		// Ensure that every cell in the dungeon is "reachable". If not, start fresh.  
+		// Solving now also involves placing keys in the level prior to corresponding
+		// locked doors, and positioning the down stairs at a suitable location.
 		private void LevelSolve()
 		{
-			SequenceNumber = 0;
+			this.DownStairsCell = null;
+			this.SequenceNumber = 0;
+			this.DownStairsCellDistance = 0;
 			
 			Solve(CellAt(StartCoords.X, StartCoords.Y));
 			
-			for (int Y = 0; Y < Constants.GridHeight; Y++) 
+			for (int y = 0; y < Constants.GridHeight; y++) 
 			{
-				for (int X = 0; X < Constants.GridWidth; X++)
+				for (int x = 0; x < Constants.GridWidth; x++)
 				{
-					if (!CellAt(X, Y).Visited)
+					if (!CellAt(x, y).Visited)
 					{
 						throw new LevelGenerateException();
 					}
 				}
 			}
-			
-			CircularPassagewayCheck();
 		}
 
 		private void Solve(Cell cell)
 		{
-			SequenceNumber++;
-			cell.Sequence = SequenceNumber;
+			this.SequenceNumber++;
+
 			cell.Visited = true;
+			cell.Sequence = SequenceNumber;
 			
 			// Cell above.
 			if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
 			{
 				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
-				// Method connectsCheck was commented out here. Required for rooms?
+				
 				if (!cellAbove.Visited)
 				{
 					Solve(cellAbove);
@@ -2759,7 +2998,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 			{
 				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
-				// Method connectsCheck was commented out here. Required for rooms?
+				
 				if (!cellBelow.Visited)
 				{
 					Solve(cellBelow);
@@ -2770,7 +3009,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 			{
 				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
-				// Method connectsCheck was commented out here. Required for rooms?
+				
 				if (!cellLeft.Visited)
 				{
 					Solve(cellLeft);
@@ -2781,7 +3020,7 @@ namespace DigitalWizardry.LevelGenerator
 			if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
 			{
 				Cell cellRight = CellAt(cell.X + 1, cell.Y);
-				// Method connectsCheck was commented out here. Required for rooms?
+				
 				if (!cellRight.Visited)
 				{
 					Solve(cellRight);
@@ -2789,34 +3028,40 @@ namespace DigitalWizardry.LevelGenerator
 			}
 		}
 
-		private void CircularPassagewayCheck()
+		private void CheckForDownStairsPlacement(Cell cell)
 		{
-			for (int Y = 0; Y < Constants.GridHeight - 1; Y++) 
+			double distance = DistanceFromStartCell(cell);
+			
+			if (distance >= DownStairsCellDistance) 
 			{
-				for (int X = 0; X < Constants.GridWidth - 1; X++)
+				int placementChance = (int)Math.Round((distance * 100) / this.MaxDistance);
+				int random = R.Next(100 + 1);
+				
+				if (random < placementChance && DownStairsCell != null)
 				{
-					Cell cell1 = CellAt(X, Y);
-					Cell cell2 = CellAt(X, Y + 1);
-					Cell cell3 = CellAt(X + 1, Y + 1);
-					Cell cell4 = CellAt(X + 1, Y);
-					
-					if 
-					(
-						cell1.Type.ConnectsTo(cell2.Type, Direction.Up) &&
-						cell2.Type.ConnectsTo(cell3.Type, Direction.Right) &&
-						cell3.Type.ConnectsTo(cell4.Type, Direction.Down) &&
-						cell4.Type.ConnectsTo(cell1.Type, Direction.Left)
-					)
-					{
-						throw new LevelGenerateException();
-					}
+					return;
 				}
+				
+				DownStairsCell = cell;
+				DownStairsCellDistance = distance;
 			}
-		}	
+		}
+
+		private double DistanceFromStartCell(Cell cell)
+		{
+			// distance = SQRT[(x2 - x1)^2 + (y2 - y1)^2]
+			return Math.Abs(Math.Sqrt(Math.Pow(cell.X - this.StartCoords.X, 2) + Math.Pow(cell.Y - this.StartCoords.Y, 2)));
+		}
 
 		#endregion
 
 		#region Utility
+
+		// Returns a random number 0 >= x < 100, representing percent.
+		private int RandomPercent()
+		{
+			return R.Next(100);
+		}
 
 		private bool RandomBool()
 		{
