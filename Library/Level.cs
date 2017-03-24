@@ -53,8 +53,8 @@ namespace DigitalWizardry.LevelGenerator
 					GenerateLevel();
 					PlaceDoors();
 					LevelSolve();
-					//PlaceKeys();
-					//PlaceDownStairs();
+					PlaceKeys();
+					PlaceDownStairs();
 					//AddDescriptions();
 					levelComplete = true;  // i.e. no exceptions...
 				}
@@ -211,6 +211,17 @@ namespace DigitalWizardry.LevelGenerator
 					cellRight.AvailableConnections--;
 				}
 			}
+		}
+
+		// Set a down stairs at the farthest possible location from the start cell.
+		private void PlaceDownStairs()
+		{
+			Cell newCell;
+			CellType newType;
+			
+			newType = CellTypes.ConvDeadEndToDownStairs(this.DownStairsCell.Type);
+			newCell = new Cell(DownStairsCell.X, DownStairsCell.Y, newType, DownStairsCell.Descr);
+			SetCellValue(DownStairsCell.X, DownStairsCell.Y, newCell);
 		}
 
 		#region Randomization
