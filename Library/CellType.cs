@@ -72,11 +72,9 @@ namespace DigitalWizardry.LevelGenerator
 				   not, that's bad).
 			*/
 			
-			// Also, two junctions cannot appear side-by-side.
-			if (this.IsJunction && otherCell.IsJunction) 
-			{
-				return false;
-			}
+			// This code snippet will suppress side-by-side junctions, useful perhaps in maze-only levels,
+			// but it will also cause certain levels with rooms to go into an infinite loop.
+			// if (this.IsJunction && otherCell.IsJunction) { return false; }
 			
 			if (otherCell.IsEmpty)
 			{

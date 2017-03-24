@@ -438,16 +438,16 @@ namespace DigitalWizardry.LevelGenerator
 			Rooms = new List<Room>();
 			
 			CalcRooms();
-			PlaceMines();
+			//PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
 			//PlaceRoundRoom();
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
-			ConnectMines();
-			CleanRoomsArray();
-			ConvertRoomsToCatacombs();
+			//ConnectMines();
+			//CleanRoomsArray();
+			//ConvertRoomsToCatacombs();
 		}
 
 		private void CalcRooms()
