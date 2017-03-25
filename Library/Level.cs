@@ -59,7 +59,7 @@ namespace DigitalWizardry.Dungeon
 					AddDescriptions();
 					levelComplete = true;  // i.e. No exceptions...
 				}
-				catch (LevelGenerateException) 
+				catch (DungeonBuildException) 
 				{
 					levelComplete = false;  // Try again.
 				}
@@ -420,7 +420,7 @@ namespace DigitalWizardry.Dungeon
 						// "dungeon augmentation" by swapping corridor types for empty cells. But, that would 
 						// involve a bunch of programming. Before I resort to that, I'm going to see how
 						// feasible it is to simply abandon this "failed" dungeon level and start fresh...
-						throw new LevelGenerateException();
+						throw new DungeonBuildException();
 					}
 				}
 			}
@@ -530,7 +530,7 @@ namespace DigitalWizardry.Dungeon
 				
 				if (!placed)
 				{
-					throw new LevelGenerateException();
+					throw new DungeonBuildException();
 				}
 			}
 		}
@@ -1477,7 +1477,7 @@ namespace DigitalWizardry.Dungeon
 						catch (Exception) 
 						{
 							// Anything that's this bad that happens here, start over...
-							throw new LevelGenerateException();
+							throw new DungeonBuildException();
 						}
 					}
 				}
@@ -1499,7 +1499,7 @@ namespace DigitalWizardry.Dungeon
 				// times when the traverse attempts to exceed the size of the dungeon level.
 				if (y < 0 || y >= Constants.GridHeight || x < 0 || x >= Constants.GridWidth)
 				{
-					throw new LevelGenerateException();
+					throw new DungeonBuildException();
 				}
 				
 				currentCell = CellAt(x, y);
@@ -1510,7 +1510,7 @@ namespace DigitalWizardry.Dungeon
 				// the way the "sub-rooms" were "plunked" down on the level. Irrecoverable. Abort.
 				if (currentCell.Merged && room.Walls.Contains(currentCell))
 				{
-					throw new LevelGenerateException();
+					throw new DungeonBuildException();
 				}
 				
 				cellUp = y + 1 >= 0 && y + 1 < Constants.GridHeight && x >= 0 && x < Constants.GridWidth 
@@ -1750,7 +1750,7 @@ namespace DigitalWizardry.Dungeon
 				
 				if (x == newX && y == newY)  // Going nowhere? This room is bitched.
 				{
-					throw new LevelGenerateException();
+					throw new DungeonBuildException();
 				}
 				else
 				{
@@ -2047,7 +2047,7 @@ namespace DigitalWizardry.Dungeon
 					
 					if (x == newX && y == newY)  // Going nowhere? This room is bitched.
 					{
-						throw new LevelGenerateException();
+						throw new DungeonBuildException();
 					}
 					else
 					{
@@ -2129,7 +2129,7 @@ namespace DigitalWizardry.Dungeon
 				// impossible to place an exit there, the room cannot be reached. Start over.
 				if (!exitPossible || walls.Count == 0) 
 				{
-					throw new LevelGenerateException();
+					throw new DungeonBuildException();
 				}
 				
 				Cell cell = walls[this.R.Next(walls.Count)];
@@ -2390,7 +2390,7 @@ namespace DigitalWizardry.Dungeon
 			// No point in trying to force connect two special rooms, they won't join anyways.
 			if (CellDescriptions.IsMines(cell.Descr) && CellDescriptions.IsMines(adjacent.Descr))
 			{
-				throw new LevelGenerateException();
+				throw new DungeonBuildException();
 			}
 			
 			if (adjacent.Type.IsEmpty || cell.Type.ConnectsTo(adjacent.Type, dir))
@@ -2965,7 +2965,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					if (!CellAt(x, y).Visited)
 					{
-						throw new LevelGenerateException();
+						throw new DungeonBuildException();
 					}
 				}
 			}
@@ -3347,7 +3347,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (CellTypes.IsFloodingIncompatible(cell.Type) || cell.Type == CellTypes.Entrance)
 				{
-					throw new LevelGenerateException();  // Except when the cell cannot be flooded.
+					throw new DungeonBuildException();  // Except when the cell cannot be flooded.
 				}
 				else
 				{
@@ -3669,8 +3669,8 @@ namespace DigitalWizardry.Dungeon
 		#endregion
 	}
 
-	public class LevelGenerateException : Exception
+	public class DungeonBuildException : Exception
 	{
-		public LevelGenerateException() : base() {}
+		public DungeonBuildException() : base() {}
 	}
 }

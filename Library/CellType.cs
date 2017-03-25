@@ -1037,51 +1037,89 @@ namespace DigitalWizardry.Dungeon
 			CellType exit;
 			
 			if (wall == RoomWallU)
+			{
 				exit = RoomExitU;
+			}
 			else if (wall == RoomWallD)
+			{
 				exit = RoomExitD;
+			}
 			else if (wall == RoomWallL)
+			{
 				exit = RoomExitL; 
+			}
 			else if (wall == RoomWallR)
+			{
 				exit = RoomExitR;
-		
+			}
 			else if (wall == RoomWallUL && dir == Direction.Up)
+			{
 				exit = RoomExitUL_U;
+			}
 			else if (wall == RoomWallUL && dir == Direction.Left)
+			{
 				exit = RoomExitUL_L;
+			}
 			else if (wall == RoomWallUR && dir == Direction.Up) 
+			{
 				exit = RoomExitUR_U;
+			}
 			else if (wall == RoomWallUR && dir == Direction.Right)
+			{
 				exit = RoomExitUR_R;
+			}
 			else if (wall == RoomWallDL && dir == Direction.Down)
+			{
 				exit = RoomExitDL_D;
+			}
 			else if (wall == RoomWallDL && dir == Direction.Left)
+			{
 				exit = RoomExitDL_L;
+			}
 			else if (wall == RoomWallDR && dir == Direction.Down)
+			{
 				exit = RoomExitDR_D;
+			}
 			else if (wall == RoomWallDR && dir == Direction.Right)
+			{
 				exit = RoomExitDR_R;
-			
+			}
 			else if (wall == RoomWallUL && dir == Direction.UpLeft)
+			{
 				exit = RoomExitUL_UL;
+			}
 			else if (wall == RoomWallUR && dir == Direction.UpRight) 
+			{
 				exit = RoomExitUR_UR;
+			}
 			else if (wall == RoomWallDL && dir == Direction.DownLeft)
+			{
 				exit = RoomExitDL_DL;
+			}
 			else if (wall == RoomWallDR && dir == Direction.DownRight)
+			{
 				exit = RoomExitDR_DR;
-			
+			}
 			else if ((wall == RoomExitUL_U && dir == Direction.Left) || (wall == RoomExitUL_L && dir == Direction.Up))
+			{
 				exit = RoomExitUL_UL;
+			}
 			else if ((wall == RoomExitUR_U && dir == Direction.Right) || (wall == RoomExitUR_R && dir == Direction.Up))
+			{
 				exit = RoomExitUR_UR;
+			}
 			else if ((wall == RoomExitDL_D && dir == Direction.Left) || (wall == RoomExitDL_L && dir == Direction.Down))
+			{
 				exit = RoomExitDL_DL;
+			}
 			else if ((wall == RoomExitDR_D && dir == Direction.Right) || (wall == RoomExitDR_R && dir == Direction.Down))
+			{
 				exit = RoomExitDR_DR;
-			
+			}
 			else
+			{
 				exit = Inter;
+			}
 			
 			return exit;
 		}
@@ -1091,51 +1129,89 @@ namespace DigitalWizardry.Dungeon
 			CellType wall;
 			
 			if (exit == RoomExitU)
+			{
 				wall = RoomWallU;
+			}
 			else if (exit == RoomExitD)
+			{
 				wall = RoomWallD;
+			}
 			else if (exit == RoomExitL)
+			{
 				wall = RoomWallL; 
+			}
 			else if (exit == RoomExitR)
+			{
 				wall = RoomWallR; 
-			
+			}
 			else if (dir == Direction.Up && exit == Inter && descr == CellDescriptions.Mines_Vert)
+			{
 				wall = JuncDLR;
+			}
 			else if (dir == Direction.Down && exit == Inter && descr == CellDescriptions.Mines_Vert)
+			{
 				wall = JuncULR;
+			}
 			else if (dir == Direction.Left && exit == Inter && descr == CellDescriptions.Mines_Horiz)
+			{
 				wall = JuncUDR;
+			}
 			else if (dir == Direction.Right && exit == Inter && descr == CellDescriptions.Mines_Horiz)
+			{
 				wall = JuncUDL;
-			
+			}
 			else if (exit == RoomExitUL_U || exit == RoomExitUL_L)
+			{
 				wall = RoomWallUL;
+			}
 			else if (exit == RoomExitUR_U || exit == RoomExitUR_R)
+			{
 				wall = RoomWallUR;
+			}
 			else if (exit == RoomExitDL_D || exit == RoomExitDL_L)
+			{
 				wall = RoomWallDL;
+			}
 			else if (exit == RoomExitDR_D || exit == RoomExitDR_R)
+			{
 				wall = RoomWallDR;
-			
+			}
 			else if (exit == RoomExitUL_UL && dir == Direction.Up)
+			{
 				wall = RoomExitUL_L;
+			}
 			else if (exit == RoomExitUL_UL && dir == Direction.Left)
+			{
 				wall = RoomExitUL_U;
+			}
 			else if (exit == RoomExitUR_UR && dir == Direction.Up)
+			{
 				wall = RoomExitUR_R;
+			}
 			else if (exit == RoomExitUR_UR && dir == Direction.Right)
+			{
 				wall = RoomExitUR_U;
+			}
 			else if (exit == RoomExitDL_DL && dir == Direction.Down)
+			{
 				wall = RoomExitDL_L;
+			}
 			else if (exit == RoomExitDL_DL && dir == Direction.Left)
+			{
 				wall = RoomExitDL_D;
+			}
 			else if (exit == RoomExitDR_DR && dir == Direction.Down)
+			{
 				wall = RoomExitDR_R;
+			}
 			else if (exit == RoomExitDR_DR && dir == Direction.Right)
+			{
 				wall = RoomExitDR_D;
-			
+			}
 			else
-				throw new LevelGenerateException();  // Unknown... scrap it (never happens).
+			{
+				throw new DungeonBuildException();  // Unknown... scrap it (never happens).
+			}
 			
 			return wall;
 		}
@@ -1145,13 +1221,21 @@ namespace DigitalWizardry.Dungeon
 			CellType stairs = null;
 			
 			if (deadEnd == DeadU)
+			{
 				stairs = DownStairU;
+			}
 			else if (deadEnd == DeadD)
+			{
 				stairs = DownStairD;
+			}
 			else if (deadEnd == DeadL)
+			{
 				stairs = DownStairL; 
+			}
 			else if (deadEnd == DeadR)
+			{
 				stairs = DownStairR; 
+			}
 			
 			return stairs;
 		}
@@ -1213,37 +1297,69 @@ namespace DigitalWizardry.Dungeon
 			Direction dir = Direction.Up;
 			
 			if (type == RoomWallU)
+			{
 				dir = Direction.Up;
+			}
 			else if (type == RoomWallD)
+			{
 				dir = Direction.Down;
+			}
 			else if (type == RoomWallL)
+			{
 				dir = Direction.Left;
+			}
 			else if (type == RoomWallR)
+			{
 				dir = Direction.Right;
+			}
 			else if (type == RoomWallU_Round)
+			{
 				dir = Direction.Up;
+			}
 			else if (type == RoomWallD_Round)
+			{
 				dir = Direction.Down;
+			}
 			else if (type == RoomWallL_Round)
+			{
 				dir = Direction.Left;
+			}
 			else if (type == RoomWallR_Round)
+			{
 				dir = Direction.Right;
+			}
 			else if (type == RoomWallUL)
+			{
 				dir = Direction.UpLeft;
+			}
 			else if (type == RoomWallUR)
+			{
 				dir = Direction.UpRight;
+			}
 			else if (type == RoomWallDL)
+			{
 				dir = Direction.DownLeft;
+			}
 			else if (type == RoomWallDR)
+			{
 				dir = Direction.DownRight;
+			}
 			else if (type == RoomWallUL_Round)
+			{
 				dir = Direction.UpLeft;
+			}
 			else if (type == RoomWallUR_Round)
+			{
 				dir = Direction.UpRight;
+			}
 			else if (type == RoomWallDL_Round)
+			{
 				dir = Direction.DownLeft;
+			}
 			else if (type == RoomWallDR_Round)
+			{
 				dir = Direction.DownRight;
+			}
 			
 			return dir;
 		}
@@ -1253,45 +1369,73 @@ namespace DigitalWizardry.Dungeon
 			CellType catacomb;
 			
 			if (roomType == RoomWallU) 
+			{
 				catacomb = JuncDLR;
+			}
 			else if (roomType == RoomWallD)
+			{
 				catacomb = JuncULR;
+			}
 			else if (roomType == RoomWallL) 
+			{
 				catacomb = JuncUDR;
+			}
 			else if (roomType == RoomWallR)
+			{
 				catacomb = JuncUDL;
-			
+			}
 			else if (roomType == RoomWallUL)
+			{
 				catacomb = ElbDR;
+			}
 			else if (roomType == RoomWallUR) 
+			{
 				catacomb = ElbDL;
+			}
 			else if (roomType == RoomWallDL)
+			{
 				catacomb = ElbUR;
+			}
 			else if (roomType == RoomWallDR)
+			{
 				catacomb = ElbUL;
-			
+			}
 			else if (roomType == RoomExitUL_U)
+			{
 				catacomb = JuncUDR;
+			}
 			else if (roomType == RoomExitUL_L) 
+			{
 				catacomb = JuncDLR;
-		
+			}
 			else if (roomType == RoomExitUR_U)
+			{
 				catacomb = JuncUDL;
+			}
 			else if (roomType == RoomExitUR_R) 
+			{
 				catacomb = JuncDLR;
-		
+			}
 			else if (roomType == RoomExitDL_D)
+			{
 				catacomb = JuncUDR;
+			}
 			else if (roomType == RoomExitDL_L) 
+			{
 				catacomb = JuncULR;
-		
+			}
 			else if (roomType == RoomExitDR_D)
+			{
 				catacomb = JuncUDL;
+			}
 			else if (roomType == RoomExitDR_R) 
+			{
 				catacomb = JuncULR;
-			
+			}
 			else
+			{
 				catacomb = Inter;
+			}
 			
 			return catacomb;
 		}
