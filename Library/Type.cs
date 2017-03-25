@@ -46,7 +46,7 @@ namespace DigitalWizardry.Dungeon
 
 		public Type()
 		{
-        	ForceGrowthCompatible = true;
+        	ForceGrowthCompatible = true;  // Attention! This is the only bool member which is initialized to true.
 			RoomWallDirection = Direction.NoDir;
 		}
 
@@ -477,7 +477,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallU_Round.TraversableDown = true;
 			RoomWallU_Round.TraversableLeft = true;
 			RoomWallU_Round.TraversableRight = true;
-			RoomWallU_Round.RoomExitCompatible = false;
 			RoomWallU_Round.RoomConnectsLeft = true;
 			RoomWallU_Round.RoomConnectsRight = true;
 			RoomWallU_Round.TextRep = "┉";
@@ -489,7 +488,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallD_Round.TraversableUp = true;
 			RoomWallD_Round.TraversableLeft = true;
 			RoomWallD_Round.TraversableRight = true;
-			RoomWallD_Round.RoomExitCompatible = false;
 			RoomWallD_Round.RoomConnectsLeft = true;
 			RoomWallD_Round.RoomConnectsRight = true;
 			RoomWallD_Round.TextRep = "┉";
@@ -501,7 +499,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallL_Round.TraversableUp = true;
 			RoomWallL_Round.TraversableDown = true;
 			RoomWallL_Round.TraversableRight = true;
-			RoomWallL_Round.RoomExitCompatible = false;
 			RoomWallL_Round.RoomConnectsUp = true;
 			RoomWallL_Round.RoomConnectsDown = true;
 			RoomWallL_Round.TextRep = "┋";
@@ -513,7 +510,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallR_Round.TraversableUp = true;
 			RoomWallR_Round.TraversableDown = true;
 			RoomWallR_Round.TraversableLeft = true;
-			RoomWallR_Round.RoomExitCompatible = false;
 			RoomWallR_Round.RoomConnectsUp = true;
 			RoomWallR_Round.RoomConnectsDown = true;
 			RoomWallR_Round.TextRep = "┋";
@@ -572,7 +568,6 @@ namespace DigitalWizardry.Dungeon
 			
 			RoomWallUL_Round.TraversableDown = true;
 			RoomWallUL_Round.TraversableRight = true;
-			RoomWallUL_Round.RoomExitCompatible = false;
 			RoomWallUL_Round.RoomConnectsDown = true;
 			RoomWallUL_Round.RoomConnectsRight = true;
 			RoomWallUL_Round.TextRep = "╭";
@@ -584,7 +579,6 @@ namespace DigitalWizardry.Dungeon
 			
 			RoomWallUR_Round.TraversableDown = true;
 			RoomWallUR_Round.TraversableLeft = true;
-			RoomWallUR_Round.RoomExitCompatible = false;
 			RoomWallUR_Round.RoomConnectsDown = true;
 			RoomWallUR_Round.RoomConnectsLeft = true;
 			RoomWallUR_Round.TextRep = "╮";
@@ -596,7 +590,6 @@ namespace DigitalWizardry.Dungeon
 			
 			RoomWallDL_Round.TraversableUp = true;
 			RoomWallDL_Round.TraversableRight = true;
-			RoomWallDL_Round.RoomExitCompatible = false;
 			RoomWallDL_Round.RoomConnectsUp = true;
 			RoomWallDL_Round.RoomConnectsRight = true;
 			RoomWallDL_Round.TextRep = "╰";
@@ -608,7 +601,6 @@ namespace DigitalWizardry.Dungeon
 			
 			RoomWallDR_Round.TraversableUp = true;
 			RoomWallDR_Round.TraversableLeft = true;
-			RoomWallDR_Round.RoomExitCompatible = false;
 			RoomWallDR_Round.RoomConnectsUp = true;
 			RoomWallDR_Round.RoomConnectsLeft = true;
 			RoomWallDR_Round.TextRep = "╯";
