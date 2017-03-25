@@ -21,7 +21,14 @@ namespace DigitalWizardry.Dungeon
 		public int DoorProb;
 		public bool IsEmpty;
 		public bool IsJunction;
+		public bool IsDeadEnd;
+		public bool IsRoomType;
 		public bool IsRoomExit;
+		public bool IsRoomCorner;
+		public Direction RoomWallDirection;
+		public bool IsCleanStartWall;
+		public bool IsFloodingTransition;
+		public bool IsFloodingIncompatible;
 		public bool RoomExitCompatible;
 		public bool ForceGrowthCompatible;  // Can be substituted for another cell to increase dungeon fill.
 		public string TextRep;
@@ -31,6 +38,7 @@ namespace DigitalWizardry.Dungeon
 		public Type()
 		{
         	ForceGrowthCompatible = true;
+			RoomWallDirection = Direction.NoDir;
 		}
 
 		public bool ConnectsTo(Type otherCell, Direction direction)
@@ -220,6 +228,7 @@ namespace DigitalWizardry.Dungeon
 			Vert.TraversableDown = true;
 			Vert.TextRep = @"║";
 			Vert.TextRep2 = @" ";
+			Vert.IsFloodingTransition = true;
 			Vert.InitialAvailableConnections = 2;
 			
 			Horiz.Weight = 100;
@@ -229,6 +238,7 @@ namespace DigitalWizardry.Dungeon
 			Horiz.TraversableRight = true;
 			Horiz.TextRep = @"═";
 			Horiz.TextRep2 = @"═";
+			Horiz.IsFloodingTransition = true;
 			Horiz.InitialAvailableConnections = 2;
 			
 			Inter.Weight = 20;
@@ -243,6 +253,7 @@ namespace DigitalWizardry.Dungeon
 			Inter.TextRep = @"╬";
 			Inter.TextRep2 = @"═";
 			Inter.IsJunction = true;
+			Inter.IsRoomExit = true;
 			Inter.InitialAvailableConnections = 4;
 			
 			JuncULR.Weight = 20;
@@ -337,6 +348,7 @@ namespace DigitalWizardry.Dungeon
 			DeadU.TraversableUp = true;
 			DeadU.TextRep = @"╨";
 			DeadU.TextRep2 = @" ";
+			DeadU.IsDeadEnd = true;
 			DeadU.InitialAvailableConnections = 1;
 			
 			DeadD.Weight = 1;
@@ -344,6 +356,7 @@ namespace DigitalWizardry.Dungeon
 			DeadD.TraversableDown = true;
 			DeadD.TextRep = @"╥";
 			DeadD.TextRep2 = @" ";
+			DeadD.IsDeadEnd = true;
 			DeadD.InitialAvailableConnections = 1;
 			
 			DeadL.Weight = 1;
@@ -351,6 +364,7 @@ namespace DigitalWizardry.Dungeon
 			DeadL.TraversableLeft = true;
 			DeadL.TextRep = @"╡";
 			DeadL.TextRep2 = @" ";
+			DeadL.IsDeadEnd = true;
 			DeadL.InitialAvailableConnections = 1;
 			
 			DeadR.Weight = 1;
@@ -358,6 +372,7 @@ namespace DigitalWizardry.Dungeon
 			DeadR.TraversableRight = true;
 			DeadR.TextRep = @"╞";
 			DeadR.TextRep2 = @"═";
+			DeadR.IsDeadEnd = true;
 			DeadR.InitialAvailableConnections = 1;
 			
 			DeadexU.ConnectsUp = true;
@@ -389,6 +404,7 @@ namespace DigitalWizardry.Dungeon
 			RoomSpace.TraversableRight = true;
 			RoomSpace.TextRep = " ";
 			RoomSpace.TextRep2 = " ";
+			RoomSpace.IsRoomType = true;
 			RoomSpace.ForceGrowthCompatible = false;
 			
 			Fountain.TraversableUp = true;
@@ -397,8 +413,9 @@ namespace DigitalWizardry.Dungeon
 			Fountain.TraversableRight = true;
 			Fountain.TextRep = "F";
 			Fountain.TextRep2 = " ";
+			Fountain.IsRoomType = true;
 			Fountain.ForceGrowthCompatible = false;
-			
+		
 			RoomWallU.TraversableDown = true;
 			RoomWallU.TraversableLeft = true;
 			RoomWallU.TraversableRight = true;
@@ -407,7 +424,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallU.RoomConnectsRight = true;
 			RoomWallU.TextRep = "─";
 			RoomWallU.TextRep2 = "─";
+			RoomWallU.IsRoomType = true;
 			RoomWallU.ForceGrowthCompatible = false;
+			RoomWallU.RoomWallDirection = Direction.Up;
 			
 			RoomWallD.TraversableUp = true;
 			RoomWallD.TraversableLeft = true;
@@ -417,7 +436,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallD.RoomConnectsRight = true;
 			RoomWallD.TextRep = "─";
 			RoomWallD.TextRep2 = "─";
+			RoomWallD.IsRoomType = true;
+			RoomWallD.IsCleanStartWall = true;
 			RoomWallD.ForceGrowthCompatible = false;
+			RoomWallD.RoomWallDirection = Direction.Down;
 			
 			RoomWallL.TraversableUp = true;
 			RoomWallL.TraversableDown = true;
@@ -427,7 +449,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallL.RoomConnectsDown = true;
 			RoomWallL.TextRep = "│";
 			RoomWallL.TextRep2 = " ";
+			RoomWallL.IsRoomType = true;
 			RoomWallL.ForceGrowthCompatible = false;
+			RoomWallL.RoomWallDirection = Direction.Left;
 			
 			RoomWallR.TraversableUp = true;
 			RoomWallR.TraversableDown = true;
@@ -437,8 +461,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallR.RoomConnectsDown = true;
 			RoomWallR.TextRep = "│";
 			RoomWallR.TextRep2 = " ";
+			RoomWallR.IsRoomType = true;
 			RoomWallR.ForceGrowthCompatible = false;
-			
+			RoomWallR.RoomWallDirection = Direction.Right;
+
 			RoomWallU_Round.TraversableDown = true;
 			RoomWallU_Round.TraversableLeft = true;
 			RoomWallU_Round.TraversableRight = true;
@@ -447,7 +473,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallU_Round.RoomConnectsRight = true;
 			RoomWallU_Round.TextRep = "┉";
 			RoomWallU_Round.TextRep2 = "┉";
+			RoomWallU_Round.IsRoomType = true;
 			RoomWallU_Round.ForceGrowthCompatible = false;
+			RoomWallU_Round.RoomWallDirection = Direction.Up;
 			
 			RoomWallD_Round.TraversableUp = true;
 			RoomWallD_Round.TraversableLeft = true;
@@ -457,7 +485,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallD_Round.RoomConnectsRight = true;
 			RoomWallD_Round.TextRep = "┉";
 			RoomWallD_Round.TextRep2 = "┉";
+			RoomWallD_Round.IsRoomType = true;
 			RoomWallD_Round.ForceGrowthCompatible = false;
+			RoomWallD_Round.RoomWallDirection = Direction.Down;
 			
 			RoomWallL_Round.TraversableUp = true;
 			RoomWallL_Round.TraversableDown = true;
@@ -467,7 +497,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallL_Round.RoomConnectsDown = true;
 			RoomWallL_Round.TextRep = "┋";
 			RoomWallL_Round.TextRep2 = " ";
+			RoomWallL_Round.IsRoomType = true;
 			RoomWallL_Round.ForceGrowthCompatible = false;
+			RoomWallL_Round.RoomWallDirection = Direction.Left;
 			
 			RoomWallR_Round.TraversableUp = true;
 			RoomWallR_Round.TraversableDown = true;
@@ -477,8 +509,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallR_Round.RoomConnectsDown = true;
 			RoomWallR_Round.TextRep = "┋";
 			RoomWallR_Round.TextRep2 = " ";
+			RoomWallR_Round.IsRoomType = true;
 			RoomWallR_Round.ForceGrowthCompatible = false;
-			
+			RoomWallR_Round.RoomWallDirection = Direction.Right;
+	
 			RoomWallUL.TraversableDown = true;
 			RoomWallUL.TraversableRight = true;
 			RoomWallUL.RoomExitCompatible = true;
@@ -486,7 +520,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUL.RoomConnectsRight = true;
 			RoomWallUL.TextRep = "┌";
 			RoomWallUL.TextRep2 = "─";
+			RoomWallUL.IsRoomType = true;
+			RoomWallUL.IsRoomCorner = true;
 			RoomWallUL.ForceGrowthCompatible = false;
+			RoomWallUL.RoomWallDirection = Direction.UpLeft;
 			
 			RoomWallUR.TraversableDown = true;
 			RoomWallUR.TraversableLeft = true;
@@ -495,7 +532,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUR.RoomConnectsLeft = true;
 			RoomWallUR.TextRep = "┐";
 			RoomWallUR.TextRep2 = " ";
+			RoomWallUR.IsRoomType = true;
+			RoomWallUR.IsRoomCorner = true;
 			RoomWallUR.ForceGrowthCompatible = false;
+			RoomWallUR.RoomWallDirection = Direction.UpRight;
 			
 			RoomWallDL.TraversableUp = true;
 			RoomWallDL.TraversableRight = true;
@@ -504,7 +544,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDL.RoomConnectsRight = true;
 			RoomWallDL.TextRep = "└";
 			RoomWallDL.TextRep2 = "─";
+			RoomWallDL.IsRoomType = true;
+			RoomWallDL.IsRoomCorner = true;
 			RoomWallDL.ForceGrowthCompatible = false;
+			RoomWallDL.RoomWallDirection = Direction.DownLeft;
 			
 			RoomWallDR.TraversableUp = true;
 			RoomWallDR.TraversableLeft = true;
@@ -513,7 +556,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDR.RoomConnectsLeft = true;
 			RoomWallDR.TextRep = "┘";
 			RoomWallDR.TextRep2 = " ";
+			RoomWallDR.IsRoomType = true;
+			RoomWallDR.IsRoomCorner = true;
 			RoomWallDR.ForceGrowthCompatible = false;
+			RoomWallDR.RoomWallDirection = Direction.DownRight;
 			
 			RoomWallUL_Round.TraversableDown = true;
 			RoomWallUL_Round.TraversableRight = true;
@@ -522,7 +568,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUL_Round.RoomConnectsRight = true;
 			RoomWallUL_Round.TextRep = "╭";
 			RoomWallUL_Round.TextRep2 = "─";
+			RoomWallUL_Round.IsRoomType = true;
+			RoomWallUL_Round.IsRoomCorner = true;
 			RoomWallUL_Round.ForceGrowthCompatible = false;
+			RoomWallUL_Round.RoomWallDirection = Direction.UpLeft;
 			
 			RoomWallUR_Round.TraversableDown = true;
 			RoomWallUR_Round.TraversableLeft = true;
@@ -531,7 +580,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUR_Round.RoomConnectsLeft = true;
 			RoomWallUR_Round.TextRep = "╮";
 			RoomWallUR_Round.TextRep2 = " ";
+			RoomWallUR_Round.IsRoomType = true;
+			RoomWallUR_Round.IsRoomCorner = true;
 			RoomWallUR_Round.ForceGrowthCompatible = false;
+			RoomWallUR_Round.RoomWallDirection = Direction.UpRight;
 			
 			RoomWallDL_Round.TraversableUp = true;
 			RoomWallDL_Round.TraversableRight = true;
@@ -540,7 +592,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDL_Round.RoomConnectsRight = true;
 			RoomWallDL_Round.TextRep = "╰";
 			RoomWallDL_Round.TextRep2 = "─";
+			RoomWallDL_Round.IsRoomType = true;
+			RoomWallDL_Round.IsRoomCorner = true;
 			RoomWallDL_Round.ForceGrowthCompatible = false;
+			RoomWallDL_Round.RoomWallDirection = Direction.DownLeft;
 			
 			RoomWallDR_Round.TraversableUp = true;
 			RoomWallDR_Round.TraversableLeft = true;
@@ -549,7 +604,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDR_Round.RoomConnectsLeft = true;
 			RoomWallDR_Round.TextRep = "╯";
 			RoomWallDR_Round.TextRep2 = " ";
+			RoomWallDR_Round.IsRoomType = true;
+			RoomWallDR_Round.IsRoomCorner = true;
 			RoomWallDR_Round.ForceGrowthCompatible = false;
+			RoomWallDR_Round.RoomWallDirection = Direction.DownRight;
 			
 			RoomWallULinv.TraversableDown = true;
 			RoomWallULinv.TraversableRight = true;
@@ -557,6 +615,8 @@ namespace DigitalWizardry.Dungeon
 			RoomWallULinv.RoomConnectsRight = true;
 			RoomWallULinv.TextRep = "┌";
 			RoomWallULinv.TextRep2 = "─";
+			RoomWallULinv.IsRoomType = true;
+			RoomWallULinv.IsCleanStartWall = true;
 			RoomWallULinv.ForceGrowthCompatible = false;
 			
 			RoomWallURinv.TraversableDown = true;
@@ -565,6 +625,8 @@ namespace DigitalWizardry.Dungeon
 			RoomWallURinv.RoomConnectsLeft = true;
 			RoomWallURinv.TextRep = "┐";
 			RoomWallURinv.TextRep2 = " ";
+			RoomWallURinv.IsRoomType = true;
+			RoomWallURinv.IsCleanStartWall = true;
 			RoomWallURinv.ForceGrowthCompatible = false;
 			
 			RoomWallDLinv.TraversableUp = true;
@@ -573,6 +635,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDLinv.RoomConnectsRight = true;
 			RoomWallDLinv.TextRep = "└";
 			RoomWallDLinv.TextRep2 = "─";
+			RoomWallDLinv.IsRoomType = true;
 			RoomWallDLinv.ForceGrowthCompatible = false;
 			
 			RoomWallDRinv.TraversableUp = true;
@@ -581,6 +644,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDRinv.RoomConnectsLeft = true;
 			RoomWallDRinv.TextRep = "┘";
 			RoomWallDRinv.TextRep2 = " ";
+			RoomWallDRinv.IsRoomType = true;
 			RoomWallDRinv.ForceGrowthCompatible = false;
 			
 			RoomExitU.ConnectsUp = true;
@@ -594,6 +658,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitU.TextRep = "╨";
 			RoomExitU.TextRep2 = "─";
 			RoomExitU.DoorProb = 50;
+			RoomExitU.IsRoomType = true;
 			RoomExitU.IsRoomExit = true;
 			RoomExitU.ForceGrowthCompatible = false;
 			
@@ -608,7 +673,9 @@ namespace DigitalWizardry.Dungeon
 			RoomExitD.TextRep = "╥";
 			RoomExitD.TextRep2 = "─";
 			RoomExitD.DoorProb = 50;
+			RoomExitD.IsRoomType = true;
 			RoomExitD.IsRoomExit = true;
+			RoomExitD.IsCleanStartWall = true;
 			RoomExitD.ForceGrowthCompatible = false;
 			
 			RoomExitL.ConnectsLeft = true;
@@ -622,6 +689,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitL.TextRep = "╡";
 			RoomExitL.TextRep2 = " ";
 			RoomExitL.DoorProb = 50;
+			RoomExitL.IsRoomType = true;
 			RoomExitL.IsRoomExit = true;
 			RoomExitL.ForceGrowthCompatible = false;
 			
@@ -636,6 +704,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR.TextRep = "╞";
 			RoomExitR.TextRep2 = "═";
 			RoomExitR.DoorProb = 50;
+			RoomExitR.IsRoomType = true;
 			RoomExitR.IsRoomExit = true;
 			RoomExitR.ForceGrowthCompatible = false;
 			
@@ -650,7 +719,9 @@ namespace DigitalWizardry.Dungeon
 			RoomExitU_Round.TextRep = "╨";
 			RoomExitU_Round.TextRep2 = "┉";
 			RoomExitU_Round.DoorProb = 0;
+			RoomExitU_Round.IsRoomType = true;
 			RoomExitU_Round.IsRoomExit = true;
+			RoomExitU_Round.IsFloodingIncompatible = true;
 			RoomExitU_Round.ForceGrowthCompatible = false;
 			
 			RoomExitD_Round.ConnectsDown = true;
@@ -664,7 +735,9 @@ namespace DigitalWizardry.Dungeon
 			RoomExitD_Round.TextRep = "╥";
 			RoomExitD_Round.TextRep2 = "┉";
 			RoomExitD_Round.DoorProb = 0;
+			RoomExitD_Round.IsRoomType = true;
 			RoomExitD_Round.IsRoomExit = true;
+			RoomExitD_Round.IsFloodingIncompatible = true;
 			RoomExitD_Round.ForceGrowthCompatible = false;
 			
 			RoomExitL_Round.ConnectsLeft = true;
@@ -678,7 +751,9 @@ namespace DigitalWizardry.Dungeon
 			RoomExitL_Round.TextRep = "╡";
 			RoomExitL_Round.TextRep2 = " ";
 			RoomExitL_Round.DoorProb = 0;
+			RoomExitL_Round.IsRoomType = true;
 			RoomExitL_Round.IsRoomExit = true;
+			RoomExitL_Round.IsFloodingIncompatible = true;
 			RoomExitL_Round.ForceGrowthCompatible = false;
 			
 			RoomExitR_Round.ConnectsRight = true;
@@ -692,7 +767,9 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR_Round.TextRep = "╞";
 			RoomExitR_Round.TextRep2 = "═";
 			RoomExitR_Round.DoorProb = 0;
+			RoomExitR_Round.IsRoomType = true;
 			RoomExitR_Round.IsRoomExit = true;
+			RoomExitR_Round.IsFloodingIncompatible = true;
 			RoomExitR_Round.ForceGrowthCompatible = false;
 			
 			// *** END ROOM CELLS ***
@@ -1032,7 +1109,7 @@ namespace DigitalWizardry.Dungeon
 			return types;
 		}
 
-		public static Type ConvRoomWallToExit(Type wall, Direction dir)
+		public static Type ConvertRoomWallToExit(Type wall, Direction dir)
 		{
 			Type exit;
 			
@@ -1124,7 +1201,7 @@ namespace DigitalWizardry.Dungeon
 			return exit;
 		}
 
-		public static Type ConvRoomExitToWall(Type exit, Direction dir, Description descr)
+		public static Type ConvertRoomExitToWall(Type exit, Direction dir, Description descr)
 		{
 			Type wall;
 			
@@ -1216,7 +1293,7 @@ namespace DigitalWizardry.Dungeon
 			return wall;
 		}
 
-		public static Type ConvDeadEndToDownStairs(Type deadEnd)
+		public static Type ConvertDeadEndToDownStairs(Type deadEnd)
 		{    
 			Type stairs = null;
 			
@@ -1240,131 +1317,7 @@ namespace DigitalWizardry.Dungeon
 			return stairs;
 		}
 
-		public static bool IsRoomExit(Type type)
-		{
-			return type == RoomExitU || type == RoomExitD || type == RoomExitL || type == RoomExitR || 
-				   type == Inter || type == RoomExitUL_U || type == RoomExitUL_L || type == RoomExitUL_UL ||
-				   type == RoomExitUR_U || type == RoomExitUR_R || type == RoomExitUR_UR || type == RoomExitDL_D || 
-				   type == RoomExitDL_L || type == RoomExitDL_DL || type == RoomExitDR_D || type == RoomExitDR_R || 
-				   type == RoomExitDR_DR || type == RoomExitU_Round || type == RoomExitD_Round || 
-				   type == RoomExitL_Round || type == RoomExitR_Round;
-		}
-
-		public static bool IsRoomType(Type type)
-		{
-			return type == RoomSpace  || type == RoomWallD || type == RoomWallDL || type == RoomWallDR ||
-				   type == RoomWallL  || type == RoomWallR || type == RoomWallU  || type == RoomWallUL || 
-				   type == RoomWallUR || type == RoomExitD || type == RoomExitL  || type == RoomExitR  || 
-				   type == RoomExitU  || type == RoomWallDLinv || type == RoomWallDRinv || type == RoomWallULinv ||
-				   type == RoomWallURinv || type == RoomWallDL_Round || type == RoomWallDR_Round ||
-				   type == RoomWallUL_Round || type == RoomWallUR_Round || type == Fountain || 
-				   type == RoomExitU_Round || type == RoomExitD_Round || 
-				   type == RoomExitL_Round || type == RoomExitR_Round ||
-				   type == RoomWallU_Round || type == RoomWallD_Round || 
-				   type == RoomWallL_Round || type == RoomWallR_Round;
-		}
-
-		public static bool IsRoomCorner(Type type)
-		{
-			return type == RoomWallDL || type == RoomWallDR || type == RoomWallUL || type == RoomWallUR ||
-				   type == RoomWallDL_Round || type == RoomWallDR_Round  || type == RoomWallUL_Round  || 
-				   type == RoomWallUR_Round ;
-		}
-
-		public static bool IsDeadEnd(Type type)
-		{
-			return type == DeadU || type == DeadD || type == DeadL || type == DeadR;
-		}
-
-		public static bool IsCleanStartWall(Type type)
-		{
-			return type == RoomWallD || type == RoomWallURinv || type == RoomWallULinv || type == RoomExitD;
-		}
-
-		public static bool IsFloodingTransition(Type type)
-		{
-			return type == Vert || type == Horiz;
-		}
-
-		public static bool IsFloodingIncompatible(Type type)
-		{
-			return type == RoomExitU_Round || type == RoomExitD_Round || type == RoomExitL_Round || 
-				type == RoomExitR_Round;
-		}
-
-		public static Direction RoomWallDirection(Type type)
-		{
-			Direction dir = Direction.Up;
-			
-			if (type == RoomWallU)
-			{
-				dir = Direction.Up;
-			}
-			else if (type == RoomWallD)
-			{
-				dir = Direction.Down;
-			}
-			else if (type == RoomWallL)
-			{
-				dir = Direction.Left;
-			}
-			else if (type == RoomWallR)
-			{
-				dir = Direction.Right;
-			}
-			else if (type == RoomWallU_Round)
-			{
-				dir = Direction.Up;
-			}
-			else if (type == RoomWallD_Round)
-			{
-				dir = Direction.Down;
-			}
-			else if (type == RoomWallL_Round)
-			{
-				dir = Direction.Left;
-			}
-			else if (type == RoomWallR_Round)
-			{
-				dir = Direction.Right;
-			}
-			else if (type == RoomWallUL)
-			{
-				dir = Direction.UpLeft;
-			}
-			else if (type == RoomWallUR)
-			{
-				dir = Direction.UpRight;
-			}
-			else if (type == RoomWallDL)
-			{
-				dir = Direction.DownLeft;
-			}
-			else if (type == RoomWallDR)
-			{
-				dir = Direction.DownRight;
-			}
-			else if (type == RoomWallUL_Round)
-			{
-				dir = Direction.UpLeft;
-			}
-			else if (type == RoomWallUR_Round)
-			{
-				dir = Direction.UpRight;
-			}
-			else if (type == RoomWallDL_Round)
-			{
-				dir = Direction.DownLeft;
-			}
-			else if (type == RoomWallDR_Round)
-			{
-				dir = Direction.DownRight;
-			}
-			
-			return dir;
-		}
-
-		public static Type ConvRoomTypeToCatacomb(Type roomType)
+		public static Type ConvertRoomTypeToCatacomb(Type roomType)
 		{
 			Type catacomb;
 			

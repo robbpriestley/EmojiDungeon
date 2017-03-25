@@ -234,7 +234,7 @@ namespace DigitalWizardry.Dungeon
 			Cell newCell;
 			Type newType;
 			
-			newType = Types.ConvDeadEndToDownStairs(this.DownStairsCell.Type);
+			newType = Types.ConvertDeadEndToDownStairs(this.DownStairsCell.Type);
 			newCell = new Cell(this.DownStairsCell.X, this.DownStairsCell.Y, newType, this.DownStairsCell.Descr);
 			SetCellValue(this.DownStairsCell.X, this.DownStairsCell.Y, newCell);
 		}
@@ -1701,7 +1701,7 @@ namespace DigitalWizardry.Dungeon
 				currentCell = y < Constants.GridHeight ? CellAt(x, y) : null;
 				cellUp = y + up < Constants.GridHeight ? CellAt(x, y + up) : null;
 				
-				if (Types.IsCleanStartWall(currentCell.Type))
+				if (currentCell.Type.IsCleanStartWall)
 				{
 					while (!cellUp.Merged)
 					{
@@ -1766,7 +1766,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (Types.IsRoomType(cell.Type) && !cell.Merged)
+					if (cell.Type.IsRoomType && !cell.Merged)
 					{
 						ReplaceDungeonCellValue(x, y, this.EmptyCell);
 					}
@@ -2061,7 +2061,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			Cell cell = CellAt(x, y);
 			
-			if (!Types.IsRoomExit(cell.Type))
+			if (!cell.Type.IsRoomExit)
 			{
 				return;
 			}
@@ -2134,7 +2134,7 @@ namespace DigitalWizardry.Dungeon
 				
 				Direction directionOK = Direction.NoDir;
 				
-				if (Types.IsRoomCorner(cell.Type))
+				if (cell.Type.IsRoomCorner)
 				{
 					directionOK = RoomCellsAdjacentOK(cell);
 				}
@@ -2146,7 +2146,7 @@ namespace DigitalWizardry.Dungeon
 				if (directionOK != Direction.NoDir) 
 				{
 					directionOK = FilterDirection(directionOK);
-					Type newType = Types.ConvRoomWallToExit(cell.Type, directionOK);
+					Type newType = Types.ConvertRoomWallToExit(cell.Type, directionOK);
 					
 					Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Room_TBD);
 					
@@ -2245,7 +2245,7 @@ namespace DigitalWizardry.Dungeon
 		private Direction RoomCellAdjacentOK(Cell cell)
 		{
 			Cell adjacentCell = null;
-			Direction dir = Types.RoomWallDirection(cell.Type);
+			Direction dir = cell.Type.RoomWallDirection;
 				
 			if (dir == Direction.Up && cell.Y + 1 < Constants.GridHeight)
 			{
@@ -2281,7 +2281,7 @@ namespace DigitalWizardry.Dungeon
 			bool okUp = false, okDown = false, okLeft = false, okRight = false;
 			Cell adjCellUp, adjCellDown, adjCellLeft, adjCellRight;
 			
-			Direction dir = Types.RoomWallDirection(cell.Type);
+			Direction dir = cell.Type.RoomWallDirection;
 				
 			if (dir == Direction.UpLeft || dir == Direction.UpRight)
 			{
@@ -2396,14 +2396,14 @@ namespace DigitalWizardry.Dungeon
 			}
 			else if (adjacent.Type.RoomExitCompatible)
 			{
-				newType = Types.ConvRoomWallToExit(adjacent.Type, OppositeDir(dir));
+				newType = Types.ConvertRoomWallToExit(adjacent.Type, OppositeDir(dir));
 				newCell = new Cell(adjX, adjY, newType, adjacent.Descr);
 				SetCellValue(adjX, adjY, newCell);
 				AddNewCellToRoom(adjacent, newCell);
 			}
 			else
 			{
-				newType = Types.ConvRoomExitToWall(cell.Type, dir, cell.Descr);
+				newType = Types.ConvertRoomExitToWall(cell.Type, dir, cell.Descr);
 				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
 				
 				if (newCell.Descr.IsMines) 
@@ -2550,7 +2550,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			foreach (Cell cell in room.Walls) 
 			{
-				Type newType = Types.ConvRoomTypeToCatacomb(cell.Type);
+				Type newType = Types.ConvertRoomTypeToCatacomb(cell.Type);
 				Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
 				newCell.IsCatacombs = true;
 				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
@@ -2558,7 +2558,7 @@ namespace DigitalWizardry.Dungeon
 			
 			foreach (Cell cell in room.Space) 
 			{
-				Type newType = Types.ConvRoomTypeToCatacomb(cell.Type);
+				Type newType = Types.ConvertRoomTypeToCatacomb(cell.Type);
 				Cell newCell =  new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
 				newCell.IsCatacombs = true;
 				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
@@ -3017,7 +3017,7 @@ namespace DigitalWizardry.Dungeon
 				}
 			}
 
-			if (Types.IsDeadEnd(cell.Type)) 
+			if (cell.Type.IsDeadEnd) 
         	{
 				CheckForDownStairsPlacement(cell);
 			}
@@ -3096,7 +3096,7 @@ namespace DigitalWizardry.Dungeon
 								}
 								
 								// Update descr for either entire room, or individual cell.
-								if (Types.IsRoomType(cell.Type))
+								if (cell.Type.IsRoomType)
 								{
 									UpdateRoomDescr(cell, descr, weight);
 								}
@@ -3263,7 +3263,7 @@ namespace DigitalWizardry.Dungeon
 			
 			// Flooding transitions can only occur with certain cell types.
 			
-			if (!Types.IsFloodingTransition(cellType))
+			if (!cellType.IsFloodingTransition)
 			{
 				descrs.Remove(Descriptions.Constructed_Flooded);
 				descrs.Remove(Descriptions.Cavern_Flooded);
@@ -3308,7 +3308,7 @@ namespace DigitalWizardry.Dungeon
 					{
 						Cell cell = CellAt(x, y);
 						
-						if (cell.Descr.IsFlooded && !Types.IsFloodingTransition(cell.Type))
+						if (cell.Descr.IsFlooded && !cell.Type.IsFloodingTransition)
 						{
 							// Cell above.
 							if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
@@ -3341,7 +3341,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (!cell.Descr.IsFlooded)  // If the cell is not already flooded, then flood it.
 			{
-				if (Types.IsFloodingIncompatible(cell.Type) || cell.Type == Types.Entrance)
+				if (cell.Type.IsFloodingIncompatible || cell.Type == Types.Entrance)
 				{
 					throw new DungeonBuildException();  // Except when the cell cannot be flooded.
 				}
@@ -3367,7 +3367,7 @@ namespace DigitalWizardry.Dungeon
 					}
 					
 					// Update descr for either entire room, or individual cell.
-					if (Types.IsRoomType(cell.Type))
+					if (cell.Type.IsRoomType)
 					{
 						UpdateRoomDescr(cell, descr, 0);
 					}
