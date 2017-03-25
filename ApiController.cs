@@ -28,7 +28,7 @@ namespace DigitalWizardry.Dungeon
 			StringBuilder output = new StringBuilder();
 			output.AppendLine(dungeon.VisualizeAsText());
 			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
-			//output.AppendLine(level.VisualizeAsTextWithDescription());
+			output.AppendLine(dungeon.VisualizeAsTextWithDescription());
 
 			return new ObjectResult(output.ToString());
 			//return Utility.SerializedJsonObjectResult(visualize);
