@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using DigitalWizardry.LevelGenerator;
+using DigitalWizardry.Dungeon;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

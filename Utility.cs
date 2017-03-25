@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {	
 	public class Utility
 	{

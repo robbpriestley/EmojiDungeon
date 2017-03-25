@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {	
 	public class BasicAuthentication
     {

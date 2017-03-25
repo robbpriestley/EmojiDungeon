@@ -10,7 +10,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {	
 	public class Level
 	{

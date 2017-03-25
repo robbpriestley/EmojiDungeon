@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {	
 	public class Room
 	{

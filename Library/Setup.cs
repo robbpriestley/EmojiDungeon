@@ -1,4 +1,4 @@
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {	
 	public class Constants
 	{

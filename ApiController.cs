@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace DigitalWizardry.LevelGenerator
+namespace DigitalWizardry.Dungeon
 {
 	[Route("levelgenerator")]
 	public class LevelGeneratorApiController : Controller
