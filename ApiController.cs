@@ -50,6 +50,7 @@ namespace DigitalWizardry.Dungeon
 				Dungeon dungeon = new Dungeon(0);
 				output.AppendLine(dungeon.VisualizeAsText());
 				output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
+				Console.WriteLine("Iteration: " + i.ToString());
 			}
 
 			return new ObjectResult(output.ToString());
