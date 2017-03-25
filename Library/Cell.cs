@@ -18,7 +18,7 @@ namespace DigitalWizardry.Dungeon
 		public int DescrWeight;           // Essentially a percentage, used to determine how "sticky" the description is.
 		public CellType Type;
 		public CellDescription Descr;
-		public List<CellDoor> Doors;
+		public List<Door> Doors;
 		
 		public Cell(){}
 		
@@ -51,11 +51,11 @@ namespace DigitalWizardry.Dungeon
 			
 			if (source.Doors != null)
 			{
-				this.Doors = new List<CellDoor>();
+				this.Doors = new List<Door>();
 
-				foreach (CellDoor door in source.Doors)
+				foreach (Door door in source.Doors)
 				{
-					this.Doors.Add(new CellDoor(door));
+					this.Doors.Add(new Door(door));
 				}
 			}
 		}

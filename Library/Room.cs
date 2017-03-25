@@ -7,9 +7,7 @@ namespace DigitalWizardry.Dungeon
 		// Coordinates record the bottom-left corner of the room.
 		public int X;  
 		public int Y;
-		public bool Round;
-		public bool ExitImpossible;
-		public CellDescription Descr;
+		public CellDescription Description;
 		public List<Cell> Walls;
 		public List<Cell> Space; 
 
@@ -17,11 +15,11 @@ namespace DigitalWizardry.Dungeon
 		
 		public Room(int x, int y, CellDescription descr)
 		{
-			X = x;
-			Y = y;
-			Descr = descr;
-			Walls = new List<Cell>();
-			Space = new List<Cell>();
+			this.X = x;
+			this.Y = y;
+			this.Description = descr;
+			this.Walls = new List<Cell>();
+			this.Space = new List<Cell>();
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
@@ -29,7 +27,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			this.X = source.X;
 			this.Y = source.Y;
-			this.Descr = source.Descr;
+			this.Description = source.Description;
 			
 			if (source.Walls != null)
 			{

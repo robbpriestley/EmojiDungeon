@@ -1,24 +1,24 @@
 namespace DigitalWizardry.Dungeon
 {	
-	public class CellDoor
+	public class Door
 	{
 		public Direction Dir;
 		public bool Open;
 		public bool Locked;
 		public DoorType Type;
 
-		public CellDoor(){}
+		public Door(){}
 		
-		public CellDoor(Direction dir, bool open, bool locked, DoorType type)
+		public Door(Direction dir, bool open, bool locked, DoorType type)
 		{
-			Dir = dir;
-			Open = open;
-			Locked = locked;
-			Type = type;
+			this.Dir = dir;
+			this.Open = open;
+			this.Locked = locked;
+			this.Type = type;
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
-		public CellDoor(CellDoor source) : this()
+		public Door(Door source) : this()
 		{
 			this.Dir = source.Dir;
 			this.Open = source.Open;

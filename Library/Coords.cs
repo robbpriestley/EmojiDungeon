@@ -9,34 +9,34 @@ namespace DigitalWizardry.Dungeon
 		public bool AdjacentEdgeLeft;
 		public bool AdjacentEdgeRight;
 
-		public Direction Direction;  // Sneaky, it has a dir for utility purposes sometimes :-)
+		public Direction Direction;  // A direction is needed for convenience sometimes.
 
 		public Coords(){}
 		
 		public Coords(int x, int y)
 		{
-			X = x;
-			Y = y;
-			Direction = Direction.NoDir;
+			this.X = x;
+			this.Y = y;
+			this.Direction = Direction.NoDir;
 
-			if (X == 0) 
+			if (this.X == 0) 
 			{
-				AdjacentEdgeLeft = true;
+				this.AdjacentEdgeLeft = true;
 			} 
 			
-			if (Y == 0) 
+			if (this.Y == 0) 
 			{
-				AdjacentEdgeDown = true;
+				this.AdjacentEdgeDown = true;
 			}
 			
-			if (X + 1 == Constants.GridWidth) 
+			if (this.X + 1 == Constants.GridWidth) 
 			{
-				AdjacentEdgeRight = true;
+				this.AdjacentEdgeRight = true;
 			}
 			
-			if (Y + 1 == Constants.GridHeight) 
+			if (this.Y + 1 == Constants.GridHeight) 
 			{
-				AdjacentEdgeUp = true;
+				this.AdjacentEdgeUp = true;
 			}
 		}
 
@@ -55,15 +55,15 @@ namespace DigitalWizardry.Dungeon
 		{
 			return
 			
-			(Direction == Direction.Up && otherCoords.Direction == Direction.Down) ||
-			(Direction == Direction.Down && otherCoords.Direction == Direction.Up) ||
-			(Direction == Direction.Left && otherCoords.Direction == Direction.Right) ||
-			(Direction == Direction.Right && otherCoords.Direction == Direction.Left) ||
+			(this.Direction == Direction.Up && otherCoords.Direction == Direction.Down) ||
+			(this.Direction == Direction.Down && otherCoords.Direction == Direction.Up) ||
+			(this.Direction == Direction.Left && otherCoords.Direction == Direction.Right) ||
+			(this.Direction == Direction.Right && otherCoords.Direction == Direction.Left) ||
 			
-			(Direction == Direction.UpLeft && otherCoords.Direction == Direction.DownRight) ||
-			(Direction == Direction.DownLeft && otherCoords.Direction == Direction.UpRight) ||
-			(Direction == Direction.UpRight && otherCoords.Direction == Direction.DownLeft) ||
-			(Direction == Direction.DownRight && otherCoords.Direction == Direction.DownLeft);
+			(this.Direction == Direction.UpLeft && otherCoords.Direction == Direction.DownRight) ||
+			(this.Direction == Direction.DownLeft && otherCoords.Direction == Direction.UpRight) ||
+			(this.Direction == Direction.UpRight && otherCoords.Direction == Direction.DownLeft) ||
+			(this.Direction == Direction.DownRight && otherCoords.Direction == Direction.DownLeft);
 		}
 	}
 }

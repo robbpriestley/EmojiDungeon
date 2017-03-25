@@ -5,18 +5,18 @@ using Microsoft.Extensions.Options;
 
 namespace DigitalWizardry.Dungeon
 {
-	[Route("levelgenerator")]
-	public class LevelGeneratorApiController : Controller
+	[Route("dungeon")]
+	public class DungeonApiController : Controller
 	{
 		public Secrets Secrets { get; set; }
 		
-		public LevelGeneratorApiController(IOptions<Secrets> secrets)
+		public DungeonApiController(IOptions<Secrets> secrets)
 		{
 			Secrets = secrets.Value;
 		}
 
 		[HttpGet]
-		[Route("dungeon")]
+		[Route("create")]
 		public IActionResult Dungeon()
 		{
 			if (!BasicAuthentication.Authenticate(Secrets, Request))
@@ -24,11 +24,10 @@ namespace DigitalWizardry.Dungeon
 				return new UnauthorizedResult();
 			}
 			
-			Coords startCoords = new Coords(1, 1);
-			Level level = new Level(0, startCoords);
+			Dungeon dungeon = new Dungeon(0);
 			StringBuilder output = new StringBuilder();
-			output.AppendLine(level.VisualizeAsText());
-			output.AppendLine(level.Stats() + Environment.NewLine);
+			output.AppendLine(dungeon.VisualizeAsText());
+			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
 			//output.AppendLine(level.VisualizeAsTextWithDescription());
 
 			return new ObjectResult(output.ToString());

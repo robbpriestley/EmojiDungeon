@@ -12,7 +12,7 @@ namespace DigitalWizardry.Dungeon
 		
 		public CellDescription(string textRep)
 		{
-			TextRep = textRep;
+			this.TextRep = textRep;
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
