@@ -33,5 +33,26 @@ namespace DigitalWizardry.Dungeon
 			return new ObjectResult(output.ToString());
 			//return Utility.SerializedJsonObjectResult(visualize);
 		}
+
+		[HttpGet]
+		[Route("test")]
+		public IActionResult Test()
+		{
+			if (!BasicAuthentication.Authenticate(Secrets, Request))
+			{
+				return new UnauthorizedResult();
+			}
+			
+			StringBuilder output = new StringBuilder();
+
+			for (int i = 0; i < 100; i++)
+			{
+				Dungeon dungeon = new Dungeon(0);
+				output.AppendLine(dungeon.VisualizeAsText());
+				output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
+			}
+
+			return new ObjectResult(output.ToString());
+		}
 	}
 }
