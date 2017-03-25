@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace DigitalWizardry.Dungeon
 {	
-	public class CellType
+	public class Type
 	{
 		// The "connects" members only apply to corridor cells.
 		public bool ConnectsUp;
@@ -28,12 +28,12 @@ namespace DigitalWizardry.Dungeon
 		public string TextRep2;  // Used for expanding the text representation into the horizontal.
 		public int InitialAvailableConnections;
 
-		public CellType()
+		public Type()
 		{
         	ForceGrowthCompatible = true;
 		}
 
-		public bool ConnectsTo(CellType otherCell, Direction direction)
+		public bool ConnectsTo(Type otherCell, Direction direction)
 		{    
 			if (otherCell.IsEmpty)
 			{
@@ -59,7 +59,7 @@ namespace DigitalWizardry.Dungeon
 			return false;
 		}
 
-		public bool CompatibleWith(CellType otherCell, Direction direction)
+		public bool CompatibleWith(Type otherCell, Direction direction)
 		{
 			/*
 				Another cell is compatible with the current cell if:
@@ -109,79 +109,79 @@ namespace DigitalWizardry.Dungeon
 		}
 	}
 
-	public class CellTypes
+	public class Types
 	{
-		public static CellType EmptyCell = new CellType();	       // Empty, i.e. unused.
-		public static CellType Entrance = new CellType();	       // Entrance Cell, used only once on level 0...
-		public static CellType Vert = new CellType();		       // Vertical Corridor            
-		public static CellType Horiz = new CellType();		       // Horizontal Corridor           
-		public static CellType Inter = new CellType();		       // Intersection                 
-		public static CellType JuncULR = new CellType();	       // Junction Up Left Right       
-		public static CellType JuncUDR = new CellType();	       // Junction Up Down Right       
-		public static CellType JuncDLR = new CellType();	       // Junction Down Left Right     
-		public static CellType JuncUDL = new CellType();	       // Junction Up Down Left        
-		public static CellType ElbUR = new CellType();		       // Elbow Up Right               
-		public static CellType ElbDR = new CellType();		       // Elbow Down Right             
-		public static CellType ElbDL = new CellType();		       // Elbow Down Left              
-		public static CellType ElbUL = new CellType();		       // Elbow Up Left                
-		public static CellType DeadU = new CellType();		       // Dead End Up                  
-		public static CellType DeadD = new CellType();		       // Dead End Down                
-		public static CellType DeadL = new CellType();		       // Dead End Left                
-		public static CellType DeadR = new CellType();		       // Dead End Right 
-		public static CellType DeadexU = new CellType();           // Dead End Exit Up                  
-		public static CellType DeadexD = new CellType();           // Dead End Exit Down                
-		public static CellType DeadexL = new CellType();           // Dead End Exit Left                
-		public static CellType DeadexR = new CellType();           // Dead End Exit Right 
-		public static CellType UpStairU = new CellType();          // Stairs Up Connects Up        
-		public static CellType UpStairD = new CellType();          // Stairs Up Connects Down      
-		public static CellType UpStairL = new CellType();          // Stairs Up Connects Left      
-		public static CellType UpStairR = new CellType();          // Stairs Up Connects Right     
-		public static CellType DownStairU = new CellType();        // Stairs Down Connects Up      
-		public static CellType DownStairD = new CellType();        // Stairs Down Connects Down    
-		public static CellType DownStairL = new CellType();        // Stairs Down Connects Left    
-		public static CellType DownStairR = new CellType();        // Stairs Down Connects Right 
-		public static CellType RoomSpace = new CellType();         // Room Space
-		public static CellType Fountain = new CellType();          // Healing Fountain
-		public static CellType RoomWallU = new CellType();         // Room Wall Up
-		public static CellType RoomWallD = new CellType();         // Room Wall Down
-		public static CellType RoomWallL = new CellType();         // Room Wall Left
-		public static CellType RoomWallR = new CellType();         // Room Wall Right
-		public static CellType RoomWallU_Round = new CellType();   // Room Wall Up Round
-		public static CellType RoomWallD_Round = new CellType();   // Room Wall Down Round
-		public static CellType RoomWallL_Round = new CellType();   // Room Wall Left Round
-		public static CellType RoomWallR_Round = new CellType();   // Room Wall Right Round
-		public static CellType RoomWallUL = new CellType();        // Room Wall Up Left
-		public static CellType RoomWallUR = new CellType();        // Room Wall Up Right
-		public static CellType RoomWallDL = new CellType();        // Room Wall Down Left
-		public static CellType RoomWallDR = new CellType();        // Room Wall Down Right
-		public static CellType RoomWallUL_Round = new CellType();  // Room Wall Up Left Round
-		public static CellType RoomWallUR_Round = new CellType();  // Room Wall Up Right Round
-		public static CellType RoomWallDL_Round = new CellType();  // Room Wall Down Left Round
-		public static CellType RoomWallDR_Round = new CellType();  // Room Wall Down Right Round
-		public static CellType RoomWallULinv = new CellType();     // Room Wall Up Left Inverted
-		public static CellType RoomWallURinv = new CellType();     // Room Wall Up Right Inverted
-		public static CellType RoomWallDLinv = new CellType();     // Room Wall Down Left Inverted
-		public static CellType RoomWallDRinv = new CellType();     // Room Wall Down Right Inverted
-		public static CellType RoomExitU = new CellType();         // Room Exit Up
-		public static CellType RoomExitD = new CellType();         // Room Exit Down
-		public static CellType RoomExitL = new CellType();         // Room Exit Left
-		public static CellType RoomExitR = new CellType();         // Room Exit Right
-		public static CellType RoomExitU_Round = new CellType();   // Room Exit Up Round
-		public static CellType RoomExitD_Round = new CellType();   // Room Exit Down Round
-		public static CellType RoomExitL_Round = new CellType();   // Room Exit Left Round
-		public static CellType RoomExitR_Round = new CellType();   // Room Exit Right Round
-		public static CellType RoomExitUL_U = new CellType();      // Room Exit Up Left Corner, Exit Up
-		public static CellType RoomExitUL_L = new CellType();      // Room Exit Up Left Corner, Exit Left
-		public static CellType RoomExitUL_UL = new CellType();     // Room Exit Up Left Corner, Exits Up and Left
-		public static CellType RoomExitUR_U = new CellType();      // Room Exit Up Right Corner, Exit Up
-		public static CellType RoomExitUR_R = new CellType();      // Room Exit Up Right Corner, Exit Right
-		public static CellType RoomExitUR_UR = new CellType();     // Room Exit Up Right Corner, Exits Up and Right
-		public static CellType RoomExitDL_D = new CellType();      // Room Exit Down Left Corner, Exit Down
-		public static CellType RoomExitDL_L = new CellType();      // Room Exit Down Left Corner, Exit Left
-		public static CellType RoomExitDL_DL = new CellType();     // Room Exit Down Left Corner, Exits Down and Left
-		public static CellType RoomExitDR_D = new CellType();      // Room Exit Down Right Corner, Exit Down
-		public static CellType RoomExitDR_R = new CellType();      // Room Exit Down Right Corner, Exit Right
-		public static CellType RoomExitDR_DR = new CellType();     // Room Exit Down Right Corner, Exits Down and Right
+		public static Type EmptyCell = new Type();	       // Empty, i.e. unused.
+		public static Type Entrance = new Type();	       // Entrance Cell, used only once on level 0...
+		public static Type Vert = new Type();		       // Vertical Corridor            
+		public static Type Horiz = new Type();		       // Horizontal Corridor           
+		public static Type Inter = new Type();		       // Intersection                 
+		public static Type JuncULR = new Type();	       // Junction Up Left Right       
+		public static Type JuncUDR = new Type();	       // Junction Up Down Right       
+		public static Type JuncDLR = new Type();	       // Junction Down Left Right     
+		public static Type JuncUDL = new Type();	       // Junction Up Down Left        
+		public static Type ElbUR = new Type();		       // Elbow Up Right               
+		public static Type ElbDR = new Type();		       // Elbow Down Right             
+		public static Type ElbDL = new Type();		       // Elbow Down Left              
+		public static Type ElbUL = new Type();		       // Elbow Up Left                
+		public static Type DeadU = new Type();		       // Dead End Up                  
+		public static Type DeadD = new Type();		       // Dead End Down                
+		public static Type DeadL = new Type();		       // Dead End Left                
+		public static Type DeadR = new Type();		       // Dead End Right 
+		public static Type DeadexU = new Type();           // Dead End Exit Up                  
+		public static Type DeadexD = new Type();           // Dead End Exit Down                
+		public static Type DeadexL = new Type();           // Dead End Exit Left                
+		public static Type DeadexR = new Type();           // Dead End Exit Right 
+		public static Type UpStairU = new Type();          // Stairs Up Connects Up        
+		public static Type UpStairD = new Type();          // Stairs Up Connects Down      
+		public static Type UpStairL = new Type();          // Stairs Up Connects Left      
+		public static Type UpStairR = new Type();          // Stairs Up Connects Right     
+		public static Type DownStairU = new Type();        // Stairs Down Connects Up      
+		public static Type DownStairD = new Type();        // Stairs Down Connects Down    
+		public static Type DownStairL = new Type();        // Stairs Down Connects Left    
+		public static Type DownStairR = new Type();        // Stairs Down Connects Right 
+		public static Type RoomSpace = new Type();         // Room Space
+		public static Type Fountain = new Type();          // Healing Fountain
+		public static Type RoomWallU = new Type();         // Room Wall Up
+		public static Type RoomWallD = new Type();         // Room Wall Down
+		public static Type RoomWallL = new Type();         // Room Wall Left
+		public static Type RoomWallR = new Type();         // Room Wall Right
+		public static Type RoomWallU_Round = new Type();   // Room Wall Up Round
+		public static Type RoomWallD_Round = new Type();   // Room Wall Down Round
+		public static Type RoomWallL_Round = new Type();   // Room Wall Left Round
+		public static Type RoomWallR_Round = new Type();   // Room Wall Right Round
+		public static Type RoomWallUL = new Type();        // Room Wall Up Left
+		public static Type RoomWallUR = new Type();        // Room Wall Up Right
+		public static Type RoomWallDL = new Type();        // Room Wall Down Left
+		public static Type RoomWallDR = new Type();        // Room Wall Down Right
+		public static Type RoomWallUL_Round = new Type();  // Room Wall Up Left Round
+		public static Type RoomWallUR_Round = new Type();  // Room Wall Up Right Round
+		public static Type RoomWallDL_Round = new Type();  // Room Wall Down Left Round
+		public static Type RoomWallDR_Round = new Type();  // Room Wall Down Right Round
+		public static Type RoomWallULinv = new Type();     // Room Wall Up Left Inverted
+		public static Type RoomWallURinv = new Type();     // Room Wall Up Right Inverted
+		public static Type RoomWallDLinv = new Type();     // Room Wall Down Left Inverted
+		public static Type RoomWallDRinv = new Type();     // Room Wall Down Right Inverted
+		public static Type RoomExitU = new Type();         // Room Exit Up
+		public static Type RoomExitD = new Type();         // Room Exit Down
+		public static Type RoomExitL = new Type();         // Room Exit Left
+		public static Type RoomExitR = new Type();         // Room Exit Right
+		public static Type RoomExitU_Round = new Type();   // Room Exit Up Round
+		public static Type RoomExitD_Round = new Type();   // Room Exit Down Round
+		public static Type RoomExitL_Round = new Type();   // Room Exit Left Round
+		public static Type RoomExitR_Round = new Type();   // Room Exit Right Round
+		public static Type RoomExitUL_U = new Type();      // Room Exit Up Left Corner, Exit Up
+		public static Type RoomExitUL_L = new Type();      // Room Exit Up Left Corner, Exit Left
+		public static Type RoomExitUL_UL = new Type();     // Room Exit Up Left Corner, Exits Up and Left
+		public static Type RoomExitUR_U = new Type();      // Room Exit Up Right Corner, Exit Up
+		public static Type RoomExitUR_R = new Type();      // Room Exit Up Right Corner, Exit Right
+		public static Type RoomExitUR_UR = new Type();     // Room Exit Up Right Corner, Exits Up and Right
+		public static Type RoomExitDL_D = new Type();      // Room Exit Down Left Corner, Exit Down
+		public static Type RoomExitDL_L = new Type();      // Room Exit Down Left Corner, Exit Left
+		public static Type RoomExitDL_DL = new Type();     // Room Exit Down Left Corner, Exits Down and Left
+		public static Type RoomExitDR_D = new Type();      // Room Exit Down Right Corner, Exit Down
+		public static Type RoomExitDR_R = new Type();      // Room Exit Down Right Corner, Exit Right
+		public static Type RoomExitDR_DR = new Type();     // Room Exit Down Right Corner, Exits Down and Right
 
 		public static void Initialize()
 		{
@@ -942,9 +942,9 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		// Edge: meaning the extreme edge of the dungeon's grid.
-		public static List<CellType> GetTypes(Coords coords)
+		public static List<Type> GetTypes(Coords coords)
 		{
-			List<CellType> types = new List<CellType>();
+			List<Type> types = new List<Type>();
 			
 			if (coords.AdjacentEdgeUp && !coords.AdjacentEdgeLeft && !coords.AdjacentEdgeRight) 
 			{
@@ -1032,9 +1032,9 @@ namespace DigitalWizardry.Dungeon
 			return types;
 		}
 
-		public static CellType ConvRoomWallToExit(CellType wall, Direction dir)
+		public static Type ConvRoomWallToExit(Type wall, Direction dir)
 		{
-			CellType exit;
+			Type exit;
 			
 			if (wall == RoomWallU)
 			{
@@ -1124,9 +1124,9 @@ namespace DigitalWizardry.Dungeon
 			return exit;
 		}
 
-		public static CellType ConvRoomExitToWall(CellType exit, Direction dir, CellDescription descr)
+		public static Type ConvRoomExitToWall(Type exit, Direction dir, Description descr)
 		{
-			CellType wall;
+			Type wall;
 			
 			if (exit == RoomExitU)
 			{
@@ -1144,19 +1144,19 @@ namespace DigitalWizardry.Dungeon
 			{
 				wall = RoomWallR; 
 			}
-			else if (dir == Direction.Up && exit == Inter && descr == CellDescriptions.Mines_Vert)
+			else if (dir == Direction.Up && exit == Inter && descr == Descriptions.Mines_Vert)
 			{
 				wall = JuncDLR;
 			}
-			else if (dir == Direction.Down && exit == Inter && descr == CellDescriptions.Mines_Vert)
+			else if (dir == Direction.Down && exit == Inter && descr == Descriptions.Mines_Vert)
 			{
 				wall = JuncULR;
 			}
-			else if (dir == Direction.Left && exit == Inter && descr == CellDescriptions.Mines_Horiz)
+			else if (dir == Direction.Left && exit == Inter && descr == Descriptions.Mines_Horiz)
 			{
 				wall = JuncUDR;
 			}
-			else if (dir == Direction.Right && exit == Inter && descr == CellDescriptions.Mines_Horiz)
+			else if (dir == Direction.Right && exit == Inter && descr == Descriptions.Mines_Horiz)
 			{
 				wall = JuncUDL;
 			}
@@ -1216,9 +1216,9 @@ namespace DigitalWizardry.Dungeon
 			return wall;
 		}
 
-		public static CellType ConvDeadEndToDownStairs(CellType deadEnd)
+		public static Type ConvDeadEndToDownStairs(Type deadEnd)
 		{    
-			CellType stairs = null;
+			Type stairs = null;
 			
 			if (deadEnd == DeadU)
 			{
@@ -1240,7 +1240,7 @@ namespace DigitalWizardry.Dungeon
 			return stairs;
 		}
 
-		public static bool IsRoomExit(CellType type)
+		public static bool IsRoomExit(Type type)
 		{
 			return type == RoomExitU || type == RoomExitD || type == RoomExitL || type == RoomExitR || 
 				   type == Inter || type == RoomExitUL_U || type == RoomExitUL_L || type == RoomExitUL_UL ||
@@ -1250,7 +1250,7 @@ namespace DigitalWizardry.Dungeon
 				   type == RoomExitL_Round || type == RoomExitR_Round;
 		}
 
-		public static bool IsRoomType(CellType type)
+		public static bool IsRoomType(Type type)
 		{
 			return type == RoomSpace  || type == RoomWallD || type == RoomWallDL || type == RoomWallDR ||
 				   type == RoomWallL  || type == RoomWallR || type == RoomWallU  || type == RoomWallUL || 
@@ -1264,35 +1264,35 @@ namespace DigitalWizardry.Dungeon
 				   type == RoomWallL_Round || type == RoomWallR_Round;
 		}
 
-		public static bool IsRoomCorner(CellType type)
+		public static bool IsRoomCorner(Type type)
 		{
 			return type == RoomWallDL || type == RoomWallDR || type == RoomWallUL || type == RoomWallUR ||
 				   type == RoomWallDL_Round || type == RoomWallDR_Round  || type == RoomWallUL_Round  || 
 				   type == RoomWallUR_Round ;
 		}
 
-		public static bool IsDeadEnd(CellType type)
+		public static bool IsDeadEnd(Type type)
 		{
 			return type == DeadU || type == DeadD || type == DeadL || type == DeadR;
 		}
 
-		public static bool IsCleanStartWall(CellType type)
+		public static bool IsCleanStartWall(Type type)
 		{
 			return type == RoomWallD || type == RoomWallURinv || type == RoomWallULinv || type == RoomExitD;
 		}
 
-		public static bool IsFloodingTransition(CellType type)
+		public static bool IsFloodingTransition(Type type)
 		{
 			return type == Vert || type == Horiz;
 		}
 
-		public static bool IsFloodingIncompatible(CellType type)
+		public static bool IsFloodingIncompatible(Type type)
 		{
 			return type == RoomExitU_Round || type == RoomExitD_Round || type == RoomExitL_Round || 
 				type == RoomExitR_Round;
 		}
 
-		public static Direction RoomWallDirection(CellType type)
+		public static Direction RoomWallDirection(Type type)
 		{
 			Direction dir = Direction.Up;
 			
@@ -1364,9 +1364,9 @@ namespace DigitalWizardry.Dungeon
 			return dir;
 		}
 
-		public static CellType ConvRoomTypeToCatacomb(CellType roomType)
+		public static Type ConvRoomTypeToCatacomb(Type roomType)
 		{
-			CellType catacomb;
+			Type catacomb;
 			
 			if (roomType == RoomWallU) 
 			{

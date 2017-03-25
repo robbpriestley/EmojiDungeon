@@ -2,21 +2,21 @@ using System.Collections.Generic;
 
 namespace DigitalWizardry.Dungeon
 {	
-	public class CellDescription
+	public class Description
 	{
 		public int Weight;
 		public int WeightReduction;
 		public string TextRep;
 
-		public CellDescription(){}
+		public Description(){}
 		
-		public CellDescription(string textRep)
+		public Description(string textRep)
 		{
 			this.TextRep = textRep;
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
-		public CellDescription(CellDescription source) : this()
+		public Description(Description source) : this()
 		{
 			this.Weight = source.Weight;
 			this.WeightReduction = source.WeightReduction;
@@ -24,21 +24,21 @@ namespace DigitalWizardry.Dungeon
 		}
 	}
 
-	public class CellDescriptions
+	public class Descriptions
 	{
-		public static CellDescription Empty = new CellDescription("E");
-		public static CellDescription Room_TBD = new CellDescription(",");
-		public static CellDescription Corridor_TBD = new CellDescription(".");
-		public static CellDescription Catacombs_TBD = new CellDescription("'");
-		public static CellDescription Mines_Horiz = new CellDescription("M");
-		public static CellDescription Mines_Vert = new CellDescription("M");
-		public static CellDescription Mines_Horiz_Flooded = new CellDescription("x");
-		public static CellDescription Mines_Vert_Flooded = new CellDescription("x");
-		public static CellDescription Constructed = new CellDescription("C");
-		public static CellDescription Constructed_Flooded = new CellDescription("F");
-		public static CellDescription Cavern = new CellDescription("c");
-    	public static CellDescription Cavern_Flooded = new CellDescription("f");
-    	public static List<CellDescription> Descrs = new List<CellDescription>();
+		public static Description Empty = new Description("E");
+		public static Description Room_TBD = new Description(",");
+		public static Description Corridor_TBD = new Description(".");
+		public static Description Catacombs_TBD = new Description("'");
+		public static Description Mines_Horiz = new Description("M");
+		public static Description Mines_Vert = new Description("M");
+		public static Description Mines_Horiz_Flooded = new Description("x");
+		public static Description Mines_Vert_Flooded = new Description("x");
+		public static Description Constructed = new Description("C");
+		public static Description Constructed_Flooded = new Description("F");
+		public static Description Cavern = new Description("c");
+    	public static Description Cavern_Flooded = new Description("f");
+    	public static List<Description> Descrs = new List<Description>();
 
 		public static void Initialize()
 		{
@@ -60,17 +60,17 @@ namespace DigitalWizardry.Dungeon
 			Descrs.Add(Cavern_Flooded);
 		}
 
-		public static bool IsTBD(CellDescription descr)
+		public static bool IsTBD(Description descr)
 		{
 			return descr == Room_TBD || descr == Corridor_TBD || descr == Catacombs_TBD;
 		}
 
-		public static bool IsMines(CellDescription descr)
+		public static bool IsMines(Description descr)
 		{
 			return descr == Mines_Horiz || descr == Mines_Vert || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
 		}
 
-		public static bool IsFlooded(CellDescription descr)
+		public static bool IsFlooded(Description descr)
 		{
 			return descr == Constructed_Flooded || descr == Cavern_Flooded || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
 		}

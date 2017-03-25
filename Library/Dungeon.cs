@@ -26,12 +26,12 @@ namespace DigitalWizardry.Dungeon
 
 		public Dungeon(int levelNumber)
 		{
-			CellTypes.Initialize();
-			CellDescriptions.Initialize();
+			Types.Initialize();
+			Descriptions.Initialize();
 			
 			this.R = new Random();
 			this.LevelNumber = levelNumber;
-			this.EmptyCell = new Cell(-1, -1, CellTypes.EmptyCell, CellDescriptions.Empty);
+			this.EmptyCell = new Cell(-1, -1, Types.EmptyCell, Descriptions.Empty);
 			this.MaxDistance = Math.Abs(Math.Sqrt(Math.Pow(Constants.GridWidth - 1, 2) + Math.Pow(Constants.GridHeight - 1, 2)));
 
 			Start();
@@ -88,7 +88,7 @@ namespace DigitalWizardry.Dungeon
 				// this.StartCoords = THIS CODE NEEDS TO BE COMPLETED;
 			}
 
-			List<CellType> types = CellTypes.GetTypes(this.StartCoords);
+			List<Type> types = Types.GetTypes(this.StartCoords);
 
 			this.CellsWithLockedDoors = new List<Cell>();
 		}
@@ -97,8 +97,8 @@ namespace DigitalWizardry.Dungeon
 		private Coords PlaceEntrance()
 		{
 			int x = Constants.GridWidth / 2;
-			CellType startType = CellTypes.Entrance;
-			Cell entrance = new Cell(x, 0, startType, CellDescriptions.Constructed);
+			Type startType = Types.Entrance;
+			Cell entrance = new Cell(x, 0, startType, Descriptions.Constructed);
 			entrance.DescrWeight = 100;
 			SetDungeonCellValue(x, 0, entrance);
 			return new Coords(x, 0);
@@ -108,7 +108,7 @@ namespace DigitalWizardry.Dungeon
 		{    
 			Cell cell;
 			bool modified = false;
-			CellDescription descr = CellDescriptions.Corridor_TBD;
+			Description descr = Descriptions.Corridor_TBD;
 			
 			// As long as the dungeon is not considered complete, keep adding stuff to it.
 			do 
@@ -139,7 +139,7 @@ namespace DigitalWizardry.Dungeon
 			} while (!CompleteCheck(modified));
 		}
 
-		private bool AttachNewCell(Cell cell, CellDescription descr)
+		private bool AttachNewCell(Cell cell, Description descr)
 		{
 			bool attachSuccessful = false;
 			Coords coords = RandomAttachCoords(cell);
@@ -147,11 +147,11 @@ namespace DigitalWizardry.Dungeon
 			if (coords != null)
 			{
 				// Get a disposable array of constructed corridor cell types.
-				List<CellType> types = CellTypes.GetTypes(coords);
+				List<Type> types = Types.GetTypes(coords);
 				
 				// Choose a new cell type to attach.
 				Cell newCell = null;
-				CellType newType = null;
+				Type newType = null;
 				
 				while (newCell == null) 
 				{
@@ -232,9 +232,9 @@ namespace DigitalWizardry.Dungeon
 		private void PlaceDownStairs()
 		{
 			Cell newCell;
-			CellType newType;
+			Type newType;
 			
-			newType = CellTypes.ConvDeadEndToDownStairs(this.DownStairsCell.Type);
+			newType = Types.ConvDeadEndToDownStairs(this.DownStairsCell.Type);
 			newCell = new Cell(this.DownStairsCell.X, this.DownStairsCell.Y, newType, this.DownStairsCell.Descr);
 			SetCellValue(this.DownStairsCell.X, this.DownStairsCell.Y, newCell);
 		}
@@ -301,7 +301,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private CellType RandomCellType(List<CellType> types)
+		private Type RandomCellType(List<Type> types)
 		{
 			// Pick a cell type randomly, and also eliminate it as a candidate for the current cell to avoid 
 			// re-testing it in the future if it is rejected. DungeonCellTypes have weights, so some are more 
@@ -309,16 +309,16 @@ namespace DigitalWizardry.Dungeon
 			
 			int total = 0;
 			
-			foreach (CellType type in types)
+			foreach (Type type in types)
 			{
 				total += type.Weight;
 			}
 			
 			int threshold = this.R.Next(total);
 			
-			CellType selected = null;
+			Type selected = null;
 
-			foreach (CellType type in types)
+			foreach (Type type in types)
 			{
 				selected = type;
 				threshold -= type.Weight;
@@ -347,7 +347,7 @@ namespace DigitalWizardry.Dungeon
 
 		// With "coords" representing the new, empty dungeon location, check that each of the adjacent cells 
 		// is compatible with the proposed (randomly determined) new cell type.
-		private bool TypeCompatibleWithAdjacentCells(CellType newCellType, Coords coords)
+		private bool TypeCompatibleWithAdjacentCells(Type newCellType, Coords coords)
 		{
 			// This is an innocent-until-proven guilty scenario. However, if any of the cells is proven to be
 			// incompatible, that's enough to eliminate it as a prospect.
@@ -488,7 +488,7 @@ namespace DigitalWizardry.Dungeon
 			
 			while (roomsCount > 0 && attempts <= maxAttempts) 
 			{
-				if (RandomRoom(CellDescriptions.Room_TBD, Constants.MaxRoomWidth, Constants.MaxRoomHeight, Constants.MinRoomWidth, Constants.MinRoomHeight))
+				if (RandomRoom(Descriptions.Room_TBD, Constants.MaxRoomWidth, Constants.MaxRoomHeight, Constants.MinRoomWidth, Constants.MinRoomHeight))
 				{
 					roomsCount--;
 					attempts = 0;
@@ -545,7 +545,7 @@ namespace DigitalWizardry.Dungeon
 			
 				if (horiz)
 				{
-					if (RandomRoom(CellDescriptions.Mines_Horiz, Constants.MaxMinesHeight, Constants.MaxMinesWidth, Constants.MinMinesHeight, Constants.MinMinesWidth))
+					if (RandomRoom(Descriptions.Mines_Horiz, Constants.MaxMinesHeight, Constants.MaxMinesWidth, Constants.MinMinesHeight, Constants.MinMinesWidth))
 					{
 						count--;
 						attempts = 0;
@@ -557,7 +557,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				else
 				{
-					if (RandomRoom(CellDescriptions.Mines_Vert, Constants.MaxMinesWidth, Constants.MaxMinesHeight, Constants.MinMinesWidth, Constants.MinMinesHeight))
+					if (RandomRoom(Descriptions.Mines_Vert, Constants.MaxMinesWidth, Constants.MaxMinesHeight, Constants.MinMinesWidth, Constants.MinMinesHeight))
 					{
 						count--;
 						attempts = 0;
@@ -570,7 +570,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private bool RandomRoom(CellDescription descr, int maxWidth, int maxHeight, int minWidth, int minHeight)
+		private bool RandomRoom(Description descr, int maxWidth, int maxHeight, int minWidth, int minHeight)
 		{
 			int width = this.R.Next(maxWidth - minWidth + 1) + minWidth;
 			int height = this.R.Next(maxHeight - minHeight + 1) + minHeight;
@@ -583,7 +583,7 @@ namespace DigitalWizardry.Dungeon
 			}
 			else
 			{
-				if (descr == CellDescriptions.Room_TBD)
+				if (descr == Descriptions.Room_TBD)
 				{
 					bool irregularlyShapedRoom = RandomBool();
 					
@@ -624,7 +624,7 @@ namespace DigitalWizardry.Dungeon
 						
 						if 
 						(
-							CellDescriptions.IsMines(cell.Descr) ||
+							Descriptions.IsMines(cell.Descr) ||
 							(
 								y > this.StartCoords.Y - 2 && y < this.StartCoords.Y + 2 && 
 								x > this.StartCoords.X - 2 && x < this.StartCoords.X + 2
@@ -648,7 +648,7 @@ namespace DigitalWizardry.Dungeon
 
 		private Room BuildRoom(RoomType roomType, Coords coords, int width, int height)
 		{
-			CellDescription descr = roomType == RoomType.Round ? CellDescriptions.Constructed : CellDescriptions.Room_TBD;
+			Description descr = roomType == RoomType.Round ? Descriptions.Constructed : Descriptions.Room_TBD;
 			
 			Room room = new Room(coords.X, coords.Y, descr);
 			
@@ -664,7 +664,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = coords.X; x < coords.X + width; x++) 
 				{
-					CellType newType = null;
+					Type newType = null;
 					
 					switch (roomType) 
 					{                
@@ -713,7 +713,7 @@ namespace DigitalWizardry.Dungeon
 						newCell.DescrWeight = 0;
 					}
 					
-					if (newType == CellTypes.RoomSpace || newType == CellTypes.Fountain)
+					if (newType == Types.RoomSpace || newType == Types.Fountain)
 					{
 						room.Space.Add(newCell);
 					}
@@ -727,105 +727,105 @@ namespace DigitalWizardry.Dungeon
 			return room;
 		}
 
-		private CellType RegRoomType(int x, int y, Coords coords, int width, int height)
+		private Type RegRoomType(int x, int y, Coords coords, int width, int height)
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 			{
-				newType = CellTypes.RoomWallDL;
+				newType = Types.RoomWallDL;
 			}
 			else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 			{
-				newType = CellTypes.RoomWallDR;
+				newType = Types.RoomWallDR;
 			}
 			else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 			{
-				newType = CellTypes.RoomWallUL;
+				newType = Types.RoomWallUL;
 			}
 			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 			{
-				newType = CellTypes.RoomWallUR;
+				newType = Types.RoomWallUR;
 			}
 			else if (x == coords.X)                                            // Left wall.
 			{
-				newType = CellTypes.RoomWallL;
+				newType = Types.RoomWallL;
 			}
 			else if (x == coords.X + width - 1)                                // Right wall.
 			{
-				newType = CellTypes.RoomWallR;   
+				newType = Types.RoomWallR;   
 			}
 			else if (y == coords.Y)                                            // Bottom wall.
 			{
-				newType = CellTypes.RoomWallD;
+				newType = Types.RoomWallD;
 			}
 			else if (y == coords.Y + height - 1)                               // Top wall.
 			{
-				newType = CellTypes.RoomWallU;
+				newType = Types.RoomWallU;
 			}
 			else
 			{
-				newType = CellTypes.RoomSpace;
+				newType = Types.RoomSpace;
 			}
 			
 			return newType;
 		}
 
-		private CellType RoundRoomType(int x, int y, Coords coords, int width, int height)
+		private Type RoundRoomType(int x, int y, Coords coords, int width, int height)
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (x == coords.X && y == coords.Y)                                    // Bottom-left corner.
 			{
-				newType = CellTypes.RoomWallDL_Round;
+				newType = Types.RoomWallDL_Round;
 			}
 			else if (x == coords.X + width - 1 && y == coords.Y)                   // Bottom-right corner.
 			{
-				newType = CellTypes.RoomWallDR_Round;
+				newType = Types.RoomWallDR_Round;
 			}
 			else if (x == coords.X && y == coords.Y + height - 1)                  // Top-left corner.
 			{
-				newType = CellTypes.RoomWallUL_Round;
+				newType = Types.RoomWallUL_Round;
 			}
 			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)      // Top-right corner.
 			{
-				newType = CellTypes.RoomWallUR_Round;
+				newType = Types.RoomWallUR_Round;
 			}
 			else if (x == coords.X && x == 0)                                      // Left wall.
 			{
-				newType = CellTypes.RoomWallL_Round;
+				newType = Types.RoomWallL_Round;
 			}
 			else if (x == coords.X)                                                // Left exit.
 			{
-				newType = CellTypes.RoomExitL_Round;
+				newType = Types.RoomExitL_Round;
 			}
 			else if (x == coords.X + width - 1 && x == Constants.GridWidth - 1)    // Right wall.
 			{
-				newType = CellTypes.RoomWallR_Round; 
+				newType = Types.RoomWallR_Round; 
 			}
 			else if (x == coords.X + width - 1)                                    // Right exit.
 			{
-				newType = CellTypes.RoomExitR_Round;  
+				newType = Types.RoomExitR_Round;  
 			}
 			else if (y == coords.Y && y == 0)                                      // Bottom wall.
 			{
-				newType = CellTypes.RoomWallD_Round;
+				newType = Types.RoomWallD_Round;
 			}
 			else if (y == coords.Y)                                                // Bottom exit.
 			{
-				newType = CellTypes.RoomExitD_Round;
+				newType = Types.RoomExitD_Round;
 			}
 			else if (y == coords.Y + height - 1 && y == Constants.GridHeight - 1)  // Top wall.
 			{
-				newType = CellTypes.RoomWallU_Round;
+				newType = Types.RoomWallU_Round;
 			}
 			else if (y == coords.Y + height - 1)                                   // Top exit.
 			{
-				newType = CellTypes.RoomExitU_Round;
+				newType = Types.RoomExitU_Round;
 			}
 			else
 			{
-				newType = CellTypes.Fountain;
+				newType = Types.Fountain;
 			}
 			
 			return newType;
@@ -890,85 +890,85 @@ namespace DigitalWizardry.Dungeon
 		|    |
 		+----+
 		*/
-		private CellType IrregRoomTypeUL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
+		private Type IrregRoomTypeUL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (y >= coords.Y && y < coords.Y + height - heightReduce - 1)         // Normal room section.
 			{
 				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x == coords.X)                                            // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - 1)                                // Right wall.
 				{
-					newType = CellTypes.RoomWallR;   
+					newType = Types.RoomWallR;   
 				}
 				else if (y == coords.Y)                                            // Bottom wall.
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else if (y == coords.Y + height - 1)                               // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y == coords.Y + height - heightReduce - 1)  
 			{
 				if (x == coords.X)                                                
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                
 				{
-					newType = CellTypes.RoomWallDRinv;
+					newType = Types.RoomWallDRinv;
 				}
 				else if (x == coords.X + width - 1)                                
 				{
-					newType = CellTypes.RoomWallR;
+					newType = Types.RoomWallR;
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1) 
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y > coords.Y + height - heightReduce - 1 && y < coords.Y + height - 1) 
 			{
 				if (x == coords.X + width - 1)                                            
 				{
-					newType = CellTypes.RoomWallR;
+					newType = Types.RoomWallR;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                
 				{
-					newType = CellTypes.RoomWallL; 
+					newType = Types.RoomWallL; 
 				}
 				else if (x > coords.X + width - widthReduce - 1)   
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 				//else Empty.
 			}
@@ -976,15 +976,15 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (x == coords.X + width - 1)                                            
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x == coords.X + width - widthReduce - 1)               
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x > coords.X + width - widthReduce - 1)  
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				//else Empty.
 			}
@@ -999,85 +999,85 @@ namespace DigitalWizardry.Dungeon
 		|    |
 		+----+
 		*/
-		private CellType IrregRoomTypeUR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
+		private Type IrregRoomTypeUR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (y >= coords.Y && y < coords.Y + height - heightReduce - 1)         // Normal room section.
 			{
 				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x == coords.X)                                            // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - 1)                                // Right wall.
 				{
-					newType = CellTypes.RoomWallR;   
+					newType = Types.RoomWallR;   
 				}
 				else if (y == coords.Y)                                            // Bottom wall.
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else if (y == coords.Y + height - 1)                               // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y == coords.Y + height - heightReduce - 1)  
 			{
 				if (x == coords.X)                                                 // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                  // Bottom-left corner inv.
 				{
-					newType = CellTypes.RoomWallDLinv;
+					newType = Types.RoomWallDLinv;
 				}
 				else if (x == coords.X + width - 1)                                // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)   // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y > coords.Y + height - heightReduce - 1 && y < coords.Y + height - 1) 
 			{
 				if (x == coords.X)                                                 // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                  // Right wall.
 				{
-					newType = CellTypes.RoomWallR; 
+					newType = Types.RoomWallR; 
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   // Room space.
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 				//else Empty.
 			}
@@ -1085,15 +1085,15 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (x == coords.X)                                                 // Top-left corner.
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                  // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				//else Empty.
 			}
@@ -1109,85 +1109,85 @@ namespace DigitalWizardry.Dungeon
 		   | |
 		   +-+
 		*/
-		private CellType IrregRoomTypeDL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
+		private Type IrregRoomTypeDL(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce)
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (y > coords.Y + height - heightReduce - 1)                          // Normal room section.
 			{
 				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x == coords.X)                                            // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - 1)                                // Right wall.
 				{
-					newType = CellTypes.RoomWallR;   
+					newType = Types.RoomWallR;   
 				}
 				else if (y == coords.Y)                                            // Bottom wall.
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else if (y == coords.Y + height - 1)                               // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y == coords.Y + height - heightReduce - 1)  
 			{
 				if (x == coords.X)                                                
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                
 				{
-					newType = CellTypes.RoomWallURinv;
+					newType = Types.RoomWallURinv;
 				}
 				else if (x == coords.X + width - 1)                              
 				{
-					newType = CellTypes.RoomWallR;
+					newType = Types.RoomWallR;
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1)   
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y > coords.Y && y < coords.Y + height - heightReduce - 1) 
 			{
 				if (x == coords.X + width - 1)                                                
 				{
-					newType = CellTypes.RoomWallR;
+					newType = Types.RoomWallR;
 				}
 				else if (x == coords.X + width - widthReduce - 1)               
 				{
-					newType = CellTypes.RoomWallL; 
+					newType = Types.RoomWallL; 
 				}
 				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)  
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 				//else Empty.
 			}
@@ -1195,15 +1195,15 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (x == coords.X + width - 1)                                                 
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x == coords.X + width - widthReduce - 1)           
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)  
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				//else Empty.
 			}
@@ -1219,85 +1219,85 @@ namespace DigitalWizardry.Dungeon
 		| |
 		+-+
 		*/
-		private CellType IrregRoomTypeDR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
+		private Type IrregRoomTypeDR(int x, int y, Coords coords, int width, int height, int widthReduce, int heightReduce) 
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			if (y > coords.Y + height - heightReduce - 1)                          // Normal room section.
 			{
 				if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 				{
-					newType = CellTypes.RoomWallUL;
+					newType = Types.RoomWallUL;
 				}
 				else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 				{
-					newType = CellTypes.RoomWallUR;
+					newType = Types.RoomWallUR;
 				}
 				else if (x == coords.X)                                            // Left wall.
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - 1)                                // Right wall.
 				{
-					newType = CellTypes.RoomWallR;   
+					newType = Types.RoomWallR;   
 				}
 				else if (y == coords.Y)                                            // Bottom wall.
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else if (y == coords.Y + height - 1)                               // Top wall.
 				{
-					newType = CellTypes.RoomWallU;
+					newType = Types.RoomWallU;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y == coords.Y + height - heightReduce - 1)  
 			{
 				if (x == coords.X)                                                
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)                
 				{
-					newType = CellTypes.RoomWallULinv;
+					newType = Types.RoomWallULinv;
 				}
 				else if (x == coords.X + width - 1)                              
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x > coords.X + width - widthReduce - 1 && x < coords.X + width - 1)   
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				else
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 			}
 			else if (y > coords.Y && y < coords.Y + height - heightReduce - 1) 
 			{
 				if (x == coords.X)                                                
 				{
-					newType = CellTypes.RoomWallL;
+					newType = Types.RoomWallL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)               
 				{
-					newType = CellTypes.RoomWallR; 
+					newType = Types.RoomWallR; 
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1)  
 				{
-					newType = CellTypes.RoomSpace;
+					newType = Types.RoomSpace;
 				}
 				//else Empty.
 			}
@@ -1305,15 +1305,15 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (x == coords.X)                                                 
 				{
-					newType = CellTypes.RoomWallDL;
+					newType = Types.RoomWallDL;
 				}
 				else if (x == coords.X + width - widthReduce - 1)           
 				{
-					newType = CellTypes.RoomWallDR;
+					newType = Types.RoomWallDR;
 				}
 				else if (x > coords.X && x < coords.X + width - widthReduce - 1)  
 				{
-					newType = CellTypes.RoomWallD;
+					newType = Types.RoomWallD;
 				}
 				//else Empty.
 			}
@@ -1321,9 +1321,9 @@ namespace DigitalWizardry.Dungeon
 			return newType;
 		}
 
-		private void BuildMines(Coords coords, int width, int height, CellDescription descr)
+		private void BuildMines(Coords coords, int width, int height, Description descr)
 		{
-			CellType newType = null;
+			Type newType = null;
 			
 			for (int y = coords.Y; y < coords.Y + height; y++) 
 			{
@@ -1331,19 +1331,19 @@ namespace DigitalWizardry.Dungeon
 				{
 					if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
 					{
-						newType = CellTypes.ElbUR;
+						newType = Types.ElbUR;
 					}
 					else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
 					{
-						newType = CellTypes.ElbUL;
+						newType = Types.ElbUL;
 					}
 					else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
 					{
-						newType = CellTypes.ElbDR;
+						newType = Types.ElbDR;
 					}
 					else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
 					{
-						newType = CellTypes.ElbDL;
+						newType = Types.ElbDL;
 					}
 					else if (x == coords.X)                                            // Left wall.
 					{
@@ -1361,13 +1361,13 @@ namespace DigitalWizardry.Dungeon
 					{
 						newType = MinesWall(x, y, Direction.Up, descr);
 					}
-					else if (descr == CellDescriptions.Mines_Horiz)
+					else if (descr == Descriptions.Mines_Horiz)
 					{
-						newType = CellTypes.Horiz;
+						newType = Types.Horiz;
 					}
-					else if (descr == CellDescriptions.Mines_Vert)
+					else if (descr == Descriptions.Mines_Vert)
 					{
-						newType = CellTypes.Vert;
+						newType = Types.Vert;
 					}
 					
 					Cell currentCell = CellAt(x, y);
@@ -1381,71 +1381,71 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private CellType MinesWall(int x, int y, Direction dir, CellDescription desc)
+		private Type MinesWall(int x, int y, Direction dir, Description desc)
 		{
-			CellType type = null;
+			Type type = null;
 		
 			// Room exits can only occur if the room wall in question is at least 1 cell from the dungeon 
 			// edge, to allow the resulting corridors to grow or be "capped".
 			
 			if (dir == Direction.Up)                             
 			{
-				if (desc == CellDescriptions.Mines_Horiz)
+				if (desc == Descriptions.Mines_Horiz)
 				{
-					type = CellTypes.Horiz;    // No exit for horizontal mine.
+					type = Types.Horiz;    // No exit for horizontal mine.
 				}
 				else if (y + 1 < Constants.GridHeight)
 				{
-					type = CellTypes.Inter;    // Exit for vertical mine.
+					type = Types.Inter;    // Exit for vertical mine.
 				}
 				else
 				{
-					type = CellTypes.JuncDLR;  // No exit for vertical mine.
+					type = Types.JuncDLR;  // No exit for vertical mine.
 				}
 			}
 			else if (dir == Direction.Down)                                            
 			{
-				if (desc == CellDescriptions.Mines_Horiz)
+				if (desc == Descriptions.Mines_Horiz)
 				{
-					type = CellTypes.Horiz;    // No exit for horizontal mine.
+					type = Types.Horiz;    // No exit for horizontal mine.
 				}
 				else if (y - 1 >= 0)
 				{
-					type = CellTypes.Inter;    // Exit for vertical mine.
+					type = Types.Inter;    // Exit for vertical mine.
 				}
 				else
 				{
-					type = CellTypes.JuncULR;  // No exit for vertical mine.
+					type = Types.JuncULR;  // No exit for vertical mine.
 				}
 			}
 			else if (dir == Direction.Left)                                              
 			{        
-				if (desc == CellDescriptions.Mines_Vert)
+				if (desc == Descriptions.Mines_Vert)
 				{
-					type = CellTypes.Vert;    // No exit for vertical mine.
+					type = Types.Vert;    // No exit for vertical mine.
 				}
 				else if (x - 1 >= 0)
 				{
-					type = CellTypes.Inter;    // Exit for horizontal mine.
+					type = Types.Inter;    // Exit for horizontal mine.
 				}
 				else
 				{
-					type = CellTypes.JuncUDR;  // No exit for horizontal mine.
+					type = Types.JuncUDR;  // No exit for horizontal mine.
 				}
 			}                                
 			else if (dir == Direction.Right)                                  
 			{
-				if (desc == CellDescriptions.Mines_Vert)
+				if (desc == Descriptions.Mines_Vert)
 				{
-					type = CellTypes.Vert;    // No exit for vertical mine.
+					type = Types.Vert;    // No exit for vertical mine.
 				}
 				else if (x + 1 < Constants.GridHeight)
 				{
-					type = CellTypes.Inter;    // Exit for horizontal mine.
+					type = Types.Inter;    // Exit for horizontal mine.
 				}
 				else
 				{
-					type = CellTypes.JuncUDL;  // No exit for horizontal mine.
+					type = Types.JuncUDL;  // No exit for horizontal mine.
 				}
 			}
 			
@@ -1461,7 +1461,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (cell.Type == CellTypes.RoomWallDL && !cell.Merged)
+					if (cell.Type == Types.RoomWallDL && !cell.Merged)
 					{
 						try 
 						{
@@ -1487,7 +1487,7 @@ namespace DigitalWizardry.Dungeon
 			Direction dir = Direction.Up;
 			int newX = 0, newY = 0;
 			int x = startX, y = startY;
-			Room room = new Room(startX, startY, CellDescriptions.Room_TBD);
+			Room room = new Room(startX, startY, Descriptions.Room_TBD);
 			Cell currentCell, cellUp, cellDown, cellLeft, cellRight;
 			
 			do
@@ -1501,7 +1501,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				
 				currentCell = CellAt(x, y);
-				CellType newType = currentCell.Type;  // Default.
+				Type newType = currentCell.Type;  // Default.
 				
 				// Arriving back at an already merged cell in the same room means that the rooms cannot be 
 				// properly merged. This is usually due to a "missing" wall cells occurring due to the way 
@@ -1532,7 +1532,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				else if (dir == Direction.Up && cellLeft != null && cellLeft.Type.RoomConnectsRight)
 				{
-					newType = CellTypes.RoomWallURinv;
+					newType = Types.RoomWallURinv;
 					newX = x - 1;
 					newY = y;
 					dir = Direction.Left;
@@ -1551,7 +1551,7 @@ namespace DigitalWizardry.Dungeon
 					newY = y;
 					dir = Direction.Right;
 				}
-				else if (dir == Direction.Up && (currentCell.Type == CellTypes.RoomWallUL || currentCell.Type == CellTypes.RoomWallULinv))
+				else if (dir == Direction.Up && (currentCell.Type == Types.RoomWallUL || currentCell.Type == Types.RoomWallULinv))
 				{
 					newType = RandomRoomCorner(x, y, Direction.UpLeft);
 					newX = x + 1;
@@ -1567,7 +1567,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				else if (dir == Direction.Left && cellDown != null && cellDown.Type.RoomConnectsUp)
 				{
-					newType = CellTypes.RoomWallULinv;
+					newType = Types.RoomWallULinv;
 					newX = x;
 					newY = y - 1;
 					dir = Direction.Down;
@@ -1586,7 +1586,7 @@ namespace DigitalWizardry.Dungeon
 					newY = y + 1;
 					dir = Direction.Up;
 				}
-				else if (dir == Direction.Left && (currentCell.Type == CellTypes.RoomWallDL || currentCell.Type == CellTypes.RoomWallDLinv))
+				else if (dir == Direction.Left && (currentCell.Type == Types.RoomWallDL || currentCell.Type == Types.RoomWallDLinv))
 				{
 					newType = RandomRoomCorner(x, y, Direction.DownLeft);
 					newX = x;
@@ -1602,7 +1602,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				else if (dir == Direction.Right && cellUp != null && cellUp.Type.RoomConnectsDown)
 				{
-					newType = CellTypes.RoomWallDRinv;
+					newType = Types.RoomWallDRinv;
 					newX = x;
 					newY = y + 1;
 					dir = Direction.Up;
@@ -1621,7 +1621,7 @@ namespace DigitalWizardry.Dungeon
 					newY = y - 1;
 					dir = Direction.Down;
 				}
-				else if (dir == Direction.Right && (currentCell.Type == CellTypes.RoomWallUR || currentCell.Type == CellTypes.RoomWallURinv))
+				else if (dir == Direction.Right && (currentCell.Type == Types.RoomWallUR || currentCell.Type == Types.RoomWallURinv))
 				{
 					newType = RandomRoomCorner(x, y, Direction.UpRight);
 					newX = x;
@@ -1637,7 +1637,7 @@ namespace DigitalWizardry.Dungeon
 				}
 				else if (dir == Direction.Down && cellRight != null && cellRight.Type.RoomConnectsLeft)
 				{
-					newType = CellTypes.RoomWallDLinv;
+					newType = Types.RoomWallDLinv;
 					newX = x + 1;
 					newY = y;
 					dir = Direction.Right;
@@ -1656,7 +1656,7 @@ namespace DigitalWizardry.Dungeon
 					newY = y;
 					dir = Direction.Left;
 				}
-				else if (dir == Direction.Down && (currentCell.Type == CellTypes.RoomWallDR || currentCell.Type == CellTypes.RoomWallDRinv))
+				else if (dir == Direction.Down && (currentCell.Type == Types.RoomWallDR || currentCell.Type == Types.RoomWallDRinv))
 				{
 					newType = RandomRoomCorner(x, y, Direction.DownRight);
 					newX = x - 1;
@@ -1671,7 +1671,7 @@ namespace DigitalWizardry.Dungeon
 					dir = Direction.Down;
 				}
 				
-				Cell newCell = new Cell(x, y, newType, CellDescriptions.Room_TBD);
+				Cell newCell = new Cell(x, y, newType, Descriptions.Room_TBD);
 				newCell.Merged = true;
 				SetCellValue(x, y, newCell);
 				room.Walls.Add(newCell);
@@ -1701,12 +1701,12 @@ namespace DigitalWizardry.Dungeon
 				currentCell = y < Constants.GridHeight ? CellAt(x, y) : null;
 				cellUp = y + up < Constants.GridHeight ? CellAt(x, y + up) : null;
 				
-				if (CellTypes.IsCleanStartWall(currentCell.Type))
+				if (Types.IsCleanStartWall(currentCell.Type))
 				{
 					while (!cellUp.Merged)
 					{
-						CellType newType = CellTypes.RoomSpace;
-						Cell newCell = new Cell(x, y + up, newType, CellDescriptions.Room_TBD);
+						Type newType = Types.RoomSpace;
+						Cell newCell = new Cell(x, y + up, newType, Descriptions.Room_TBD);
 						newCell.Merged = true;
 						SetCellValue(x, y + up, newCell);
 						room.Space.Add(newCell);
@@ -1766,7 +1766,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (CellTypes.IsRoomType(cell.Type) && !cell.Merged)
+					if (Types.IsRoomType(cell.Type) && !cell.Merged)
 					{
 						ReplaceDungeonCellValue(x, y, this.EmptyCell);
 					}
@@ -1809,9 +1809,9 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		// Need a random piece of wall? Then you've come to the right place!
-		private CellType RandomRoomWall(int x, int y, Direction dir)
+		private Type RandomRoomWall(int x, int y, Direction dir)
 		{
-			CellType type = null;
+			Type type = null;
 			bool exit = this.R.Next(100) + 1 <= Constants.RoomExitProb;
 			
 			// Room exits can only occur if the room wall in question is at least 1 cell
@@ -1820,40 +1820,40 @@ namespace DigitalWizardry.Dungeon
 			if (dir == Direction.Up)                             
 			{
 				if (exit && y + 1 < Constants.GridHeight)
-					type = CellTypes.RoomExitU; 
+					type = Types.RoomExitU; 
 				else
-					type = CellTypes.RoomWallU;
+					type = Types.RoomWallU;
 			}
 			else if (dir == Direction.Down)                                            
 			{
 				if (exit && y - 1 >= 0)
-					type = CellTypes.RoomExitD;
+					type = Types.RoomExitD;
 				else
-					type = CellTypes.RoomWallD;
+					type = Types.RoomWallD;
 			}
 			else if (dir == Direction.Left)                                              
 			{
 				if (exit && x - 1 >= 0) 
-					type = CellTypes.RoomExitL; 
+					type = Types.RoomExitL; 
 				else
-					type = CellTypes.RoomWallL;
+					type = Types.RoomWallL;
 			}                                
 			else if (dir == Direction.Right)                                  
 			{
 				if (exit && x + 1 < Constants.GridHeight) 
-					type = CellTypes.RoomExitR;
+					type = Types.RoomExitR;
 				else
-					type = CellTypes.RoomWallR;
+					type = Types.RoomWallR;
 			}
 			
 			return type;
 		}
 
-		private CellType RandomRoomCorner(int x, int y, Direction dir)
+		private Type RandomRoomCorner(int x, int y, Direction dir)
 		{
-			CellType type = null;
+			Type type = null;
 			bool exit = this.R.Next(100) + 1 <= Constants.RoomExitProb;
-			List<CellType> possibleExitTypes = new List<CellType>();
+			List<Type> possibleExitTypes = new List<Type>();
 			
 			// Room exits can only occur if the room wall in question is at least 1 cell
 			// from the dungeon edge, to allow the resulting corridors to grow or be "capped".
@@ -1862,22 +1862,22 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (!exit) 
 				{
-					return CellTypes.RoomWallUL;
+					return Types.RoomWallUL;
 				}
 				
 				if (y + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUL_U);
+					possibleExitTypes.Add(Types.RoomExitUL_U);
 				}
 				
 				if (x - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUL_L);
+					possibleExitTypes.Add(Types.RoomExitUL_L);
 				}
 				
 				if (x - 1 >= 0 && y + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUL_UL);
+					possibleExitTypes.Add(Types.RoomExitUL_UL);
 				}
 				
 				if (possibleExitTypes.Count > 0)
@@ -1886,29 +1886,29 @@ namespace DigitalWizardry.Dungeon
 				}
 				else
 				{
-					type = CellTypes.RoomWallUL;  // No exits fit.
+					type = Types.RoomWallUL;  // No exits fit.
 				}
 			}
 			else if (dir == Direction.UpRight)                                            
 			{
 				if (!exit) 
 				{
-					return CellTypes.RoomWallUR;
+					return Types.RoomWallUR;
 				}
 				
 				if (y + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUR_U);
+					possibleExitTypes.Add(Types.RoomExitUR_U);
 				}
 				
 				if (x + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUR_R);
+					possibleExitTypes.Add(Types.RoomExitUR_R);
 				}
 				
 				if (x + 1 < Constants.GridHeight && y + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitUR_UR);
+					possibleExitTypes.Add(Types.RoomExitUR_UR);
 				}
 				
 				if (possibleExitTypes.Count > 0)
@@ -1917,29 +1917,29 @@ namespace DigitalWizardry.Dungeon
 				}
 				else
 				{
-					type = CellTypes.RoomWallUR;  // No exits fit.
+					type = Types.RoomWallUR;  // No exits fit.
 				}
 			}
 			else if (dir == Direction.DownLeft)                                              
 			{
 				if (!exit) 
 				{
-					return CellTypes.RoomWallDL;
+					return Types.RoomWallDL;
 				}
 				
 				if (y - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDL_D);
+					possibleExitTypes.Add(Types.RoomExitDL_D);
 				}
 				
 				if (x - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDL_L);
+					possibleExitTypes.Add(Types.RoomExitDL_L);
 				}
 				
 				if (x - 1 >= 0 && y - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDL_DL);
+					possibleExitTypes.Add(Types.RoomExitDL_DL);
 				}
 				
 				if (possibleExitTypes.Count > 0)
@@ -1948,29 +1948,29 @@ namespace DigitalWizardry.Dungeon
 				}
 				else
 				{
-					type = CellTypes.RoomWallDL;  // No exits fit.
+					type = Types.RoomWallDL;  // No exits fit.
 				}
 			}                                
 			else if (dir == Direction.DownRight)                                  
 			{
 				if (!exit) 
 				{
-					return CellTypes.RoomWallDR;
+					return Types.RoomWallDR;
 				}
 				
 				if (y - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDR_D);
+					possibleExitTypes.Add(Types.RoomExitDR_D);
 				}
 				
 				if (x + 1 < Constants.GridHeight)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDR_R);
+					possibleExitTypes.Add(Types.RoomExitDR_R);
 				}
 				
 				if (x + 1 < Constants.GridHeight && y - 1 >= 0)
 				{
-					possibleExitTypes.Add(CellTypes.RoomExitDR_DR);
+					possibleExitTypes.Add(Types.RoomExitDR_DR);
 				}
 				
 				if (possibleExitTypes.Count > 0)
@@ -1979,20 +1979,20 @@ namespace DigitalWizardry.Dungeon
 				}
 				else
 				{
-					type = CellTypes.RoomWallDR;  // No exits fit.
+					type = Types.RoomWallDR;  // No exits fit.
 				}
 			}
 			
 			return type;
 		}
 
-		private bool IncompatibleCornerTypes(CellType currentType, CellType newType)
+		private bool IncompatibleCornerTypes(Type currentType, Type newType)
 		{
 			return 
-			(currentType == CellTypes.RoomWallUL && newType == CellTypes.RoomWallDR) ||
-			(currentType == CellTypes.RoomWallUR && newType == CellTypes.RoomWallDL) ||
-			(currentType == CellTypes.RoomWallDL && newType == CellTypes.RoomWallUR) ||
-			(currentType == CellTypes.RoomWallDR && newType == CellTypes.RoomWallUL);
+			(currentType == Types.RoomWallUL && newType == Types.RoomWallDR) ||
+			(currentType == Types.RoomWallUR && newType == Types.RoomWallDL) ||
+			(currentType == Types.RoomWallDL && newType == Types.RoomWallUR) ||
+			(currentType == Types.RoomWallDR && newType == Types.RoomWallUL);
 		}
 
 		// Any existing room exit should be connected to any adjacent room section belonging to another room.
@@ -2061,7 +2061,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			Cell cell = CellAt(x, y);
 			
-			if (!CellTypes.IsRoomExit(cell.Type))
+			if (!Types.IsRoomExit(cell.Type))
 			{
 				return;
 			}
@@ -2134,7 +2134,7 @@ namespace DigitalWizardry.Dungeon
 				
 				Direction directionOK = Direction.NoDir;
 				
-				if (CellTypes.IsRoomCorner(cell.Type))
+				if (Types.IsRoomCorner(cell.Type))
 				{
 					directionOK = RoomCellsAdjacentOK(cell);
 				}
@@ -2146,9 +2146,9 @@ namespace DigitalWizardry.Dungeon
 				if (directionOK != Direction.NoDir) 
 				{
 					directionOK = FilterDirection(directionOK);
-					CellType newType = CellTypes.ConvRoomWallToExit(cell.Type, directionOK);
+					Type newType = Types.ConvRoomWallToExit(cell.Type, directionOK);
 					
-					Cell newCell = new Cell(cell.X, cell.Y, newType, CellDescriptions.Room_TBD);
+					Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Room_TBD);
 					
 					SetDungeonCellValue(cell.X, cell.Y, newCell);
 					room.Walls.Add(newCell);
@@ -2245,7 +2245,7 @@ namespace DigitalWizardry.Dungeon
 		private Direction RoomCellAdjacentOK(Cell cell)
 		{
 			Cell adjacentCell = null;
-			Direction dir = CellTypes.RoomWallDirection(cell.Type);
+			Direction dir = Types.RoomWallDirection(cell.Type);
 				
 			if (dir == Direction.Up && cell.Y + 1 < Constants.GridHeight)
 			{
@@ -2264,7 +2264,7 @@ namespace DigitalWizardry.Dungeon
 				adjacentCell = CellAt(cell.X + 1, cell.Y);
 			}
 				
-			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || (adjacentCell.Type.RoomExitCompatible && adjacentCell.Descr == CellDescriptions.Room_TBD)))
+			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || (adjacentCell.Type.RoomExitCompatible && adjacentCell.Descr == Descriptions.Room_TBD)))
 			{
 				return dir;
 			}
@@ -2281,7 +2281,7 @@ namespace DigitalWizardry.Dungeon
 			bool okUp = false, okDown = false, okLeft = false, okRight = false;
 			Cell adjCellUp, adjCellDown, adjCellLeft, adjCellRight;
 			
-			Direction dir = CellTypes.RoomWallDirection(cell.Type);
+			Direction dir = Types.RoomWallDirection(cell.Type);
 				
 			if (dir == Direction.UpLeft || dir == Direction.UpRight)
 			{
@@ -2289,7 +2289,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					adjCellUp = CellAt(cell.X, cell.Y + 1);
 
-					if (adjCellUp.Type.IsEmpty || (adjCellUp.Type.RoomExitCompatible && adjCellUp.Descr == CellDescriptions.Room_TBD))
+					if (adjCellUp.Type.IsEmpty || (adjCellUp.Type.RoomExitCompatible && adjCellUp.Descr == Descriptions.Room_TBD))
 					{
 						okUp = true;
 					}
@@ -2302,7 +2302,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					adjCellDown = CellAt(cell.X, cell.Y - 1);
 
-					if (adjCellDown.Type.IsEmpty || (adjCellDown.Type.RoomExitCompatible && adjCellDown.Descr == CellDescriptions.Room_TBD))
+					if (adjCellDown.Type.IsEmpty || (adjCellDown.Type.RoomExitCompatible && adjCellDown.Descr == Descriptions.Room_TBD))
 					{
 						okDown = true;
 					}
@@ -2314,7 +2314,7 @@ namespace DigitalWizardry.Dungeon
 				if (cell.X - 1 >= 0)
 				{
 					adjCellLeft = CellAt(cell.X - 1, cell.Y);
-					if (adjCellLeft.Type.IsEmpty || (adjCellLeft.Type.RoomExitCompatible && adjCellLeft.Descr == CellDescriptions.Room_TBD))
+					if (adjCellLeft.Type.IsEmpty || (adjCellLeft.Type.RoomExitCompatible && adjCellLeft.Descr == Descriptions.Room_TBD))
 					{
 						okLeft = true;
 					}
@@ -2326,7 +2326,7 @@ namespace DigitalWizardry.Dungeon
 				if (cell.X + 1 < Constants.GridWidth)
 				{
 					adjCellRight = CellAt(cell.X + 1, cell.Y);
-					if (adjCellRight.Type.IsEmpty || (adjCellRight.Type.RoomExitCompatible && adjCellRight.Descr == CellDescriptions.Room_TBD))
+					if (adjCellRight.Type.IsEmpty || (adjCellRight.Type.RoomExitCompatible && adjCellRight.Descr == Descriptions.Room_TBD))
 					{
 						okRight = true;
 					}
@@ -2381,11 +2381,11 @@ namespace DigitalWizardry.Dungeon
 		private void ConnectRoomCells(Cell cell, int adjX, int adjY, Direction dir)
 		{
 			Cell newCell;
-			CellType newType;
+			Type newType;
 			Cell adjacent = CellAt(adjX, adjY);
 			
 			// No point in trying to force connect two special rooms, they won't join anyways.
-			if (CellDescriptions.IsMines(cell.Descr) && CellDescriptions.IsMines(adjacent.Descr))
+			if (Descriptions.IsMines(cell.Descr) && Descriptions.IsMines(adjacent.Descr))
 			{
 				throw new DungeonBuildException();
 			}
@@ -2396,17 +2396,17 @@ namespace DigitalWizardry.Dungeon
 			}
 			else if (adjacent.Type.RoomExitCompatible)
 			{
-				newType = CellTypes.ConvRoomWallToExit(adjacent.Type, OppositeDir(dir));
+				newType = Types.ConvRoomWallToExit(adjacent.Type, OppositeDir(dir));
 				newCell = new Cell(adjX, adjY, newType, adjacent.Descr);
 				SetCellValue(adjX, adjY, newCell);
 				AddNewCellToRoom(adjacent, newCell);
 			}
 			else
 			{
-				newType = CellTypes.ConvRoomExitToWall(cell.Type, dir, cell.Descr);
+				newType = Types.ConvRoomExitToWall(cell.Type, dir, cell.Descr);
 				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
 				
-				if (CellDescriptions.IsMines(newCell.Descr)) 
+				if (Descriptions.IsMines(newCell.Descr)) 
 				{
 					ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
 				}
@@ -2464,7 +2464,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (cell.Type == CellTypes.Inter)
+					if (cell.Type == Types.Inter)
 					{
 						Cell cellUp, cellDown, cellLeft, cellRight;
 							
@@ -2514,7 +2514,7 @@ namespace DigitalWizardry.Dungeon
 					
 					int volume = room.Walls.Count + room.Space.Count;
 					
-					if (room.Description == CellDescriptions.Room_TBD && volume >= Constants.MinCatacombsVolume) 
+					if (room.Description == Descriptions.Room_TBD && volume >= Constants.MinCatacombsVolume) 
 					{
 						ConvertRoomToCatacombs(room);
 						added++;
@@ -2550,16 +2550,16 @@ namespace DigitalWizardry.Dungeon
 		{
 			foreach (Cell cell in room.Walls) 
 			{
-				CellType newType = CellTypes.ConvRoomTypeToCatacomb(cell.Type);
-				Cell newCell = new Cell(cell.X, cell.Y, newType, CellDescriptions.Catacombs_TBD);
+				Type newType = Types.ConvRoomTypeToCatacomb(cell.Type);
+				Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
 				newCell.IsCatacombs = true;
 				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
 			}
 			
 			foreach (Cell cell in room.Space) 
 			{
-				CellType newType = CellTypes.ConvRoomTypeToCatacomb(cell.Type);
-				Cell newCell =  new Cell(cell.X, cell.Y, newType, CellDescriptions.Catacombs_TBD);
+				Type newType = Types.ConvRoomTypeToCatacomb(cell.Type);
+				Cell newCell =  new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
 				newCell.IsCatacombs = true;
 				ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
 			}
@@ -2589,7 +2589,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = CellAt(x, y);
 					
-					if (!CellDescriptions.IsMines(cell.Descr) && !(cell.Descr == CellDescriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
+					if (!Descriptions.IsMines(cell.Descr) && !(cell.Descr == Descriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
 					{
 						cell.Doors = RandomDoorSetup(cell);
 					}
@@ -2879,8 +2879,8 @@ namespace DigitalWizardry.Dungeon
 			bool success = false;
 			bool typeMatch = false;
 			
-			CellType newType = null;
-			CellDescription descr = null;
+			Type newType = null;
+			Description descr = null;
 			List<Cell> cells = ForceGrowthCells();
 			
 			while (!success && cells.Count > 0) 
@@ -2889,7 +2889,7 @@ namespace DigitalWizardry.Dungeon
 				Coords coords = new Coords(cell.X, cell.Y);
 				
 				// Attempt to replace it from the standard types.
-				List<CellType> types = CellTypes.GetTypes(coords);
+				List<Type> types = Types.GetTypes(coords);
 				types.Remove(cell.Type);  // ...but replace it with something different.
 				
 				while (!typeMatch) 
@@ -3017,7 +3017,7 @@ namespace DigitalWizardry.Dungeon
 				}
 			}
 
-			if (CellTypes.IsDeadEnd(cell.Type)) 
+			if (Types.IsDeadEnd(cell.Type)) 
         	{
 				CheckForDownStairsPlacement(cell);
 			}
@@ -3065,10 +3065,10 @@ namespace DigitalWizardry.Dungeon
 					{
 						Cell cell = CellAt(X, Y);
 						
-						if (CellDescriptions.IsTBD(cell.Descr))
+						if (Descriptions.IsTBD(cell.Descr))
 						{
 							int dominantWeight = -1;
-							CellDescription dominantDescr = CellDescriptions.Empty;  // Initialize to empty to satisfy compiler.
+							Description dominantDescr = Descriptions.Empty;  // Initialize to empty to satisfy compiler.
 							DominantDescr(cell, ref dominantWeight, ref dominantDescr);
 							
 							if (dominantWeight == -1 && !forceChange)
@@ -3078,7 +3078,7 @@ namespace DigitalWizardry.Dungeon
 							else
 							{
 								int weight = 0, randomPercent = RandomPercent();
-								CellDescription descr;
+								Description descr;
 								
 								if (randomPercent >= dominantWeight || forceChange)
 								{
@@ -3096,7 +3096,7 @@ namespace DigitalWizardry.Dungeon
 								}
 								
 								// Update descr for either entire room, or individual cell.
-								if (CellTypes.IsRoomType(cell.Type))
+								if (Types.IsRoomType(cell.Type))
 								{
 									UpdateRoomDescr(cell, descr, weight);
 								}
@@ -3137,7 +3137,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (CellDescriptions.IsTBD(cell.Descr)) 
+					if (Descriptions.IsTBD(cell.Descr)) 
 					{
 						complete = false;
 						break;
@@ -3148,7 +3148,7 @@ namespace DigitalWizardry.Dungeon
 			return complete;
 		}
 
-		private void DominantDescr(Cell cell, ref int weight, ref CellDescription descr)
+		private void DominantDescr(Cell cell, ref int weight, ref Description descr)
 		{    
 			Cell adjacentCell;
 			List<Cell> cells = new List<Cell>();
@@ -3158,7 +3158,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X, cell.Y + 1);
 				
-				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3169,7 +3169,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X, cell.Y - 1);
 				
-				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3180,7 +3180,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X - 1, cell.Y);
 				
-				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3191,7 +3191,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X + 1, cell.Y);
 				
-				if (!CellDescriptions.IsTBD(adjacentCell.Descr)) 
+				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3217,7 +3217,7 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		// Incoming cell, locate room, and update all room cells with provided descr and weight.
-		private void UpdateRoomDescr(Cell cell, CellDescription descr, int weight)
+		private void UpdateRoomDescr(Cell cell, Description descr, int weight)
 		{
 			Room updateRoom = null;
 			
@@ -3248,13 +3248,13 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private CellDescription RandomCellDescr(CellDescription previousDescr, CellType cellType)
+		private Description RandomCellDescr(Description previousDescr, Type cellType)
 		{
 			// DungeonCellDescr objects have weights, so some are more likely to be picked than others.
 			
-			List<CellDescription> descrs = new List<CellDescription>();
+			List<Description> descrs = new List<Description>();
 
-			foreach (CellDescription descr in CellDescriptions.Descrs)
+			foreach (Description descr in Descriptions.Descrs)
 			{
 				descrs.Add(descr);  // Make a shallow copy clone of the descriptions.
 			}
@@ -3263,24 +3263,24 @@ namespace DigitalWizardry.Dungeon
 			
 			// Flooding transitions can only occur with certain cell types.
 			
-			if (!CellTypes.IsFloodingTransition(cellType))
+			if (!Types.IsFloodingTransition(cellType))
 			{
-				descrs.Remove(CellDescriptions.Constructed_Flooded);
-				descrs.Remove(CellDescriptions.Cavern_Flooded);
+				descrs.Remove(Descriptions.Constructed_Flooded);
+				descrs.Remove(Descriptions.Cavern_Flooded);
 			}
 			
 			int total = 0;
 			
-			foreach (CellDescription descr in descrs) 
+			foreach (Description descr in descrs) 
 			{
 				total += descr.Weight;
 			}
 			
 			int threshold = this.R.Next(total);
 			
-			CellDescription randomDescr = null;
+			Description randomDescr = null;
 			
-			foreach (CellDescription descr in descrs) 
+			foreach (Description descr in descrs) 
 			{
 				threshold -= descr.Weight;
 				
@@ -3305,7 +3305,7 @@ namespace DigitalWizardry.Dungeon
 					{
 						Cell cell = CellAt(x, y);
 						
-						if (CellDescriptions.IsFlooded(cell.Descr) && !CellTypes.IsFloodingTransition(cell.Type))
+						if (Descriptions.IsFlooded(cell.Descr) && !Types.IsFloodingTransition(cell.Type))
 						{
 							// Cell above.
 							if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
@@ -3336,35 +3336,35 @@ namespace DigitalWizardry.Dungeon
 			bool changed = false;
 			Cell cell = CellAt(X, Y);
 			
-			if (!CellDescriptions.IsFlooded(cell.Descr))  // If the cell is not already flooded, then flood it.
+			if (!Descriptions.IsFlooded(cell.Descr))  // If the cell is not already flooded, then flood it.
 			{
-				if (CellTypes.IsFloodingIncompatible(cell.Type) || cell.Type == CellTypes.Entrance)
+				if (Types.IsFloodingIncompatible(cell.Type) || cell.Type == Types.Entrance)
 				{
 					throw new DungeonBuildException();  // Except when the cell cannot be flooded.
 				}
 				else
 				{
-					CellDescription descr = CellDescriptions.Empty;  // Initialize with empty to satisfy the compiler.
+					Description descr = Descriptions.Empty;  // Initialize with empty to satisfy the compiler.
 					
-					if (cell.Descr == CellDescriptions.Constructed)
+					if (cell.Descr == Descriptions.Constructed)
 					{
-						descr = CellDescriptions.Constructed_Flooded;
+						descr = Descriptions.Constructed_Flooded;
 					}
-					else if (cell.Descr == CellDescriptions.Cavern)
+					else if (cell.Descr == Descriptions.Cavern)
 					{
-						descr = CellDescriptions.Cavern_Flooded;
+						descr = Descriptions.Cavern_Flooded;
 					}
-					else if (cell.Descr == CellDescriptions.Mines_Horiz)
+					else if (cell.Descr == Descriptions.Mines_Horiz)
 					{
-						descr = CellDescriptions.Mines_Horiz_Flooded;
+						descr = Descriptions.Mines_Horiz_Flooded;
 					}
-					else if (cell.Descr == CellDescriptions.Mines_Vert)
+					else if (cell.Descr == Descriptions.Mines_Vert)
 					{
-						descr = CellDescriptions.Mines_Vert_Flooded;
+						descr = Descriptions.Mines_Vert_Flooded;
 					}
 					
 					// Update descr for either entire room, or individual cell.
-					if (CellTypes.IsRoomType(cell.Type))
+					if (Types.IsRoomType(cell.Type))
 					{
 						UpdateRoomDescr(cell, descr, 0);
 					}
@@ -3392,55 +3392,55 @@ namespace DigitalWizardry.Dungeon
 					
 					bool adjacentFlooded = false;
 					
-					if (CellDescriptions.IsFlooded(cell.Descr))
+					if (Descriptions.IsFlooded(cell.Descr))
 					{
 						// Cell above.
 						if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
 						{
 							adjacentCell = CellAt(x, y + 1);
-							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
 						}
 						
 						// Cell below.
 						if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 						{
 							adjacentCell = CellAt(x, y - 1);
-							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
 						}
 						
 						// Cell left.
 						if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 						{
 							adjacentCell = CellAt(x - 1, y);
-							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
 						}
 						
 						// Cell right.
 						if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
 						{
 							adjacentCell = CellAt(x + 1, y);
-							adjacentFlooded = CellDescriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
 						}
 						
 						if (!adjacentFlooded)
 						{
-							CellDescription descr = CellDescriptions.Empty;  // Initialize with empty to satisfy the compiler.
+							Description descr = Descriptions.Empty;  // Initialize with empty to satisfy the compiler.
 							
-							if (cell.Descr == CellDescriptions.Constructed_Flooded)
+							if (cell.Descr == Descriptions.Constructed_Flooded)
 							{
-								descr = CellDescriptions.Constructed;
+								descr = Descriptions.Constructed;
 							}
-							else if (cell.Descr == CellDescriptions.Cavern_Flooded)
+							else if (cell.Descr == Descriptions.Cavern_Flooded)
 							{
-								descr = CellDescriptions.Cavern;
+								descr = Descriptions.Cavern;
 							}
-							else if (cell.Descr == CellDescriptions.Mines_Horiz_Flooded)
+							else if (cell.Descr == Descriptions.Mines_Horiz_Flooded)
 							{
-								descr = CellDescriptions.Mines_Horiz;
+								descr = Descriptions.Mines_Horiz;
 							}
-							else if (cell.Descr == CellDescriptions.Mines_Vert_Flooded)
+							else if (cell.Descr == Descriptions.Mines_Vert_Flooded)
 							{
-								descr = CellDescriptions.Mines_Vert;
+								descr = Descriptions.Mines_Vert;
 							}
 							
 							cell.Descr = descr;
