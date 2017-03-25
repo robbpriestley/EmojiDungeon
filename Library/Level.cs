@@ -7,23 +7,22 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Dungeon
 	{
-		private List<Cell> Grid;
-		private int LevelNumber;  // Zero-indexed level identifier for multi-level dungeons.
-		private Random R;
-		// This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
-		private Cell EmptyCell = new Cell(-1, -1, CellTypes.EmptyCell, CellDescriptions.Empty);
-		private Coords StartCoords;
-		private int SequenceNumber;
-		private Double MaxDistance;
-		private Cell DownStairsCell;  // The dead-end cell chosen to be replaced with a down stairs.
-		private Double DownStairsCellDistance;
-		private int RoomCount;
-		private int MineCount;
-		private int CatacombsCount;
-		private List<Room> Rooms;
-		private List<Cell> CellsWithLockedDoors;
-		private int BuildPasses;  // Number of discarded attempts before arriving at a completed level.
-		private TimeSpan BuildTime;  // How long in total did it take to build this level?
+		private List<Cell> Grid;                 // Master grid data structure, a "simulated 2-D array".
+		private int LevelNumber;                 // Zero-indexed level identifier for multi-level dungeons.
+		private Random R;                        // Re-usable random number generator.
+		private Cell EmptyCell;                  // This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
+		private Coords StartCoords;               // Where the entrance to the dungeon is located.
+		private int SequenceNumber;               // Used when solving the dungeon to "stamp" cells with their sequence number.
+		private Double MaxDistance;               // Maximum possible distance between points in the grid.
+		private Cell DownStairsCell;              // The dead-end cell chosen to be replaced with a down stairs.
+		private Double DownStairsCellDistance;    // Distance from the start cell to the DownStairsCell.
+		private int RoomsCount;                   // Number of rooms randomly determined to be in the dungeon.
+		private int MinesCount;                   // Number of mines randomly determined to be in the dungeon.
+		private int CatacombsCount;               // Number of catacombs randomly determined to be in the dungeon.
+		private List<Room> Rooms;                 // The collection of rooms added to the dungeon.
+		private List<Cell> CellsWithLockedDoors;  // Convenience collection of door object.
+		private int BuildPasses;                  // Number of discarded attempts before arriving at a completed level.
+		private TimeSpan BuildTime;               // How long in total did it take to build this level?
 
 		public Dungeon(int levelNumber)
 		{
@@ -86,7 +85,7 @@ namespace DigitalWizardry.Dungeon
 			}
 			else  // Otherwise, it "inherits" start cell (i.e. stairs down) from above.
 			{
-				// this.StartCoords = THIS NEEDS TO BE COMPLETED;
+				// this.StartCoords = THIS CODE NEEDS TO BE COMPLETED;
 			}
 
 			List<CellType> types = CellTypes.GetTypes(this.StartCoords);
@@ -147,7 +146,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (coords != null)
 			{
-				// Get a disposable array of constructed corridor dungeon cell types.
+				// Get a disposable array of constructed corridor cell types.
 				List<CellType> types = CellTypes.GetTypes(coords);
 				
 				// Choose a new cell type to attach.
@@ -158,7 +157,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					if (types.Count == 0) 
 					{
-						return false;  // Whoops, there are no more possibilities.
+						return false;  // There are no more possibilities.
 					}
 					
 					newType = RandomCellType(types);
@@ -177,8 +176,8 @@ namespace DigitalWizardry.Dungeon
 			return attachSuccessful;
 		}
 
-		// When a new cell is placed in the dungeon, "record" it as such by decrementing the
-		// availableConnections count of each adjacent, non-empty cell that connects to it.
+		// When a new cell is placed in the dungeon, "record" it as such by decrementing the 
+		//availableConnections count of each adjacent, non-empty cell that connects to it.
 		// Also, decrement the availableConnections count of the new cell accordingly.
 		private void RecordNewAttachment(Cell cell)
 		{
@@ -242,9 +241,9 @@ namespace DigitalWizardry.Dungeon
 
 		#region Randomization
 
-		// Find which locations adjacent to the current cell could be populated with a new
-		// attaching cell. Then, out of those locations, select one at random and return the 
-		// coords for it. If no such location exists, return nil.
+		// Find which locations adjacent to the current cell could be populated with a new attaching cell. 
+		// Then, from those locations, select one at random and return the coords for it. If no such 
+		// location exists, return nil.
 		private Coords RandomAttachCoords(Cell cell)
 		{
 			List<Coords> coordPotentials = new List<Coords>();
@@ -346,12 +345,12 @@ namespace DigitalWizardry.Dungeon
 
 		#region Checks
 
-		// With "coords" representing the new, empty dungeon location, check that each of the 
-		// adjacent cells is compatible with the proposed (randomly determined) new cell type.
+		// With "coords" representing the new, empty dungeon location, check that each of the adjacent cells 
+		// is compatible with the proposed (randomly determined) new cell type.
 		private bool TypeCompatibleWithAdjacentCells(CellType newCellType, Coords coords)
 		{
-			// This is an innocent-until-proven guilty scenario. However, if any of the cells
-			// is proven to be incompatible, that's enough to eliminate it as a prospect.
+			// This is an innocent-until-proven guilty scenario. However, if any of the cells is proven to be
+			// incompatible, that's enough to eliminate it as a prospect.
 			
 			Cell cellUp, cellDown, cellLeft, cellRight;
 			
@@ -394,10 +393,9 @@ namespace DigitalWizardry.Dungeon
 			return true;
 		}
 
-		// If the dungeon level was modified on the last pass, it cannot yet be considered 
-		// complete. If it was not modified on the last pass, check to see if the dungeon 
-		// level is filled to completion. If it is not, modify a cell to allow the dungeon 
-		// to grow some more.
+		// If the dungeon level was modified on the last pass, it cannot yet be considered complete. If it 
+		// was not modified on the last pass, check to see if the dungeon level is filled to completion. If 
+		// it is not, modify a cell to allow the dungeon to grow some more.
 		bool CompleteCheck(bool modified)
 		{
 			bool complete = false;
@@ -418,8 +416,8 @@ namespace DigitalWizardry.Dungeon
 						// Frequently, this is because several rooms "block" growth into empty "pockets" near
 						// the edge. One option at this point would be to perform some sort of additional 
 						// "dungeon augmentation" by swapping corridor types for empty cells. But, that would 
-						// involve a bunch of programming. Before I resort to that, I'm going to see how
-						// feasible it is to simply abandon this "failed" dungeon level and start fresh...
+						// involve a bunch of extra programming. Instead, simply abandon this "failed" 
+						// dungeon level and start fresh...
 						throw new DungeonBuildException();
 					}
 				}
@@ -451,13 +449,13 @@ namespace DigitalWizardry.Dungeon
 		private void CalcRooms()
 		{
 			int rand = 0;
-			this.MineCount = 0;
+			this.MinesCount = 0;
 
 			rand = this.R.Next(100);
 			
 			if (rand >= 85 && rand <= 99)
 			{
-				this.MineCount = 1;
+				this.MinesCount = 1;
 			}
 	 
 			this.CatacombsCount = 0;
@@ -479,20 +477,20 @@ namespace DigitalWizardry.Dungeon
 
 			int rooms = this.R.Next(Constants.MaxRooms - Constants.MinRooms + 1) + Constants.MinRooms;  // MinRooms ~ MaxRooms
 			
-			this.RoomCount = rooms - MineCount;
+			this.RoomsCount = rooms - MinesCount;
 		}
 
 		private void PlaceRegularRooms()
 		{
 			int attempts = 0;
-			int roomCount = this.RoomCount;
+			int roomsCount = this.RoomsCount;
 			int maxAttempts = Constants.GridWidth * Constants.GridHeight;
 			
-			while (roomCount > 0 && attempts <= maxAttempts) 
+			while (roomsCount > 0 && attempts <= maxAttempts) 
 			{
 				if (RandomRoom(CellDescriptions.Room_TBD, Constants.MaxRoomWidth, Constants.MaxRoomHeight, Constants.MinRoomWidth, Constants.MinRoomHeight))
 				{
-					roomCount--;
+					roomsCount--;
 					attempts = 0;
 				}
 				else
@@ -538,7 +536,7 @@ namespace DigitalWizardry.Dungeon
 		private void PlaceMines()
 		{
 			int attempts = 0;
-			int count = this.MineCount;  // Preserve original count.
+			int count = this.MinesCount;  // Preserve original count.
 			int maxAttempts = Constants.GridWidth * Constants.GridHeight;
 			
 			while (count > 0 && attempts <= maxAttempts) 
@@ -777,51 +775,51 @@ namespace DigitalWizardry.Dungeon
 		{
 			CellType newType = null;
 			
-			if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
+			if (x == coords.X && y == coords.Y)                                    // Bottom-left corner.
 			{
 				newType = CellTypes.RoomWallDL_Round;
 			}
-			else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
+			else if (x == coords.X + width - 1 && y == coords.Y)                   // Bottom-right corner.
 			{
 				newType = CellTypes.RoomWallDR_Round;
 			}
-			else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
+			else if (x == coords.X && y == coords.Y + height - 1)                  // Top-left corner.
 			{
 				newType = CellTypes.RoomWallUL_Round;
 			}
-			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
+			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)      // Top-right corner.
 			{
 				newType = CellTypes.RoomWallUR_Round;
 			}
-			else if (x == coords.X && x == 0)                                  // Left wall.
+			else if (x == coords.X && x == 0)                                      // Left wall.
 			{
 				newType = CellTypes.RoomWallL_Round;
 			}
-			else if (x == coords.X)                                            // Left exit.
+			else if (x == coords.X)                                                // Left exit.
 			{
 				newType = CellTypes.RoomExitL_Round;
 			}
-			else if (x == coords.X + width - 1 && x == Constants.GridWidth - 1)      // Right wall.
+			else if (x == coords.X + width - 1 && x == Constants.GridWidth - 1)    // Right wall.
 			{
 				newType = CellTypes.RoomWallR_Round; 
 			}
-			else if (x == coords.X + width - 1)                                // Right exit.
+			else if (x == coords.X + width - 1)                                    // Right exit.
 			{
 				newType = CellTypes.RoomExitR_Round;  
 			}
-			else if (y == coords.Y && y == 0)                                  // Bottom wall.
+			else if (y == coords.Y && y == 0)                                      // Bottom wall.
 			{
 				newType = CellTypes.RoomWallD_Round;
 			}
-			else if (y == coords.Y)                                            // Bottom exit.
+			else if (y == coords.Y)                                                // Bottom exit.
 			{
 				newType = CellTypes.RoomExitD_Round;
 			}
-			else if (y == coords.Y + height - 1 && y == Constants.GridHeight - 1)    // Top wall.
+			else if (y == coords.Y + height - 1 && y == Constants.GridHeight - 1)  // Top wall.
 			{
 				newType = CellTypes.RoomWallU_Round;
 			}
-			else if (y == coords.Y + height - 1)                               // Top exit.
+			else if (y == coords.Y + height - 1)                                   // Top exit.
 			{
 				newType = CellTypes.RoomExitU_Round;
 			}
@@ -1387,8 +1385,8 @@ namespace DigitalWizardry.Dungeon
 		{
 			CellType type = null;
 		
-			// Room exits can only occur if the room wall in question is at least 1 cell
-			// from the dungeon edge, to allow the resulting corridors to grow or be "capped".
+			// Room exits can only occur if the room wall in question is at least 1 cell from the dungeon 
+			// edge, to allow the resulting corridors to grow or be "capped".
 			
 			if (dir == Direction.Up)                             
 			{
@@ -1494,9 +1492,9 @@ namespace DigitalWizardry.Dungeon
 			
 			do
 			{        
-				// Since the room "plunking" process, and the outline traverse process aren't 
-				// perfect systems, a protection is required for the infrequent, but typical,   
-				// times when the traverse attempts to exceed the size of the dungeon level.
+				// Since the room "plunking" process, and the outline traverse process aren't perfect 
+				// systems, a protection is required for the infrequent, but typical, times when the 
+				// traverse attempts to exceed the size of the dungeon level.
 				if (y < 0 || y >= Constants.GridHeight || x < 0 || x >= Constants.GridWidth)
 				{
 					throw new DungeonBuildException();
@@ -1505,9 +1503,9 @@ namespace DigitalWizardry.Dungeon
 				currentCell = CellAt(x, y);
 				CellType newType = currentCell.Type;  // Default.
 				
-				// Arriving back at an already merged cell in the same room means that the rooms cannot  
-				// be properly merged. This is usually due to a "missing" wall cells occurring due to 
-				// the way the "sub-rooms" were "plunked" down on the level. Irrecoverable. Abort.
+				// Arriving back at an already merged cell in the same room means that the rooms cannot be 
+				// properly merged. This is usually due to a "missing" wall cells occurring due to the way 
+				// the "sub-rooms" were "plunked" down on the level. Irrecoverable. Abort.
 				if (currentCell.Merged && room.Walls.Contains(currentCell))
 				{
 					throw new DungeonBuildException();
@@ -1748,7 +1746,7 @@ namespace DigitalWizardry.Dungeon
 					dir = Direction.Down;
 				}
 				
-				if (x == newX && y == newY)  // Going nowhere? This room is bitched.
+				if (x == newX && y == newY)  // Abandon attempt if the process is going nowhere.
 				{
 					throw new DungeonBuildException();
 				}
@@ -1810,7 +1808,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		// Need a piece of wall? Then room wall or room exit?
+		// Need a random piece of wall? Then you've come to the right place!
 		private CellType RandomRoomWall(int x, int y, Direction dir)
 		{
 			CellType type = null;
@@ -2375,7 +2373,6 @@ namespace DigitalWizardry.Dungeon
 			return dir;
 		}
 
-		// Formerly known as "connectRoomCellsIfPossible" (and it's still not possible sometimes...)
 		// Given a cell representing a section of room wall, it must connect to any adjacent section of 
 		// room wall belonging to another room. The adjacent section is not an exit section, or we would
 		// not even be here, so force the other section to have an exit and connect the two sections.
@@ -2421,8 +2418,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		// Need to convert direction from the context of connectRoomCells when 
-		// altering the OTHER room's cell. Don't need the corner directions, right?
+		// Need to convert direction from the context of connectRoomCells when altering the OTHER room's cell.
 		private Direction OppositeDir(Direction dir)
 		{
 			Direction opposite;
@@ -2729,7 +2725,6 @@ namespace DigitalWizardry.Dungeon
 			return doors;
 		}
 
-
 		private Door RandomDoor(Cell cell, Direction dir)
 		{    
 			if (RandomPercent() >= cell.Type.DoorProb)
@@ -2771,7 +2766,6 @@ namespace DigitalWizardry.Dungeon
 			
 			return new Door(dir, open, locked, type);
 		}
-
 
 		private void PlaceKeys()
 		{
@@ -2948,9 +2942,9 @@ namespace DigitalWizardry.Dungeon
 
 		#region Solve
 		
-		// Ensure that every cell in the dungeon is "reachable". If not, start fresh.  
-		// Solving now also involves placing keys in the level prior to corresponding
-		// locked doors, and positioning the down stairs at a suitable location.
+		// Ensure that every cell in the dungeon is "reachable". If not, start fresh. Solving also involves 
+		// placing keys in the level prior to corresponding locked doors, and positioning the down stairs at 
+		// a suitable location.
 		private void LevelSolve()
 		{
 			this.DownStairsCell = null;
@@ -2971,6 +2965,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
+		// Recursive solve algorithm.
 		private void Solve(Cell cell)
 		{
 			this.SequenceNumber++;
@@ -3128,7 +3123,7 @@ namespace DigitalWizardry.Dungeon
 				
 			} while (!DescriptionsComplete());
 			
-		// 	[self completeFlooding];
+			CompleteFlooding();
 		}
 
 
@@ -3152,7 +3147,6 @@ namespace DigitalWizardry.Dungeon
 			
 			return complete;
 		}
-
 
 		private void DominantDescr(Cell cell, ref int weight, ref CellDescription descr)
 		{    
@@ -3221,7 +3215,6 @@ namespace DigitalWizardry.Dungeon
 			weight = cells[i].DescrWeight;
 			descr = cells[i].Descr;
 		}
-
 
 		// Incoming cell, locate room, and update all room cells with provided descr and weight.
 		private void UpdateRoomDescr(Cell cell, CellDescription descr, int weight)
@@ -3387,7 +3380,6 @@ namespace DigitalWizardry.Dungeon
 			
 			return changed;
 		}
-
 
 		// Floods must be at least two cells wide.
 		private void RemoveMiniFloods()
@@ -3661,8 +3653,8 @@ namespace DigitalWizardry.Dungeon
 			return Environment.NewLine +
 			       "Build Passes: " + this.BuildPasses.ToString() + Environment.NewLine +
 				   "Build Time: " + this.BuildTime.ToString() + Environment.NewLine +
-				   "Room Count: " + this.RoomCount.ToString() + Environment.NewLine +
-				   "Mines Count: " + this.MineCount.ToString() + Environment.NewLine +
+				   "Room Count: " + this.RoomsCount.ToString() + Environment.NewLine +
+				   "Mines Count: " + this.MinesCount.ToString() + Environment.NewLine +
 				   "Catacombs Count: " + this.CatacombsCount.ToString();
 		}
 
