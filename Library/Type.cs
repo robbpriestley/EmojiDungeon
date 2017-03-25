@@ -4,7 +4,8 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Type
 	{
-		// The "connects" members only apply to corridor cells.
+		// *** BEGIN CONNECTS MEMBERS ***
+		// Connects: determines if one cell is capable of being mated to another.
 		public bool ConnectsUp;
 		public bool ConnectsDown;
 		public bool ConnectsLeft;
@@ -13,27 +14,35 @@ namespace DigitalWizardry.Dungeon
 		public bool RoomConnectsDown;
 		public bool RoomConnectsLeft;
 		public bool RoomConnectsRight;
+		// *** END CONNECTS MEMBERS ***
+		// *** BEGIN TRAVERSABLE MEMBERS ***
+		// Traversable: determines if it would be possible to move from one cell to another.
 		public bool TraversableUp;
 		public bool TraversableDown;
 		public bool TraversableLeft;
 		public bool TraversableRight;
-		public int Weight;  // Weights the random selection.
-		public int DoorProb;
+		// *** END TRAVERSABLE MEMBERS ***
+		// *** BEGIN DESCRIPTIVE MEMBERS ***
 		public bool IsEmpty;
 		public bool IsJunction;
 		public bool IsDeadEnd;
 		public bool IsRoomType;
 		public bool IsRoomExit;
 		public bool IsRoomCorner;
-		public Direction RoomWallDirection;
 		public bool IsCleanStartWall;
 		public bool IsFloodingTransition;
 		public bool IsFloodingIncompatible;
+		public Direction RoomWallDirection;
 		public bool RoomExitCompatible;
-		public bool ForceGrowthCompatible;  // Can be substituted for another cell to increase dungeon fill.
-		public string TextRep;
-		public string TextRep2;  // Used for expanding the text representation into the horizontal.
-		public int InitialAvailableConnections;
+		public bool ForceGrowthCompatible;       // The type be substituted for another cell to increase dungeon fill.
+		// *** END DESCRIPTIVE MEMBERS ***
+		// *** BEGIN UTILITY MEMBERS ***
+		public int Weight;                       // Influences the selection when types are being randomly determined.
+		public int DoorProbability;              // The probability that a door can be placed in a section of room.
+		public string TextRep;                   // Primary character used to represent a type in text.
+		public string TextRep2;                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
+		public int InitialAvailableConnections;  // Used when generating the dungeon to determine if other cells can be attached to a target cell.
+		// *** END UTILITY MEMBERS ***
 
 		public Type()
 		{
@@ -657,7 +666,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitU.InitialAvailableConnections = 1;
 			RoomExitU.TextRep = "╨";
 			RoomExitU.TextRep2 = "─";
-			RoomExitU.DoorProb = 50;
+			RoomExitU.DoorProbability = 50;
 			RoomExitU.IsRoomType = true;
 			RoomExitU.IsRoomExit = true;
 			RoomExitU.ForceGrowthCompatible = false;
@@ -672,7 +681,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitD.InitialAvailableConnections = 1;
 			RoomExitD.TextRep = "╥";
 			RoomExitD.TextRep2 = "─";
-			RoomExitD.DoorProb = 50;
+			RoomExitD.DoorProbability = 50;
 			RoomExitD.IsRoomType = true;
 			RoomExitD.IsRoomExit = true;
 			RoomExitD.IsCleanStartWall = true;
@@ -688,7 +697,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitL.InitialAvailableConnections = 1;
 			RoomExitL.TextRep = "╡";
 			RoomExitL.TextRep2 = " ";
-			RoomExitL.DoorProb = 50;
+			RoomExitL.DoorProbability = 50;
 			RoomExitL.IsRoomType = true;
 			RoomExitL.IsRoomExit = true;
 			RoomExitL.ForceGrowthCompatible = false;
@@ -703,7 +712,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR.InitialAvailableConnections = 1;
 			RoomExitR.TextRep = "╞";
 			RoomExitR.TextRep2 = "═";
-			RoomExitR.DoorProb = 50;
+			RoomExitR.DoorProbability = 50;
 			RoomExitR.IsRoomType = true;
 			RoomExitR.IsRoomExit = true;
 			RoomExitR.ForceGrowthCompatible = false;
@@ -718,7 +727,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitU_Round.InitialAvailableConnections = 1;
 			RoomExitU_Round.TextRep = "╨";
 			RoomExitU_Round.TextRep2 = "┉";
-			RoomExitU_Round.DoorProb = 0;
+			RoomExitU_Round.DoorProbability = 0;
 			RoomExitU_Round.IsRoomType = true;
 			RoomExitU_Round.IsRoomExit = true;
 			RoomExitU_Round.IsFloodingIncompatible = true;
@@ -734,7 +743,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitD_Round.InitialAvailableConnections = 1;
 			RoomExitD_Round.TextRep = "╥";
 			RoomExitD_Round.TextRep2 = "┉";
-			RoomExitD_Round.DoorProb = 0;
+			RoomExitD_Round.DoorProbability = 0;
 			RoomExitD_Round.IsRoomType = true;
 			RoomExitD_Round.IsRoomExit = true;
 			RoomExitD_Round.IsFloodingIncompatible = true;
@@ -750,7 +759,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitL_Round.InitialAvailableConnections = 1;
 			RoomExitL_Round.TextRep = "╡";
 			RoomExitL_Round.TextRep2 = " ";
-			RoomExitL_Round.DoorProb = 0;
+			RoomExitL_Round.DoorProbability = 0;
 			RoomExitL_Round.IsRoomType = true;
 			RoomExitL_Round.IsRoomExit = true;
 			RoomExitL_Round.IsFloodingIncompatible = true;
@@ -766,7 +775,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR_Round.InitialAvailableConnections = 1;
 			RoomExitR_Round.TextRep = "╞";
 			RoomExitR_Round.TextRep2 = "═";
-			RoomExitR_Round.DoorProb = 0;
+			RoomExitR_Round.DoorProbability = 0;
 			RoomExitR_Round.IsRoomType = true;
 			RoomExitR_Round.IsRoomExit = true;
 			RoomExitR_Round.IsFloodingIncompatible = true;
@@ -784,7 +793,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_U.InitialAvailableConnections = 1;
 			RoomExitUL_U.TextRep = "┞";
 			RoomExitUL_U.TextRep2 = "─";
-			RoomExitUL_U.DoorProb = 50;
+			RoomExitUL_U.DoorProbability = 50;
 			RoomExitUL_U.IsRoomExit = true;
 			RoomExitUL_U.RoomExitCompatible = true;
 			RoomExitUL_U.ForceGrowthCompatible = false;
@@ -798,7 +807,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_L.InitialAvailableConnections = 1;
 			RoomExitUL_L.TextRep = "┭";
 			RoomExitUL_L.TextRep2 = "─";
-			RoomExitUL_L.DoorProb = 50;
+			RoomExitUL_L.DoorProbability = 50;
 			RoomExitUL_L.IsRoomExit = true;
 			RoomExitUL_L.RoomExitCompatible = true;
 			RoomExitUL_L.ForceGrowthCompatible = false;
@@ -814,7 +823,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_UL.InitialAvailableConnections = 2;
 			RoomExitUL_UL.TextRep = "╃";
 			RoomExitUL_UL.TextRep2 = "─";
-			RoomExitUL_UL.DoorProb = 50;
+			RoomExitUL_UL.DoorProbability = 50;
 			RoomExitUL_UL.IsRoomExit = true;
 			RoomExitUL_UL.ForceGrowthCompatible = false;
 			
@@ -827,7 +836,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_U.InitialAvailableConnections = 1;
 			RoomExitUR_U.TextRep = "┦";
 			RoomExitUR_U.TextRep2 = " ";
-			RoomExitUR_U.DoorProb = 50;
+			RoomExitUR_U.DoorProbability = 50;
 			RoomExitUR_U.IsRoomExit = true;
 			RoomExitUR_U.RoomExitCompatible = true;
 			RoomExitUR_U.ForceGrowthCompatible = false;
@@ -841,7 +850,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_R.InitialAvailableConnections = 1;
 			RoomExitUR_R.TextRep = "┮";
 			RoomExitUR_R.TextRep2 = "═";
-			RoomExitUR_R.DoorProb = 50;
+			RoomExitUR_R.DoorProbability = 50;
 			RoomExitUR_R.IsRoomExit = true;
 			RoomExitUR_R.RoomExitCompatible = true;
 			RoomExitUR_R.ForceGrowthCompatible = false;
@@ -857,7 +866,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_UR.InitialAvailableConnections = 2;
 			RoomExitUR_UR.TextRep = "╄";
 			RoomExitUR_UR.TextRep2 = "═";
-			RoomExitUR_UR.DoorProb = 50;
+			RoomExitUR_UR.DoorProbability = 50;
 			RoomExitUR_UR.IsRoomExit = true;
 			RoomExitUR_UR.ForceGrowthCompatible = false;
 			
@@ -870,7 +879,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_D.InitialAvailableConnections = 1;
 			RoomExitDL_D.TextRep = "┟";
 			RoomExitDL_D.TextRep2 = "─";
-			RoomExitDL_D.DoorProb = 50;
+			RoomExitDL_D.DoorProbability = 50;
 			RoomExitDL_D.IsRoomExit = true;
 			RoomExitDL_D.RoomExitCompatible = true;
 			RoomExitDL_D.ForceGrowthCompatible = false;
@@ -884,7 +893,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_L.InitialAvailableConnections = 1;
 			RoomExitDL_L.TextRep = "┵";
 			RoomExitDL_L.TextRep2 = "─";
-			RoomExitDL_L.DoorProb = 50;
+			RoomExitDL_L.DoorProbability = 50;
 			RoomExitDL_L.IsRoomExit = true;
 			RoomExitDL_L.RoomExitCompatible = true;
 			RoomExitDL_L.ForceGrowthCompatible = false;
@@ -900,7 +909,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_DL.InitialAvailableConnections = 2;
 			RoomExitDL_DL.TextRep = "╅";
 			RoomExitDL_DL.TextRep2 = "─";
-			RoomExitDL_DL.DoorProb = 50;
+			RoomExitDL_DL.DoorProbability = 50;
 			RoomExitDL_DL.IsRoomExit = true;
 			RoomExitDL_DL.ForceGrowthCompatible = false;
 			
@@ -913,7 +922,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_D.InitialAvailableConnections = 1;
 			RoomExitDR_D.TextRep = "┧";
 			RoomExitDR_D.TextRep2 = " ";
-			RoomExitDR_D.DoorProb = 50;
+			RoomExitDR_D.DoorProbability = 50;
 			RoomExitDR_D.IsRoomExit = true;
 			RoomExitDR_D.RoomExitCompatible = true;
 			RoomExitDR_D.ForceGrowthCompatible = false;
@@ -927,7 +936,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_R.InitialAvailableConnections = 1;
 			RoomExitDR_R.TextRep = "┶";
 			RoomExitDR_R.TextRep2 = "═";
-			RoomExitDR_R.DoorProb = 50;
+			RoomExitDR_R.DoorProbability = 50;
 			RoomExitDR_R.IsRoomExit = true;
 			RoomExitDR_R.RoomExitCompatible = true;
 			RoomExitDR_R.ForceGrowthCompatible = false;
@@ -943,7 +952,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_DR.InitialAvailableConnections = 2;
 			RoomExitDR_DR.TextRep = "╆";
 			RoomExitDR_DR.TextRep2 = "═";
-			RoomExitDR_DR.DoorProb = 50;
+			RoomExitDR_DR.DoorProbability = 50;
 			RoomExitDR_DR.IsRoomExit = true;
 			RoomExitDR_DR.ForceGrowthCompatible = false;
 
