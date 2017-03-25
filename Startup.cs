@@ -1,13 +1,12 @@
 using System;
 using System.IO;
-using DigitalWizardry.Dungeon;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LevelGenerator
+namespace DigitalWizardry.Dungeon
 {
     public class Startup
     {

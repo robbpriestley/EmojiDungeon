@@ -1288,7 +1288,7 @@ namespace DigitalWizardry.Dungeon
 			}
 			else
 			{
-				throw new DungeonBuildException();  // Unknown... scrap it (never happens).
+				throw new DungeonGenerateException();  // Unknown... scrap it (never happens).
 			}
 			
 			return wall;

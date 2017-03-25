@@ -4,10 +4,10 @@ FROM microsoft/dotnet:latest
 # http://blogs.msmvps.com/theproblemsolver/2016/03/01/turbocharging-docker-build/
 # Fixed bug. If "COPY . ./app/" like example gave, it incorrecly creates additional subdirectory.
 
-COPY ./LevelGenerator.csproj ./LevelGenerator/
-WORKDIR ./LevelGenerator/
+COPY ./DungeonGenerator.csproj ./DungeonGenerator/
+WORKDIR ./DungeonGenerator/
 RUN dotnet restore
-COPY . /LevelGenerator/
+COPY . /DungeonGenerator/
 RUN dotnet build
 
 EXPOSE 5000/tcp
