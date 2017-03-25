@@ -109,7 +109,7 @@ namespace DigitalWizardry.Dungeon
 		}
 	}
 
-	public class Types
+	public static class Types
 	{
 		public static Type EmptyCell = new Type();	       // Empty, i.e. unused.
 		public static Type Entrance = new Type();	       // Entrance Cell, used only once on level 0...
