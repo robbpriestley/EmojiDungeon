@@ -2727,7 +2727,7 @@ namespace DigitalWizardry.Dungeon
 
 		private Door RandomDoor(Cell cell, Direction dir)
 		{    
-			if (RandomPercent() >= cell.Type.DoorProb)
+			if (RandomPercent() >= cell.Type.DoorProbability)
 			{
 				return null;
 			}
