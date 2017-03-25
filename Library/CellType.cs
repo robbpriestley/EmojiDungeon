@@ -4,7 +4,7 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class CellType
 	{
-		// These "connects" members only apply to corridor cells.
+		// The "connects" members only apply to corridor cells.
 		public bool ConnectsUp;
 		public bool ConnectsDown;
 		public bool ConnectsLeft;
@@ -62,17 +62,12 @@ namespace DigitalWizardry.Dungeon
 		public bool CompatibleWith(CellType otherCell, Direction direction)
 		{
 			/*
-				Another cell is compatible with the current cell if
+				Another cell is compatible with the current cell if:
 				a) it is empty, or
 				b) in the same direction, either both cells connect, or both do not connect.
-				   (In other words if in the same direction one connects but the other does
-				   not, that's bad).
+				   (In other words if in the same direction one connects but the other does not, that's bad).
 			*/
-			
-			// This code snippet will suppress side-by-side junctions, useful perhaps in maze-only levels,
-			// but it will also cause certain levels with rooms to go into an infinite loop.
-			// if (this.IsJunction && otherCell.IsJunction) { return false; }
-			
+					
 			if (otherCell.IsEmpty)
 			{
 				return true;
@@ -193,8 +188,8 @@ namespace DigitalWizardry.Dungeon
 			// *** BEGIN SPECIAL CELLS ***
 			// These cell are only ever placed in specific, known circumstances. They are 
 			// never randomly assigned. Therefore, their Weight values are 0.
-			
 			// For simplicity, the empty cell is considered to connect in every direction.
+
 			EmptyCell.Weight = 0;
 			EmptyCell.IsEmpty = true;
 			EmptyCell.ConnectsUp = true;
@@ -385,6 +380,7 @@ namespace DigitalWizardry.Dungeon
 			DeadexR.TextRep = @"╞";
 			DeadexR.TextRep2 = @"═";
 
+			// *** END DEAD END CELLS ***
 			// *** BEGIN ROOM CELLS ***
 			
 			RoomSpace.TraversableUp = true;
@@ -699,6 +695,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR_Round.IsRoomExit = true;
 			RoomExitR_Round.ForceGrowthCompatible = false;
 			
+			// *** END ROOM CELLS ***
 			// *** ROOM CORNER EXITS ***
 			
 			RoomExitUL_U.ConnectsUp = true;
@@ -873,8 +870,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_DR.IsRoomExit = true;
 			RoomExitDR_DR.ForceGrowthCompatible = false;
 
-			// *** END ROOM CELLS ***
-			
+			// *** END ROOM CORNER EXITS ***
 			// *** BEGIN STAIRWAY CELLS ***
 			// These cells are specially placed, prior the falsermal cell placement routine.
 			
@@ -945,7 +941,7 @@ namespace DigitalWizardry.Dungeon
 			// *** END STAIRWAY CELLS ***	
 		}
 
-		// Edge: meaning the extreme edge of the level's grid.
+		// Edge: meaning the extreme edge of the dungeon's grid.
 		public static List<CellType> GetTypes(Coords coords)
 		{
 			List<CellType> types = new List<CellType>();

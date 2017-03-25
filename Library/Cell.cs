@@ -13,7 +13,7 @@ namespace DigitalWizardry.Dungeon
 		public bool IsCatacombs;
 		public bool ExitImpossible;
 		public Coords SourceCoords;       // For use when solving shortest-path.
-		public bool AttachBlocked;        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to YES.
+		public bool AttachBlocked;        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to true.
 		public int AvailableConnections;  // Records number of available connection points;
 		public int DescrWeight;           // Essentially a percentage, used to determine how "sticky" the description is.
 		public CellType Type;
