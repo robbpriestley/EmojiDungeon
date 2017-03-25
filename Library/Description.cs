@@ -7,6 +7,9 @@ namespace DigitalWizardry.Dungeon
 		public int Weight;
 		public int WeightReduction;
 		public string TextRep;
+		public bool IsTBD;
+		public bool IsMines;
+		public bool IsFlooded;
 
 		public Description(){}
 		
@@ -21,10 +24,13 @@ namespace DigitalWizardry.Dungeon
 			this.Weight = source.Weight;
 			this.WeightReduction = source.WeightReduction;
 			this.TextRep = source.TextRep;
+			this.IsTBD = source.IsTBD;
+			this.IsMines = source.IsMines;
+			this.IsFlooded = source.IsFlooded;
 		}
 	}
 
-	public class Descriptions
+	public static class Descriptions
 	{
 		public static Description Empty = new Description("E");
 		public static Description Room_TBD = new Description(",");
@@ -42,15 +48,27 @@ namespace DigitalWizardry.Dungeon
 
 		public static void Initialize()
 		{
+			Room_TBD.IsTBD = true;
+			Corridor_TBD.IsTBD = true;
+			Catacombs_TBD.IsTBD = true;
+
+			Mines_Horiz.IsMines = true;
+			Mines_Vert.IsMines = true;
+			Mines_Horiz_Flooded.IsMines = true;
+			Mines_Horiz_Flooded.IsFlooded = true;
+			Mines_Vert_Flooded.IsMines = true;
+			Mines_Vert_Flooded.IsFlooded = true;
+			
 			Constructed.Weight = 100;
 			Constructed.WeightReduction = 1;
 
+			Constructed_Flooded.IsFlooded = true;
 			Constructed_Flooded.Weight = 20;
 			Constructed_Flooded.WeightReduction = 2;
 
 			Cavern.Weight = 100;
 			Cavern.WeightReduction = 1;
-
+			Cavern_Flooded.IsFlooded = true;
 			Cavern_Flooded.Weight = 20;
 			Cavern_Flooded.WeightReduction = 1;
 
@@ -58,21 +76,6 @@ namespace DigitalWizardry.Dungeon
 			Descrs.Add(Constructed_Flooded);
 			Descrs.Add(Cavern);
 			Descrs.Add(Cavern_Flooded);
-		}
-
-		public static bool IsTBD(Description descr)
-		{
-			return descr == Room_TBD || descr == Corridor_TBD || descr == Catacombs_TBD;
-		}
-
-		public static bool IsMines(Description descr)
-		{
-			return descr == Mines_Horiz || descr == Mines_Vert || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
-		}
-
-		public static bool IsFlooded(Description descr)
-		{
-			return descr == Constructed_Flooded || descr == Cavern_Flooded || descr == Mines_Horiz_Flooded || descr == Mines_Vert_Flooded;
 		}
 	}
 }

@@ -624,7 +624,7 @@ namespace DigitalWizardry.Dungeon
 						
 						if 
 						(
-							Descriptions.IsMines(cell.Descr) ||
+							(cell.Descr.IsMines) ||
 							(
 								y > this.StartCoords.Y - 2 && y < this.StartCoords.Y + 2 && 
 								x > this.StartCoords.X - 2 && x < this.StartCoords.X + 2
@@ -2385,7 +2385,7 @@ namespace DigitalWizardry.Dungeon
 			Cell adjacent = CellAt(adjX, adjY);
 			
 			// No point in trying to force connect two special rooms, they won't join anyways.
-			if (Descriptions.IsMines(cell.Descr) && Descriptions.IsMines(adjacent.Descr))
+			if (cell.Descr.IsMines && adjacent.Descr.IsMines)
 			{
 				throw new DungeonBuildException();
 			}
@@ -2406,7 +2406,7 @@ namespace DigitalWizardry.Dungeon
 				newType = Types.ConvRoomExitToWall(cell.Type, dir, cell.Descr);
 				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
 				
-				if (Descriptions.IsMines(newCell.Descr)) 
+				if (newCell.Descr.IsMines) 
 				{
 					ReplaceDungeonCellValue(cell.X, cell.Y, newCell);
 				}
@@ -2589,7 +2589,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = CellAt(x, y);
 					
-					if (!Descriptions.IsMines(cell.Descr) && !(cell.Descr == Descriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
+					if (!cell.Descr.IsMines && !(cell.Descr == Descriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
 					{
 						cell.Doors = RandomDoorSetup(cell);
 					}
@@ -3065,7 +3065,7 @@ namespace DigitalWizardry.Dungeon
 					{
 						Cell cell = CellAt(X, Y);
 						
-						if (Descriptions.IsTBD(cell.Descr))
+						if (cell.Descr == null || cell.Descr.IsTBD)
 						{
 							int dominantWeight = -1;
 							Description dominantDescr = Descriptions.Empty;  // Initialize to empty to satisfy compiler.
@@ -3137,7 +3137,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					Cell cell = CellAt(x, y);
 					
-					if (Descriptions.IsTBD(cell.Descr)) 
+					if (cell.Descr.IsTBD) 
 					{
 						complete = false;
 						break;
@@ -3158,7 +3158,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X, cell.Y + 1);
 				
-				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
+				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3169,7 +3169,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X, cell.Y - 1);
 				
-				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
+				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3180,7 +3180,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X - 1, cell.Y);
 				
-				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
+				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3191,7 +3191,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				adjacentCell = CellAt(cell.X + 1, cell.Y);
 				
-				if (!Descriptions.IsTBD(adjacentCell.Descr)) 
+				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
 					cells.Add(adjacentCell);
 				}
@@ -3282,10 +3282,13 @@ namespace DigitalWizardry.Dungeon
 			
 			foreach (Description descr in descrs) 
 			{
+				randomDescr = descr;
 				threshold -= descr.Weight;
 				
 				if (threshold < 0)
+				{
 					break;
+				}
 			}
 			
 			return randomDescr;
@@ -3305,7 +3308,7 @@ namespace DigitalWizardry.Dungeon
 					{
 						Cell cell = CellAt(x, y);
 						
-						if (Descriptions.IsFlooded(cell.Descr) && !Types.IsFloodingTransition(cell.Type))
+						if (cell.Descr.IsFlooded && !Types.IsFloodingTransition(cell.Type))
 						{
 							// Cell above.
 							if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
@@ -3336,7 +3339,7 @@ namespace DigitalWizardry.Dungeon
 			bool changed = false;
 			Cell cell = CellAt(X, Y);
 			
-			if (!Descriptions.IsFlooded(cell.Descr))  // If the cell is not already flooded, then flood it.
+			if (!cell.Descr.IsFlooded)  // If the cell is not already flooded, then flood it.
 			{
 				if (Types.IsFloodingIncompatible(cell.Type) || cell.Type == Types.Entrance)
 				{
@@ -3392,34 +3395,34 @@ namespace DigitalWizardry.Dungeon
 					
 					bool adjacentFlooded = false;
 					
-					if (Descriptions.IsFlooded(cell.Descr))
+					if (cell.Descr.IsFlooded)
 					{
 						// Cell above.
 						if (cell.Type.TraversableUp && cell.Y + 1 < Constants.GridHeight)
 						{
 							adjacentCell = CellAt(x, y + 1);
-							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell below.
 						if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 						{
 							adjacentCell = CellAt(x, y - 1);
-							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell left.
 						if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 						{
 							adjacentCell = CellAt(x - 1, y);
-							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell right.
 						if (cell.Type.TraversableRight && cell.X + 1 < Constants.GridWidth)
 						{
 							adjacentCell = CellAt(x + 1, y);
-							adjacentFlooded = Descriptions.IsFlooded(adjacentCell.Descr) || adjacentFlooded;
+							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						if (!adjacentFlooded)
