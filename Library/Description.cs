@@ -4,29 +4,29 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Description
 	{
-		public int Weight;
-		public int WeightReduction;
-		public string TextRep;
-		public bool IsTBD;
-		public bool IsMines;
-		public bool IsFlooded;
+		public int Weight { get; set; }
+		public int WeightReduction { get; set; }
+		public string TextRep { get; set; }
+		public bool IsTBD { get; set; }
+		public bool IsMines { get; set; }
+		public bool IsFlooded { get; set; }
 
 		public Description(){}
 		
 		public Description(string textRep)
 		{
-			this.TextRep = textRep;
+			TextRep = textRep;
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
 		public Description(Description source) : this()
 		{
-			this.Weight = source.Weight;
-			this.WeightReduction = source.WeightReduction;
-			this.TextRep = source.TextRep;
-			this.IsTBD = source.IsTBD;
-			this.IsMines = source.IsMines;
-			this.IsFlooded = source.IsFlooded;
+			Weight = source.Weight;
+			WeightReduction = source.WeightReduction;
+			TextRep = source.TextRep;
+			IsTBD = source.IsTBD;
+			IsMines = source.IsMines;
+			IsFlooded = source.IsFlooded;
 		}
 	}
 

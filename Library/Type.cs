@@ -6,42 +6,42 @@ namespace DigitalWizardry.Dungeon
 	{
 		// *** BEGIN CONNECTS MEMBERS ***
 		// Connects: determines if one cell is capable of being mated to another.
-		public bool ConnectsUp;
-		public bool ConnectsDown;
-		public bool ConnectsLeft;
-		public bool ConnectsRight;
-		public bool RoomConnectsUp;
-		public bool RoomConnectsDown;
-		public bool RoomConnectsLeft;
-		public bool RoomConnectsRight;
+		public bool ConnectsUp { get; set; }
+		public bool ConnectsDown { get; set; }
+		public bool ConnectsLeft { get; set; }
+		public bool ConnectsRight { get; set; }
+		public bool RoomConnectsUp { get; set; }
+		public bool RoomConnectsDown { get; set; }
+		public bool RoomConnectsLeft { get; set; }
+		public bool RoomConnectsRight { get; set; }
 		// *** END CONNECTS MEMBERS ***
 		// *** BEGIN TRAVERSABLE MEMBERS ***
 		// Traversable: determines if it would be possible to move from one cell to another.
-		public bool TraversableUp;
-		public bool TraversableDown;
-		public bool TraversableLeft;
-		public bool TraversableRight;
+		public bool TraversableUp { get; set; }
+		public bool TraversableDown { get; set; }
+		public bool TraversableLeft { get; set; }
+		public bool TraversableRight { get; set; }
 		// *** END TRAVERSABLE MEMBERS ***
 		// *** BEGIN DESCRIPTIVE MEMBERS ***
-		public bool IsEmpty;
-		public bool IsJunction;
-		public bool IsDeadEnd;
-		public bool IsRoomType;
-		public bool IsRoomExit;
-		public bool IsRoomCorner;
-		public bool IsCleanStartWall;
-		public bool IsFloodingTransition;
-		public bool IsFloodingIncompatible;
-		public Direction RoomWallDirection;
-		public bool RoomExitCompatible;
-		public bool ForceGrowthCompatible;       // The type be substituted for another cell to increase dungeon fill.
+		public bool IsEmpty { get; set; }
+		public bool IsJunction { get; set; }
+		public bool IsDeadEnd { get; set; }
+		public bool IsRoomType { get; set; }
+		public bool IsRoomExit { get; set; }
+		public bool IsRoomCorner { get; set; }
+		public bool IsCleanStartWall { get; set; }
+		public bool IsFloodingTransition { get; set; }
+		public bool IsFloodingIncompatible { get; set; }
+		public Direction RoomWallDirection { get; set; }
+		public bool RoomExitCompatible { get; set; }
+		public bool ForceGrowthCompatible { get; set; }       // The type be substituted for another cell to increase dungeon fill.
 		// *** END DESCRIPTIVE MEMBERS ***
 		// *** BEGIN UTILITY MEMBERS ***
-		public int Weight;                       // Influences the selection when types are being randomly determined.
-		public int DoorProbability;              // The probability that a door can be placed in a section of room.
-		public string TextRep;                   // Primary character used to represent a type in text.
-		public string TextRep2;                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
-		public int InitialAvailableConnections;  // Used when generating the dungeon to determine if other cells can be attached to a target cell.
+		public int Weight { get; set; }                       // Influences the selection when types are being randomly determined.
+		public int DoorProbability { get; set; }              // The probability that a door can be placed in a section of room.
+		public string TextRep { get; set; }                   // Primary character used to represent a type in text.
+		public string TextRep2 { get; set; }                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
+		public int InitialAvailableConnections { get; set; }  // Used when generating the dungeon to determine if other cells can be attached to a target cell.
 		// *** END UTILITY MEMBERS ***
 
 		public Type()
@@ -56,19 +56,19 @@ namespace DigitalWizardry.Dungeon
 			{
 				return false;
 			}
-			else if (direction == Direction.Up && this.ConnectsUp && otherCell.ConnectsDown)
+			else if (direction == Direction.Up && ConnectsUp && otherCell.ConnectsDown)
 			{
 				return true;
 			}
-			else if (direction == Direction.Down && this.ConnectsDown && otherCell.ConnectsUp)
+			else if (direction == Direction.Down && ConnectsDown && otherCell.ConnectsUp)
 			{
 				return true;
 			}
-			else if (direction == Direction.Left && this.ConnectsLeft && otherCell.ConnectsRight)
+			else if (direction == Direction.Left && ConnectsLeft && otherCell.ConnectsRight)
 			{
 				return true;
 			}
-			else if (direction == Direction.Right && this.ConnectsRight && otherCell.ConnectsLeft)
+			else if (direction == Direction.Right && ConnectsRight && otherCell.ConnectsLeft)
 			{
 				return true;
 			}
@@ -91,32 +91,32 @@ namespace DigitalWizardry.Dungeon
 			}
 			else if (direction == Direction.Up)
 			{
-				if ((this.ConnectsUp && otherCell.ConnectsDown) || 
-					(!this.ConnectsUp && !otherCell.ConnectsDown))
+				if ((ConnectsUp && otherCell.ConnectsDown) || 
+					(!ConnectsUp && !otherCell.ConnectsDown))
 				{
 					return true;
 				}
 			}
 			else if (direction == Direction.Down)
 			{
-				if ((this.ConnectsDown && otherCell.ConnectsUp) || 
-					(!this.ConnectsDown && !otherCell.ConnectsUp))
+				if ((ConnectsDown && otherCell.ConnectsUp) || 
+					(!ConnectsDown && !otherCell.ConnectsUp))
 				{
 					return true;
 				}
 			}
 			else if (direction == Direction.Left)
 			{
-				if ((this.ConnectsLeft && otherCell.ConnectsRight) || 
-					(!this.ConnectsLeft && !otherCell.ConnectsRight))
+				if ((ConnectsLeft && otherCell.ConnectsRight) || 
+					(!ConnectsLeft && !otherCell.ConnectsRight))
 				{
 					return true;
 				}
 			}
 			else if (direction == Direction.Right)
 			{
-				if ((this.ConnectsRight && otherCell.ConnectsLeft) || 
-					(!this.ConnectsRight && !otherCell.ConnectsLeft))
+				if ((ConnectsRight && otherCell.ConnectsLeft) || 
+					(!ConnectsRight && !otherCell.ConnectsLeft))
 				{
 					return true;
 				}

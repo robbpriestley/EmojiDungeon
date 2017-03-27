@@ -2,12 +2,12 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Coords
 	{	
-		public int X;
-		public int Y;
-		public bool AdjacentEdgeUp;
-		public bool AdjacentEdgeDown;
-		public bool AdjacentEdgeLeft;
-		public bool AdjacentEdgeRight;
+		public int X { get; set; }
+		public int Y { get; set; }
+		public bool AdjacentEdgeUp { get; set; }
+		public bool AdjacentEdgeDown { get; set; }
+		public bool AdjacentEdgeLeft { get; set; }
+		public bool AdjacentEdgeRight { get; set; }
 
 		public Direction Direction;  // A direction is needed for convenience sometimes.
 
@@ -15,55 +15,55 @@ namespace DigitalWizardry.Dungeon
 		
 		public Coords(int x, int y)
 		{
-			this.X = x;
-			this.Y = y;
-			this.Direction = Direction.NoDir;
+			X = x;
+			Y = y;
+			Direction = Direction.NoDir;
 
-			if (this.X == 0) 
+			if (X == 0) 
 			{
-				this.AdjacentEdgeLeft = true;
+				AdjacentEdgeLeft = true;
 			} 
 			
-			if (this.Y == 0) 
+			if (Y == 0) 
 			{
-				this.AdjacentEdgeDown = true;
+				AdjacentEdgeDown = true;
 			}
 			
-			if (this.X + 1 == Constants.GridWidth) 
+			if (X + 1 == Reference.GridWidth) 
 			{
-				this.AdjacentEdgeRight = true;
+				AdjacentEdgeRight = true;
 			}
 			
-			if (this.Y + 1 == Constants.GridHeight) 
+			if (Y + 1 == Reference.GridHeight) 
 			{
-				this.AdjacentEdgeUp = true;
+				AdjacentEdgeUp = true;
 			}
 		}
 
 		// Copy constructor. Creates a deep copy clone of the source.
 		public Coords(Coords source) : this()
 		{		
-			this.X = source.X;
-			this.Y = source.Y;
-			this.AdjacentEdgeUp = source.AdjacentEdgeUp;
-			this.AdjacentEdgeDown = source.AdjacentEdgeDown;
-			this.AdjacentEdgeLeft = source.AdjacentEdgeLeft;
-			this.AdjacentEdgeRight = source.AdjacentEdgeRight;
+			X = source.X;
+			Y = source.Y;
+			AdjacentEdgeUp = source.AdjacentEdgeUp;
+			AdjacentEdgeDown = source.AdjacentEdgeDown;
+			AdjacentEdgeLeft = source.AdjacentEdgeLeft;
+			AdjacentEdgeRight = source.AdjacentEdgeRight;
 		}
 
 		bool IsOppositeDirTo(Coords otherCoords)
 		{
 			return
 			
-			(this.Direction == Direction.Up && otherCoords.Direction == Direction.Down) ||
-			(this.Direction == Direction.Down && otherCoords.Direction == Direction.Up) ||
-			(this.Direction == Direction.Left && otherCoords.Direction == Direction.Right) ||
-			(this.Direction == Direction.Right && otherCoords.Direction == Direction.Left) ||
+			(Direction == Direction.Up && otherCoords.Direction == Direction.Down) ||
+			(Direction == Direction.Down && otherCoords.Direction == Direction.Up) ||
+			(Direction == Direction.Left && otherCoords.Direction == Direction.Right) ||
+			(Direction == Direction.Right && otherCoords.Direction == Direction.Left) ||
 			
-			(this.Direction == Direction.UpLeft && otherCoords.Direction == Direction.DownRight) ||
-			(this.Direction == Direction.DownLeft && otherCoords.Direction == Direction.UpRight) ||
-			(this.Direction == Direction.UpRight && otherCoords.Direction == Direction.DownLeft) ||
-			(this.Direction == Direction.DownRight && otherCoords.Direction == Direction.DownLeft);
+			(Direction == Direction.UpLeft && otherCoords.Direction == Direction.DownRight) ||
+			(Direction == Direction.DownLeft && otherCoords.Direction == Direction.UpRight) ||
+			(Direction == Direction.UpRight && otherCoords.Direction == Direction.DownLeft) ||
+			(Direction == Direction.DownRight && otherCoords.Direction == Direction.DownLeft);
 		}
 	}
 }
