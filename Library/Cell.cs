@@ -16,13 +16,13 @@ namespace DigitalWizardry.Dungeon
 		public bool AttachBlocked { get; set; }        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to true.
 		public int AvailableConnections { get; set; }  // Records number of available connection points;
 		public int DescrWeight { get; set; }           // Essentially a percentage, used to determine how "sticky" the description is.
-		public Type Type { get; set; }
+		public CellType Type { get; set; }
 		public Description Descr { get; set; }
 		public List<Door> Doors { get; set; }
 		
 		public Cell(){}
 		
-		public Cell(int x, int y, Type type, Description descr)
+		public Cell(int x, int y, CellType type, Description descr)
 		{
 				X = x;
 				Y = y;
