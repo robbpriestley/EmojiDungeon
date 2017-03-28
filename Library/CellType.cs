@@ -6,6 +6,7 @@ namespace DigitalWizardry.Dungeon
 	{
 		// *** BEGIN CONNECTS MEMBERS ***
 		// Connects: determines if one cell is capable of being mated to another.
+		
 		public bool ConnectsUp { get; set; }
 		public bool ConnectsDown { get; set; }
 		public bool ConnectsLeft { get; set; }
@@ -14,15 +15,19 @@ namespace DigitalWizardry.Dungeon
 		public bool RoomConnectsDown { get; set; }
 		public bool RoomConnectsLeft { get; set; }
 		public bool RoomConnectsRight { get; set; }
+		
 		// *** END CONNECTS MEMBERS ***
 		// *** BEGIN TRAVERSABLE MEMBERS ***
 		// Traversable: determines if it would be possible to move from one cell to another.
+		
 		public bool TraversableUp { get; set; }
 		public bool TraversableDown { get; set; }
 		public bool TraversableLeft { get; set; }
 		public bool TraversableRight { get; set; }
+		
 		// *** END TRAVERSABLE MEMBERS ***
 		// *** BEGIN DESCRIPTIVE MEMBERS ***
+		
 		public bool IsEmpty { get; set; }
 		public bool IsJunction { get; set; }
 		public bool IsDeadEnd { get; set; }
@@ -35,13 +40,17 @@ namespace DigitalWizardry.Dungeon
 		public Direction RoomWallDirection { get; set; }
 		public bool RoomExitCompatible { get; set; }
 		public bool ForceGrowthCompatible { get; set; }       // The type be substituted for another cell to increase dungeon fill.
+		
 		// *** END DESCRIPTIVE MEMBERS ***
 		// *** BEGIN UTILITY MEMBERS ***
+
+		public int InitialAvailableConnections { get; set; }  // Used when generating the dungeon to determine if other cells can be attached to a target cell.
 		public int Weight { get; set; }                       // Influences the selection when types are being randomly determined.
 		public int DoorProbability { get; set; }              // The probability that a door can be placed in a section of room.
 		public string TextRep { get; set; }                   // Primary character used to represent a type in text.
 		public string TextRep2 { get; set; }                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
-		public int InitialAvailableConnections { get; set; }  // Used when generating the dungeon to determine if other cells can be attached to a target cell.
+		public string Image { get; set; }                     // Graphic image filename.
+
 		// *** END UTILITY MEMBERS ***
 
 		public CellType()
@@ -129,6 +138,7 @@ namespace DigitalWizardry.Dungeon
 	public static class CellTypes
 	{
 		// *** BEGIN FIELD DECLARATIONS ***
+		
 		private static readonly CellType _emptyCell;
 		private static readonly CellType _entrance;
 		private static readonly CellType _vert;
@@ -200,8 +210,10 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _roomExitDR_D;
 		private static readonly CellType _roomExitDR_R;
 		private static readonly CellType _roomExitDR_DR;
+		
 		// *** END FIELD DECLARATIONS ***
 		// *** BEGIN PROPERTY DECLARATIONS ***
+		
 		public static CellType EmptyCell { get { return _emptyCell; } }                // Empty, i.e. unused.
 		public static CellType Entrance { get { return _entrance; } }                  // Entrance Cell, used only once on level 0...
 		public static CellType Vert { get { return _vert; } }                          // Vertical Corridor            
@@ -273,6 +285,7 @@ namespace DigitalWizardry.Dungeon
 		public static CellType RoomExitDR_D { get { return _roomExitDR_D; } }          // Room Exit Down Right Corner, Exit Down
 		public static CellType RoomExitDR_R { get { return _roomExitDR_R; } }          // Room Exit Down Right Corner, Exit Right
 		public static CellType RoomExitDR_DR { get { return _roomExitDR_DR; } }        // Room Exit Down Right Corner, Exits Down and Right
+		
 		// *** END PROPERTY DECLARATIONS ***
 
 		static CellTypes()
@@ -379,7 +392,6 @@ namespace DigitalWizardry.Dungeon
 			Entrance.InitialAvailableConnections = 1;
 			
 			// *** END SPECIAL CELLS ***
-			
 			// *** BEGIN CORRIDOR CELLS ***
 			
 			Vert.Weight = 100;

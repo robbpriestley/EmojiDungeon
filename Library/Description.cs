@@ -33,6 +33,7 @@ namespace DigitalWizardry.Dungeon
 	public static class Descriptions
 	{
 		// *** BEGIN FIELD DECLARATIONS ***
+		
 		private static readonly Description _empty;
 		private static readonly Description _room_TBD;
 		private static readonly Description _corridor_TBD;
@@ -45,8 +46,10 @@ namespace DigitalWizardry.Dungeon
 		private static readonly Description _constructed_Flooded;
 		private static readonly Description _cavern;
 		private static readonly Description _cavern_Flooded;
+		
 		// *** END FIELD DECLARATIONS ***
 		// *** BEGIN PROPERTY DECLARATIONS ***
+		
 		public static Description Empty { get { return _empty; } }
 		public static Description Room_TBD { get { return _room_TBD; } }
 		public static Description Corridor_TBD { get { return _corridor_TBD; } }
@@ -59,6 +62,7 @@ namespace DigitalWizardry.Dungeon
 		public static Description Constructed_Flooded { get { return _constructed_Flooded; } }
 		public static Description Cavern { get { return _cavern; } }
 		public static Description Cavern_Flooded { get { return _cavern_Flooded; } }
+		
 		// *** END PROPERTY DECLARATIONS ***
 
     	public static List<Description> Descrs = new List<Description>();
