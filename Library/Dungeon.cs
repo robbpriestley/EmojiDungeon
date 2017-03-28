@@ -25,10 +25,7 @@ namespace DigitalWizardry.Dungeon
 		private TimeSpan _elapsedTime;             // How long in total did it take to build this dungeon?
 
 		public Dungeon(int levelNumber)
-		{
-			Types.Initialize();
-			Descriptions.Initialize();
-			
+		{	
 			_r = new Random();
 			_levelNumber = levelNumber;
 			_emptyCell = new Cell(-1, -1, Types.EmptyCell, Descriptions.Empty);

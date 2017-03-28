@@ -32,20 +32,54 @@ namespace DigitalWizardry.Dungeon
 
 	public static class Descriptions
 	{
-		public static Description Empty = new Description("E");
-		public static Description Room_TBD = new Description(",");
-		public static Description Corridor_TBD = new Description(".");
-		public static Description Catacombs_TBD = new Description("'");
-		public static Description Mines_Horiz = new Description("M");
-		public static Description Mines_Vert = new Description("M");
-		public static Description Mines_Horiz_Flooded = new Description("x");
-		public static Description Mines_Vert_Flooded = new Description("x");
-		public static Description Constructed = new Description("C");
-		public static Description Constructed_Flooded = new Description("F");
-		public static Description Cavern = new Description("c");
-    	public static Description Cavern_Flooded = new Description("f");
+		// *** BEGIN FIELD DECLARATIONS ***
+		private static readonly Description _empty;
+		private static readonly Description _room_TBD;
+		private static readonly Description _corridor_TBD;
+		private static readonly Description _catacombs_TBD;
+		private static readonly Description _mines_Horiz;
+		private static readonly Description _mines_Vert;
+		private static readonly Description _mines_Horiz_Flooded;
+		private static readonly Description _mines_Vert_Flooded;
+		private static readonly Description _constructed;
+		private static readonly Description _constructed_Flooded;
+		private static readonly Description _cavern;
+		private static readonly Description _cavern_Flooded;
+		// *** END FIELD DECLARATIONS ***
+		// *** BEGIN PROPERTY DECLARATIONS ***
+		public static Description Empty { get { return _empty; } }
+		public static Description Room_TBD { get { return _room_TBD; } }
+		public static Description Corridor_TBD { get { return _corridor_TBD; } }
+		public static Description Catacombs_TBD { get { return _catacombs_TBD; } }
+		public static Description Mines_Horiz { get { return _mines_Horiz; } }
+		public static Description Mines_Vert { get { return _mines_Vert; } }
+		public static Description Mines_Horiz_Flooded { get { return _mines_Horiz_Flooded; } }
+		public static Description Mines_Vert_Flooded { get { return _mines_Vert_Flooded; } }
+		public static Description Constructed { get { return _constructed; } }
+		public static Description Constructed_Flooded { get { return _constructed_Flooded; } }
+		public static Description Cavern { get { return _cavern; } }
+		public static Description Cavern_Flooded { get { return _cavern_Flooded; } }
+		// *** END PROPERTY DECLARATIONS ***
+
     	public static List<Description> Descrs = new List<Description>();
 
+		static Descriptions()
+		{
+			_empty = new Description("E");
+			_room_TBD = new Description(",");
+			_corridor_TBD = new Description(".");
+			_catacombs_TBD = new Description("'");
+			_mines_Horiz = new Description("M");
+			_mines_Vert = new Description("M");
+			_mines_Horiz_Flooded = new Description("x");
+			_mines_Vert_Flooded = new Description("x");
+			_constructed = new Description("C");
+			_constructed_Flooded = new Description("F");
+			_cavern = new Description("c");
+			_cavern_Flooded = new Description("f");
+
+			Initialize();
+		}
 		public static void Initialize()
 		{
 			Room_TBD.IsTBD = true;

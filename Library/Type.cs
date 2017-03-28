@@ -128,77 +128,229 @@ namespace DigitalWizardry.Dungeon
 
 	public static class Types
 	{
-		public static Type EmptyCell = new Type();	       // Empty, i.e. unused.
-		public static Type Entrance = new Type();	       // Entrance Cell, used only once on level 0...
-		public static Type Vert = new Type();		       // Vertical Corridor            
-		public static Type Horiz = new Type();		       // Horizontal Corridor           
-		public static Type Inter = new Type();		       // Intersection                 
-		public static Type JuncULR = new Type();	       // Junction Up Left Right       
-		public static Type JuncUDR = new Type();	       // Junction Up Down Right       
-		public static Type JuncDLR = new Type();	       // Junction Down Left Right     
-		public static Type JuncUDL = new Type();	       // Junction Up Down Left        
-		public static Type ElbUR = new Type();		       // Elbow Up Right               
-		public static Type ElbDR = new Type();		       // Elbow Down Right             
-		public static Type ElbDL = new Type();		       // Elbow Down Left              
-		public static Type ElbUL = new Type();		       // Elbow Up Left                
-		public static Type DeadU = new Type();		       // Dead End Up                  
-		public static Type DeadD = new Type();		       // Dead End Down                
-		public static Type DeadL = new Type();		       // Dead End Left                
-		public static Type DeadR = new Type();		       // Dead End Right 
-		public static Type DeadexU = new Type();           // Dead End Exit Up                  
-		public static Type DeadexD = new Type();           // Dead End Exit Down                
-		public static Type DeadexL = new Type();           // Dead End Exit Left                
-		public static Type DeadexR = new Type();           // Dead End Exit Right 
-		public static Type UpStairU = new Type();          // Stairs Up Connects Up        
-		public static Type UpStairD = new Type();          // Stairs Up Connects Down      
-		public static Type UpStairL = new Type();          // Stairs Up Connects Left      
-		public static Type UpStairR = new Type();          // Stairs Up Connects Right     
-		public static Type DownStairU = new Type();        // Stairs Down Connects Up      
-		public static Type DownStairD = new Type();        // Stairs Down Connects Down    
-		public static Type DownStairL = new Type();        // Stairs Down Connects Left    
-		public static Type DownStairR = new Type();        // Stairs Down Connects Right 
-		public static Type RoomSpace = new Type();         // Room Space
-		public static Type Fountain = new Type();          // Healing Fountain
-		public static Type RoomWallU = new Type();         // Room Wall Up
-		public static Type RoomWallD = new Type();         // Room Wall Down
-		public static Type RoomWallL = new Type();         // Room Wall Left
-		public static Type RoomWallR = new Type();         // Room Wall Right
-		public static Type RoomWallU_Round = new Type();   // Room Wall Up Round
-		public static Type RoomWallD_Round = new Type();   // Room Wall Down Round
-		public static Type RoomWallL_Round = new Type();   // Room Wall Left Round
-		public static Type RoomWallR_Round = new Type();   // Room Wall Right Round
-		public static Type RoomWallUL = new Type();        // Room Wall Up Left
-		public static Type RoomWallUR = new Type();        // Room Wall Up Right
-		public static Type RoomWallDL = new Type();        // Room Wall Down Left
-		public static Type RoomWallDR = new Type();        // Room Wall Down Right
-		public static Type RoomWallUL_Round = new Type();  // Room Wall Up Left Round
-		public static Type RoomWallUR_Round = new Type();  // Room Wall Up Right Round
-		public static Type RoomWallDL_Round = new Type();  // Room Wall Down Left Round
-		public static Type RoomWallDR_Round = new Type();  // Room Wall Down Right Round
-		public static Type RoomWallULinv = new Type();     // Room Wall Up Left Inverted
-		public static Type RoomWallURinv = new Type();     // Room Wall Up Right Inverted
-		public static Type RoomWallDLinv = new Type();     // Room Wall Down Left Inverted
-		public static Type RoomWallDRinv = new Type();     // Room Wall Down Right Inverted
-		public static Type RoomExitU = new Type();         // Room Exit Up
-		public static Type RoomExitD = new Type();         // Room Exit Down
-		public static Type RoomExitL = new Type();         // Room Exit Left
-		public static Type RoomExitR = new Type();         // Room Exit Right
-		public static Type RoomExitU_Round = new Type();   // Room Exit Up Round
-		public static Type RoomExitD_Round = new Type();   // Room Exit Down Round
-		public static Type RoomExitL_Round = new Type();   // Room Exit Left Round
-		public static Type RoomExitR_Round = new Type();   // Room Exit Right Round
-		public static Type RoomExitUL_U = new Type();      // Room Exit Up Left Corner, Exit Up
-		public static Type RoomExitUL_L = new Type();      // Room Exit Up Left Corner, Exit Left
-		public static Type RoomExitUL_UL = new Type();     // Room Exit Up Left Corner, Exits Up and Left
-		public static Type RoomExitUR_U = new Type();      // Room Exit Up Right Corner, Exit Up
-		public static Type RoomExitUR_R = new Type();      // Room Exit Up Right Corner, Exit Right
-		public static Type RoomExitUR_UR = new Type();     // Room Exit Up Right Corner, Exits Up and Right
-		public static Type RoomExitDL_D = new Type();      // Room Exit Down Left Corner, Exit Down
-		public static Type RoomExitDL_L = new Type();      // Room Exit Down Left Corner, Exit Left
-		public static Type RoomExitDL_DL = new Type();     // Room Exit Down Left Corner, Exits Down and Left
-		public static Type RoomExitDR_D = new Type();      // Room Exit Down Right Corner, Exit Down
-		public static Type RoomExitDR_R = new Type();      // Room Exit Down Right Corner, Exit Right
-		public static Type RoomExitDR_DR = new Type();     // Room Exit Down Right Corner, Exits Down and Right
+		// *** BEGIN FIELD DECLARATIONS ***
+		private static readonly Type _emptyCell;
+		private static readonly Type _entrance;
+		private static readonly Type _vert;
+		private static readonly Type _horiz;
+		private static readonly Type _inter;
+		private static readonly Type _juncULR;
+		private static readonly Type _juncUDR;
+		private static readonly Type _juncDLR;
+		private static readonly Type _juncUDL;
+		private static readonly Type _elbUR;
+		private static readonly Type _elbDR;
+		private static readonly Type _elbDL;
+		private static readonly Type _elbUL;
+		private static readonly Type _deadU;
+		private static readonly Type _deadD;
+		private static readonly Type _deadL;
+		private static readonly Type _deadR;
+		private static readonly Type _deadexU;
+		private static readonly Type _deadexD;
+		private static readonly Type _deadexL;
+		private static readonly Type _deadexR;
+		private static readonly Type _upStairU;
+		private static readonly Type _upStairD;
+		private static readonly Type _upStairL;
+		private static readonly Type _upStairR;
+		private static readonly Type _downStairU;
+		private static readonly Type _downStairD;
+		private static readonly Type _downStairL;
+		private static readonly Type _downStairR;
+		private static readonly Type _roomSpace;
+		private static readonly Type _fountain;
+		private static readonly Type _roomWallU;
+		private static readonly Type _roomWallD;
+		private static readonly Type _roomWallL;
+		private static readonly Type _roomWallR;
+		private static readonly Type _roomWallU_Round;
+		private static readonly Type _roomWallD_Round;
+		private static readonly Type _roomWallL_Round;
+		private static readonly Type _roomWallR_Round;
+		private static readonly Type _roomWallUL;
+		private static readonly Type _roomWallUR;
+		private static readonly Type _roomWallDL;
+		private static readonly Type _roomWallDR;
+		private static readonly Type _roomWallUL_Round;
+		private static readonly Type _roomWallUR_Round;
+		private static readonly Type _roomWallDL_Round;
+		private static readonly Type _roomWallDR_Round;
+		private static readonly Type _roomWallULinv;
+		private static readonly Type _roomWallURinv;
+		private static readonly Type _roomWallDLinv;
+		private static readonly Type _roomWallDRinv;
+		private static readonly Type _roomExitU;
+		private static readonly Type _roomExitD;
+		private static readonly Type _roomExitL;
+		private static readonly Type _roomExitR;
+		private static readonly Type _roomExitU_Round;
+		private static readonly Type _roomExitD_Round;
+		private static readonly Type _roomExitL_Round;
+		private static readonly Type _roomExitR_Round;
+		private static readonly Type _roomExitUL_U;
+		private static readonly Type _roomExitUL_L;
+		private static readonly Type _roomExitUL_UL;
+		private static readonly Type _roomExitUR_U;
+		private static readonly Type _roomExitUR_R;
+		private static readonly Type _roomExitUR_UR;
+		private static readonly Type _roomExitDL_D;
+		private static readonly Type _roomExitDL_L;
+		private static readonly Type _roomExitDL_DL;
+		private static readonly Type _roomExitDR_D;
+		private static readonly Type _roomExitDR_R;
+		private static readonly Type _roomExitDR_DR;
+		// *** END FIELD DECLARATIONS ***
+		// *** BEGIN PROPERTY DECLARATIONS ***
+		public static Type EmptyCell { get { return _emptyCell; } }                // Empty, i.e. unused.
+		public static Type Entrance { get { return _entrance; } }                  // Entrance Cell, used only once on level 0...
+		public static Type Vert { get { return _vert; } }                          // Vertical Corridor            
+		public static Type Horiz { get { return _horiz; } }                        // Horizontal Corridor           
+		public static Type Inter { get { return _inter; } }                        // Intersection                 
+		public static Type JuncULR { get { return _juncULR; } }                    // Junction Up Left Right       
+		public static Type JuncUDR { get { return _juncUDR; } }                    // Junction Up Down Right       
+		public static Type JuncDLR { get { return _juncDLR; } }                    // Junction Down Left Right     
+		public static Type JuncUDL { get { return _juncUDL; } }                    // Junction Up Down Left        
+		public static Type ElbUR { get { return _elbUR; } }                        // Elbow Up Right               
+		public static Type ElbDR { get { return _elbDR; } }                        // Elbow Down Right             
+		public static Type ElbDL { get { return _elbDL; } }                        // Elbow Down Left              
+		public static Type ElbUL { get { return _elbUL; } }                        // Elbow Up Left                
+		public static Type DeadU { get { return _deadU; } }                        // Dead End Up                  
+		public static Type DeadD { get { return _deadD; } }                        // Dead End Down                
+		public static Type DeadL { get { return _deadL; } }                        // Dead End Left                
+		public static Type DeadR { get { return _deadR; } }                        // Dead End Right 
+		public static Type DeadexU { get { return _deadexU; } }                    // Dead End Exit Up                  
+		public static Type DeadexD { get { return _deadexD; } }                    // Dead End Exit Down                
+		public static Type DeadexL { get { return _deadexL; } }                    // Dead End Exit Left                
+		public static Type DeadexR { get { return _deadexR; } }                    // Dead End Exit Right 
+		public static Type UpStairU { get { return _upStairU; } }                  // Stairs Up Connects Up        
+		public static Type UpStairD { get { return _upStairD; } }                  // Stairs Up Connects Down      
+		public static Type UpStairL { get { return _upStairL; } }                  // Stairs Up Connects Left      
+		public static Type UpStairR { get { return _upStairR; } }                  // Stairs Up Connects Right     
+		public static Type DownStairU { get { return _downStairU; } }              // Stairs Down Connects Up      
+		public static Type DownStairD { get { return _downStairD; } }              // Stairs Down Connects Down    
+		public static Type DownStairL { get { return _downStairL; } }              // Stairs Down Connects Left    
+		public static Type DownStairR { get { return _downStairR; } }              // Stairs Down Connects Right 
+		public static Type RoomSpace { get { return _roomSpace; } }                // Room Space
+		public static Type Fountain { get { return _fountain; } }                  // Healing Fountain
+		public static Type RoomWallU { get { return _roomWallU; } }                // Room Wall Up
+		public static Type RoomWallD { get { return _roomWallD; } }                // Room Wall Down
+		public static Type RoomWallL { get { return _roomWallL; } }                // Room Wall Left
+		public static Type RoomWallR { get { return _roomWallR; } }                // Room Wall Right
+		public static Type RoomWallU_Round { get { return _roomWallU_Round; } }    // Room Wall Up Round
+		public static Type RoomWallD_Round { get { return _roomWallD_Round; } }    // Room Wall Down Round
+		public static Type RoomWallL_Round { get { return _roomWallL_Round; } }    // Room Wall Left Round
+		public static Type RoomWallR_Round { get { return _roomWallR_Round; } }    // Room Wall Right Round
+		public static Type RoomWallUL { get { return _roomWallUL; } }              // Room Wall Up Left
+		public static Type RoomWallUR { get { return _roomWallUR; } }              // Room Wall Up Right
+		public static Type RoomWallDL { get { return _roomWallDL; } }              // Room Wall Down Left
+		public static Type RoomWallDR { get { return _roomWallDR; } }              // Room Wall Down Right
+		public static Type RoomWallUL_Round { get { return _roomWallUL_Round; } }  // Room Wall Up Left Round
+		public static Type RoomWallUR_Round { get { return _roomWallUR_Round; } }  // Room Wall Up Right Round
+		public static Type RoomWallDL_Round { get { return _roomWallDL_Round; } }  // Room Wall Down Left Round
+		public static Type RoomWallDR_Round { get { return _roomWallDR_Round; } }  // Room Wall Down Right Round
+		public static Type RoomWallULinv { get { return _roomWallULinv; } }        // Room Wall Up Left Inverted
+		public static Type RoomWallURinv { get { return _roomWallURinv; } }        // Room Wall Up Right Inverted
+		public static Type RoomWallDLinv { get { return _roomWallDLinv; } }        // Room Wall Down Left Inverted
+		public static Type RoomWallDRinv { get { return _roomWallDRinv; } }        // Room Wall Down Right Inverted
+		public static Type RoomExitU { get { return _roomExitU; } }                // Room Exit Up
+		public static Type RoomExitD { get { return _roomExitD; } }                // Room Exit Down
+		public static Type RoomExitL { get { return _roomExitL; } }                // Room Exit Left
+		public static Type RoomExitR { get { return _roomExitR; } }                // Room Exit Right
+		public static Type RoomExitU_Round { get { return _roomExitU_Round; } }    // Room Exit Up Round
+		public static Type RoomExitD_Round { get { return _roomExitD_Round; } }    // Room Exit Down Round
+		public static Type RoomExitL_Round { get { return _roomExitL_Round; } }    // Room Exit Left Round
+		public static Type RoomExitR_Round { get { return _roomExitR_Round; } }    // Room Exit Right Round
+		public static Type RoomExitUL_U { get { return _roomExitUL_U; } }          // Room Exit Up Left Corner, Exit Up
+		public static Type RoomExitUL_L { get { return _roomExitUL_L; } }          // Room Exit Up Left Corner, Exit Left
+		public static Type RoomExitUL_UL { get { return _roomExitUL_UL; } }        // Room Exit Up Left Corner, Exits Up and Left
+		public static Type RoomExitUR_U { get { return _roomExitUR_U; } }          // Room Exit Up Right Corner, Exit Up
+		public static Type RoomExitUR_R { get { return _roomExitUR_R; } }          // Room Exit Up Right Corner, Exit Right
+		public static Type RoomExitUR_UR { get { return _roomExitUR_UR; } }        // Room Exit Up Right Corner, Exits Up and Right
+		public static Type RoomExitDL_D { get { return _roomExitDL_D; } }          // Room Exit Down Left Corner, Exit Down
+		public static Type RoomExitDL_L { get { return _roomExitDL_L; } }          // Room Exit Down Left Corner, Exit Left
+		public static Type RoomExitDL_DL { get { return _roomExitDL_DL; } }        // Room Exit Down Left Corner, Exits Down and Left
+		public static Type RoomExitDR_D { get { return _roomExitDR_D; } }          // Room Exit Down Right Corner, Exit Down
+		public static Type RoomExitDR_R { get { return _roomExitDR_R; } }          // Room Exit Down Right Corner, Exit Right
+		public static Type RoomExitDR_DR { get { return _roomExitDR_DR; } }        // Room Exit Down Right Corner, Exits Down and Right
+		// *** END PROPERTY DECLARATIONS ***
+
+		static Types()
+		{
+			_emptyCell = new Type();
+			_entrance = new Type();
+			_vert = new Type();
+			_horiz = new Type();
+			_inter = new Type();
+			_juncULR = new Type();
+			_juncUDR = new Type();
+			_juncDLR = new Type();
+			_juncUDL = new Type();
+			_elbUR = new Type();
+			_elbDR = new Type();
+			_elbDL = new Type();
+			_elbUL = new Type();
+			_deadU = new Type();
+			_deadD = new Type();
+			_deadL = new Type();
+			_deadR = new Type();
+			_deadexU = new Type();
+			_deadexD = new Type();
+			_deadexL = new Type();
+			_deadexR = new Type();
+			_upStairU = new Type();
+			_upStairD = new Type();
+			_upStairL = new Type();
+			_upStairR = new Type();
+			_downStairU = new Type();
+			_downStairD = new Type();
+			_downStairL = new Type();
+			_downStairR = new Type();
+			_roomSpace = new Type();
+			_fountain = new Type();
+			_roomWallU = new Type();
+			_roomWallD = new Type();
+			_roomWallL = new Type();
+			_roomWallR = new Type();
+			_roomWallU_Round = new Type();
+			_roomWallD_Round = new Type();
+			_roomWallL_Round = new Type();
+			_roomWallR_Round = new Type();
+			_roomWallUL = new Type();
+			_roomWallUR = new Type();
+			_roomWallDL = new Type();
+			_roomWallDR = new Type();
+			_roomWallUL_Round = new Type();
+			_roomWallUR_Round = new Type();
+			_roomWallDL_Round = new Type();
+			_roomWallDR_Round = new Type();
+			_roomWallULinv = new Type();
+			_roomWallURinv = new Type();
+			_roomWallDLinv = new Type();
+			_roomWallDRinv = new Type();
+			_roomExitU = new Type();
+			_roomExitD = new Type();
+			_roomExitL = new Type();
+			_roomExitR = new Type();
+			_roomExitU_Round = new Type();
+			_roomExitD_Round = new Type();
+			_roomExitL_Round = new Type();
+			_roomExitR_Round = new Type();
+			_roomExitUL_U = new Type();
+			_roomExitUL_L = new Type();
+			_roomExitUL_UL = new Type();
+			_roomExitUR_U = new Type();
+			_roomExitUR_R = new Type();
+			_roomExitUR_UR = new Type();
+			_roomExitDL_D = new Type();
+			_roomExitDL_L = new Type();
+			_roomExitDL_DL = new Type();
+			_roomExitDR_D = new Type();
+			_roomExitDR_R = new Type();
+			_roomExitDR_DR = new Type();
+
+			Initialize();
+		}
 
 		public static void Initialize()
 		{
