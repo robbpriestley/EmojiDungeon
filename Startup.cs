@@ -41,6 +41,18 @@ namespace DigitalWizardry.Dungeon
 			
             app.UseMvc();
 			app.UseStaticFiles();
+
+			app.UseMvc
+			(
+				routes =>
+            	{
+                	routes.MapRoute
+					(
+                    	name: "default",
+                    	template: "{controller=Index}/{action=Index}/{id?}"
+					);
+            	}
+			);
         }
 
 		static void ListDirectory(string dir)

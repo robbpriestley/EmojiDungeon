@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace DigitalWizardry.Dungeon
+namespace DigitalWizardry.Dungeon.Controllers
 {
 	[Route("dungeon")]
 	public class DungeonApiController : Controller
