@@ -4,5 +4,16 @@
     ViewData["Title"] = "Dungeon Generator";
 }
 
-@Html.DisplayFor(m => m.TextVisualization)
-<!--<img src="~/images/Dwiz.png" />-->
+@* @Html.DisplayFor(m => m.TextVisualization) *@
+
+<table class="grid">
+@for(var y = @Model.Filepaths.GetLength(1) - 1; y >= 0; y--)
+{
+	<tr class="grid">
+	@for(var x = 0; x <  Model.Filepaths.GetLength(0); x++)
+	{
+		<td class="grid"><img class="grid" src="@Model.Filepaths[@x, @y]" /></td>
+	}
+	</tr>
+}
+</table>

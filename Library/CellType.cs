@@ -51,9 +51,9 @@ namespace DigitalWizardry.Dungeon
 		public string TextRep2 { get; set; }                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
 		public string Name { get; set; }                     // Name of type entity.
 		
-		public string Image
+		public string Filepath
 		{
-			get { return Name + ".png"; }
+			get { return "images/tiles/" + Name + ".png"; }
 		}
 
 		// *** END UTILITY MEMBERS ***
