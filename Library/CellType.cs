@@ -161,10 +161,6 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _deadD;
 		private static readonly CellType _deadL;
 		private static readonly CellType _deadR;
-		private static readonly CellType _deadexU;
-		private static readonly CellType _deadexD;
-		private static readonly CellType _deadexL;
-		private static readonly CellType _deadexR;
 		private static readonly CellType _upStairU;
 		private static readonly CellType _upStairD;
 		private static readonly CellType _upStairL;
@@ -236,10 +232,6 @@ namespace DigitalWizardry.Dungeon
 		public static CellType DeadD { get { return _deadD; } }                        // Dead End Down                
 		public static CellType DeadL { get { return _deadL; } }                        // Dead End Left                
 		public static CellType DeadR { get { return _deadR; } }                        // Dead End Right 
-		public static CellType DeadexU { get { return _deadexU; } }                    // Dead End Exit Up                  
-		public static CellType DeadexD { get { return _deadexD; } }                    // Dead End Exit Down                
-		public static CellType DeadexL { get { return _deadexL; } }                    // Dead End Exit Left                
-		public static CellType DeadexR { get { return _deadexR; } }                    // Dead End Exit Right 
 		public static CellType UpStairU { get { return _upStairU; } }                  // Stairs Up Connects Up        
 		public static CellType UpStairD { get { return _upStairD; } }                  // Stairs Up Connects Down      
 		public static CellType UpStairL { get { return _upStairL; } }                  // Stairs Up Connects Left      
@@ -312,10 +304,6 @@ namespace DigitalWizardry.Dungeon
 			_deadD = new CellType();
 			_deadL = new CellType();
 			_deadR = new CellType();
-			_deadexU = new CellType();
-			_deadexD = new CellType();
-			_deadexL = new CellType();
-			_deadexR = new CellType();
 			_upStairU = new CellType();
 			_upStairD = new CellType();
 			_upStairL = new CellType();
@@ -569,30 +557,6 @@ namespace DigitalWizardry.Dungeon
 			DeadR.IsDeadEnd = true;
 			DeadR.InitialAvailableConnections = 1;
 			DeadR.Name = "DeadR";
-			
-			DeadexU.ConnectsUp = true;
-			DeadexU.TraversableUp = true;
-			DeadexU.TextRep = @"╨";
-			DeadexU.TextRep2 = @" ";
-			DeadexU.Name = "DeadexU";
-			
-			DeadexD.ConnectsDown = true;
-			DeadexD.TraversableDown = true;
-			DeadexD.TextRep = @"╥";
-			DeadexD.TextRep2 = @" ";
-			DeadexD.Name = "DeadexD";
-			
-			DeadexL.ConnectsLeft = true;
-			DeadexL.TraversableLeft = true;
-			DeadexL.TextRep = @"╡";
-			DeadexL.TextRep2 = @" ";
-			DeadexL.Name = "DeadexL";
-
-			DeadexR.ConnectsRight = true;
-			DeadexR.TraversableRight = true;
-			DeadexR.TextRep = @"╞";
-			DeadexR.TextRep2 = @"═";
-			DeadexR.Name = "DeadexR";
 
 			// *** END DEAD END CELLS ***
 			// *** BEGIN ROOM CELLS ***
