@@ -1,8 +1,5 @@
 bin
 obj
-wwwroot
-dungeon
-Reference
 .DS_Store
 version.txt
 secrets.json
