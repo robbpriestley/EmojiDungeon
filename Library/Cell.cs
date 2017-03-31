@@ -64,14 +64,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			get
 			{
-				if (Descr.IsCavern)
-				{
-					return "images/tiles/dungeon/cavern/" + Type.Name + ".png";
-				}
-				else
-				{
-					return "images/tiles/dungeon/regular/" + Type.Name + ".png";
-				}
+				return "images/tiles/dungeon/" + Type.Name + ".png";
 			}
 		}
 	}
