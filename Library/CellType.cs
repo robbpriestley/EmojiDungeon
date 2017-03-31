@@ -170,23 +170,14 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _downStairL;
 		private static readonly CellType _downStairR;
 		private static readonly CellType _roomSpace;
-		private static readonly CellType _fountain;
 		private static readonly CellType _roomWallU;
 		private static readonly CellType _roomWallD;
 		private static readonly CellType _roomWallL;
 		private static readonly CellType _roomWallR;
-		private static readonly CellType _roomWallU_Round;
-		private static readonly CellType _roomWallD_Round;
-		private static readonly CellType _roomWallL_Round;
-		private static readonly CellType _roomWallR_Round;
 		private static readonly CellType _roomWallUL;
 		private static readonly CellType _roomWallUR;
 		private static readonly CellType _roomWallDL;
 		private static readonly CellType _roomWallDR;
-		private static readonly CellType _roomWallUL_Round;
-		private static readonly CellType _roomWallUR_Round;
-		private static readonly CellType _roomWallDL_Round;
-		private static readonly CellType _roomWallDR_Round;
 		private static readonly CellType _roomWallULinv;
 		private static readonly CellType _roomWallURinv;
 		private static readonly CellType _roomWallDLinv;
@@ -195,10 +186,6 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _roomExitD;
 		private static readonly CellType _roomExitL;
 		private static readonly CellType _roomExitR;
-		private static readonly CellType _roomExitU_Round;
-		private static readonly CellType _roomExitD_Round;
-		private static readonly CellType _roomExitL_Round;
-		private static readonly CellType _roomExitR_Round;
 		private static readonly CellType _roomExitUL_U;
 		private static readonly CellType _roomExitUL_L;
 		private static readonly CellType _roomExitUL_UL;
@@ -241,23 +228,14 @@ namespace DigitalWizardry.Dungeon
 		public static CellType DownStairL { get { return _downStairL; } }              // Stairs Down Connects Left    
 		public static CellType DownStairR { get { return _downStairR; } }              // Stairs Down Connects Right 
 		public static CellType RoomSpace { get { return _roomSpace; } }                // Room Space
-		public static CellType Fountain { get { return _fountain; } }                  // Healing Fountain
 		public static CellType RoomWallU { get { return _roomWallU; } }                // Room Wall Up
 		public static CellType RoomWallD { get { return _roomWallD; } }                // Room Wall Down
 		public static CellType RoomWallL { get { return _roomWallL; } }                // Room Wall Left
 		public static CellType RoomWallR { get { return _roomWallR; } }                // Room Wall Right
-		public static CellType RoomWallU_Round { get { return _roomWallU_Round; } }    // Room Wall Up Round
-		public static CellType RoomWallD_Round { get { return _roomWallD_Round; } }    // Room Wall Down Round
-		public static CellType RoomWallL_Round { get { return _roomWallL_Round; } }    // Room Wall Left Round
-		public static CellType RoomWallR_Round { get { return _roomWallR_Round; } }    // Room Wall Right Round
 		public static CellType RoomWallUL { get { return _roomWallUL; } }              // Room Wall Up Left
 		public static CellType RoomWallUR { get { return _roomWallUR; } }              // Room Wall Up Right
 		public static CellType RoomWallDL { get { return _roomWallDL; } }              // Room Wall Down Left
 		public static CellType RoomWallDR { get { return _roomWallDR; } }              // Room Wall Down Right
-		public static CellType RoomWallUL_Round { get { return _roomWallUL_Round; } }  // Room Wall Up Left Round
-		public static CellType RoomWallUR_Round { get { return _roomWallUR_Round; } }  // Room Wall Up Right Round
-		public static CellType RoomWallDL_Round { get { return _roomWallDL_Round; } }  // Room Wall Down Left Round
-		public static CellType RoomWallDR_Round { get { return _roomWallDR_Round; } }  // Room Wall Down Right Round
 		public static CellType RoomWallULinv { get { return _roomWallULinv; } }        // Room Wall Up Left Inverted
 		public static CellType RoomWallURinv { get { return _roomWallURinv; } }        // Room Wall Up Right Inverted
 		public static CellType RoomWallDLinv { get { return _roomWallDLinv; } }        // Room Wall Down Left Inverted
@@ -266,10 +244,6 @@ namespace DigitalWizardry.Dungeon
 		public static CellType RoomExitD { get { return _roomExitD; } }                // Room Exit Down
 		public static CellType RoomExitL { get { return _roomExitL; } }                // Room Exit Left
 		public static CellType RoomExitR { get { return _roomExitR; } }                // Room Exit Right
-		public static CellType RoomExitU_Round { get { return _roomExitU_Round; } }    // Room Exit Up Round
-		public static CellType RoomExitD_Round { get { return _roomExitD_Round; } }    // Room Exit Down Round
-		public static CellType RoomExitL_Round { get { return _roomExitL_Round; } }    // Room Exit Left Round
-		public static CellType RoomExitR_Round { get { return _roomExitR_Round; } }    // Room Exit Right Round
 		public static CellType RoomExitUL_U { get { return _roomExitUL_U; } }          // Room Exit Up Left Corner, Exit Up
 		public static CellType RoomExitUL_L { get { return _roomExitUL_L; } }          // Room Exit Up Left Corner, Exit Left
 		public static CellType RoomExitUL_UL { get { return _roomExitUL_UL; } }        // Room Exit Up Left Corner, Exits Up and Left
@@ -313,23 +287,14 @@ namespace DigitalWizardry.Dungeon
 			_downStairL = new CellType();
 			_downStairR = new CellType();
 			_roomSpace = new CellType();
-			_fountain = new CellType();
 			_roomWallU = new CellType();
 			_roomWallD = new CellType();
 			_roomWallL = new CellType();
 			_roomWallR = new CellType();
-			_roomWallU_Round = new CellType();
-			_roomWallD_Round = new CellType();
-			_roomWallL_Round = new CellType();
-			_roomWallR_Round = new CellType();
 			_roomWallUL = new CellType();
 			_roomWallUR = new CellType();
 			_roomWallDL = new CellType();
 			_roomWallDR = new CellType();
-			_roomWallUL_Round = new CellType();
-			_roomWallUR_Round = new CellType();
-			_roomWallDL_Round = new CellType();
-			_roomWallDR_Round = new CellType();
 			_roomWallULinv = new CellType();
 			_roomWallURinv = new CellType();
 			_roomWallDLinv = new CellType();
@@ -338,10 +303,6 @@ namespace DigitalWizardry.Dungeon
 			_roomExitD = new CellType();
 			_roomExitL = new CellType();
 			_roomExitR = new CellType();
-			_roomExitU_Round = new CellType();
-			_roomExitD_Round = new CellType();
-			_roomExitL_Round = new CellType();
-			_roomExitR_Round = new CellType();
 			_roomExitUL_U = new CellType();
 			_roomExitUL_L = new CellType();
 			_roomExitUL_UL = new CellType();
@@ -570,16 +531,6 @@ namespace DigitalWizardry.Dungeon
 			RoomSpace.IsRoomType = true;
 			RoomSpace.ForceGrowthCompatible = false;
 			RoomSpace.Name = "RoomSpace";
-			
-			Fountain.TraversableUp = true;
-			Fountain.TraversableDown = true;
-			Fountain.TraversableLeft = true;
-			Fountain.TraversableRight = true;
-			Fountain.TextRep = "F";
-			Fountain.TextRep2 = " ";
-			Fountain.IsRoomType = true;
-			Fountain.ForceGrowthCompatible = false;
-			Fountain.Name = "Fountain";
 		
 			RoomWallU.TraversableDown = true;
 			RoomWallU.TraversableLeft = true;
@@ -633,54 +584,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallR.ForceGrowthCompatible = false;
 			RoomWallR.RoomWallDirection = Direction.Right;
 			RoomWallR.Name = "RoomWallR";
-
-			RoomWallU_Round.TraversableDown = true;
-			RoomWallU_Round.TraversableLeft = true;
-			RoomWallU_Round.TraversableRight = true;
-			RoomWallU_Round.RoomConnectsLeft = true;
-			RoomWallU_Round.RoomConnectsRight = true;
-			RoomWallU_Round.TextRep = "┉";
-			RoomWallU_Round.TextRep2 = "┉";
-			RoomWallU_Round.IsRoomType = true;
-			RoomWallU_Round.ForceGrowthCompatible = false;
-			RoomWallU_Round.RoomWallDirection = Direction.Up;
-			RoomWallU_Round.Name = "RoomWallU_Round";
-			
-			RoomWallD_Round.TraversableUp = true;
-			RoomWallD_Round.TraversableLeft = true;
-			RoomWallD_Round.TraversableRight = true;
-			RoomWallD_Round.RoomConnectsLeft = true;
-			RoomWallD_Round.RoomConnectsRight = true;
-			RoomWallD_Round.TextRep = "┉";
-			RoomWallD_Round.TextRep2 = "┉";
-			RoomWallD_Round.IsRoomType = true;
-			RoomWallD_Round.ForceGrowthCompatible = false;
-			RoomWallD_Round.RoomWallDirection = Direction.Down;
-			RoomWallD_Round.Name = "RoomWallD_Round";
-			
-			RoomWallL_Round.TraversableUp = true;
-			RoomWallL_Round.TraversableDown = true;
-			RoomWallL_Round.TraversableRight = true;
-			RoomWallL_Round.RoomConnectsUp = true;
-			RoomWallL_Round.RoomConnectsDown = true;
-			RoomWallL_Round.TextRep = "┋";
-			RoomWallL_Round.TextRep2 = " ";
-			RoomWallL_Round.IsRoomType = true;
-			RoomWallL_Round.ForceGrowthCompatible = false;
-			RoomWallL_Round.RoomWallDirection = Direction.Left;
-			RoomWallL_Round.Name = "RoomWallL_Round";
-			
-			RoomWallR_Round.TraversableUp = true;
-			RoomWallR_Round.TraversableDown = true;
-			RoomWallR_Round.TraversableLeft = true;
-			RoomWallR_Round.RoomConnectsUp = true;
-			RoomWallR_Round.RoomConnectsDown = true;
-			RoomWallR_Round.TextRep = "┋";
-			RoomWallR_Round.TextRep2 = " ";
-			RoomWallR_Round.IsRoomType = true;
-			RoomWallR_Round.ForceGrowthCompatible = false;
-			RoomWallR_Round.RoomWallDirection = Direction.Right;
-			RoomWallR_Round.Name = "RoomWallR_Round";
 	
 			RoomWallUL.TraversableDown = true;
 			RoomWallUL.TraversableRight = true;
@@ -733,54 +636,6 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDR.ForceGrowthCompatible = false;
 			RoomWallDR.RoomWallDirection = Direction.DownRight;
 			RoomWallDR.Name = "RoomWallDR";
-			
-			RoomWallUL_Round.TraversableDown = true;
-			RoomWallUL_Round.TraversableRight = true;
-			RoomWallUL_Round.RoomConnectsDown = true;
-			RoomWallUL_Round.RoomConnectsRight = true;
-			RoomWallUL_Round.TextRep = "╭";
-			RoomWallUL_Round.TextRep2 = "─";
-			RoomWallUL_Round.IsRoomType = true;
-			RoomWallUL_Round.IsRoomCorner = true;
-			RoomWallUL_Round.ForceGrowthCompatible = false;
-			RoomWallUL_Round.RoomWallDirection = Direction.UpLeft;
-			RoomWallUL_Round.Name = "RoomWallUL_Round";
-			
-			RoomWallUR_Round.TraversableDown = true;
-			RoomWallUR_Round.TraversableLeft = true;
-			RoomWallUR_Round.RoomConnectsDown = true;
-			RoomWallUR_Round.RoomConnectsLeft = true;
-			RoomWallUR_Round.TextRep = "╮";
-			RoomWallUR_Round.TextRep2 = " ";
-			RoomWallUR_Round.IsRoomType = true;
-			RoomWallUR_Round.IsRoomCorner = true;
-			RoomWallUR_Round.ForceGrowthCompatible = false;
-			RoomWallUR_Round.RoomWallDirection = Direction.UpRight;
-			RoomWallUR_Round.Name = "RoomWallUR_Round";
-			
-			RoomWallDL_Round.TraversableUp = true;
-			RoomWallDL_Round.TraversableRight = true;
-			RoomWallDL_Round.RoomConnectsUp = true;
-			RoomWallDL_Round.RoomConnectsRight = true;
-			RoomWallDL_Round.TextRep = "╰";
-			RoomWallDL_Round.TextRep2 = "─";
-			RoomWallDL_Round.IsRoomType = true;
-			RoomWallDL_Round.IsRoomCorner = true;
-			RoomWallDL_Round.ForceGrowthCompatible = false;
-			RoomWallDL_Round.RoomWallDirection = Direction.DownLeft;
-			RoomWallDL_Round.Name = "RoomWallDL_Round";
-			
-			RoomWallDR_Round.TraversableUp = true;
-			RoomWallDR_Round.TraversableLeft = true;
-			RoomWallDR_Round.RoomConnectsUp = true;
-			RoomWallDR_Round.RoomConnectsLeft = true;
-			RoomWallDR_Round.TextRep = "╯";
-			RoomWallDR_Round.TextRep2 = " ";
-			RoomWallDR_Round.IsRoomType = true;
-			RoomWallDR_Round.IsRoomCorner = true;
-			RoomWallDR_Round.ForceGrowthCompatible = false;
-			RoomWallDR_Round.RoomWallDirection = Direction.DownRight;
-			RoomWallDR_Round.Name = "RoomWallDR_Round";
 			
 			RoomWallULinv.TraversableDown = true;
 			RoomWallULinv.TraversableRight = true;
@@ -888,74 +743,6 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR.IsRoomExit = true;
 			RoomExitR.ForceGrowthCompatible = false;
 			RoomExitR.Name = "RoomExitR";
-			
-			RoomExitU_Round.ConnectsUp = true;
-			RoomExitU_Round.TraversableUp = true;
-			RoomExitU_Round.TraversableDown = true;
-			RoomExitU_Round.TraversableLeft = true;
-			RoomExitU_Round.TraversableRight = true;
-			RoomExitU_Round.RoomConnectsLeft = true;
-			RoomExitU_Round.RoomConnectsRight = true;
-			RoomExitU_Round.InitialAvailableConnections = 1;
-			RoomExitU_Round.TextRep = "╨";
-			RoomExitU_Round.TextRep2 = "┉";
-			RoomExitU_Round.DoorProbability = 0;
-			RoomExitU_Round.IsRoomType = true;
-			RoomExitU_Round.IsRoomExit = true;
-			RoomExitU_Round.IsFloodingIncompatible = true;
-			RoomExitU_Round.ForceGrowthCompatible = false;
-			RoomExitU_Round.Name = "RoomExitU_Round";
-			
-			RoomExitD_Round.ConnectsDown = true;
-			RoomExitD_Round.TraversableUp = true;
-			RoomExitD_Round.TraversableDown = true;
-			RoomExitD_Round.TraversableLeft = true;
-			RoomExitD_Round.TraversableRight = true;
-			RoomExitD_Round.RoomConnectsLeft = true;
-			RoomExitD_Round.RoomConnectsRight = true;
-			RoomExitD_Round.InitialAvailableConnections = 1;
-			RoomExitD_Round.TextRep = "╥";
-			RoomExitD_Round.TextRep2 = "┉";
-			RoomExitD_Round.DoorProbability = 0;
-			RoomExitD_Round.IsRoomType = true;
-			RoomExitD_Round.IsRoomExit = true;
-			RoomExitD_Round.IsFloodingIncompatible = true;
-			RoomExitD_Round.ForceGrowthCompatible = false;
-			RoomExitD_Round.Name = "RoomExitD_Round";
-			
-			RoomExitL_Round.ConnectsLeft = true;
-			RoomExitL_Round.TraversableUp = true;
-			RoomExitL_Round.TraversableDown = true;
-			RoomExitL_Round.TraversableLeft = true;
-			RoomExitL_Round.TraversableRight = true;
-			RoomExitL_Round.RoomConnectsUp = true;
-			RoomExitL_Round.RoomConnectsDown = true;
-			RoomExitL_Round.InitialAvailableConnections = 1;
-			RoomExitL_Round.TextRep = "╡";
-			RoomExitL_Round.TextRep2 = " ";
-			RoomExitL_Round.DoorProbability = 0;
-			RoomExitL_Round.IsRoomType = true;
-			RoomExitL_Round.IsRoomExit = true;
-			RoomExitL_Round.IsFloodingIncompatible = true;
-			RoomExitL_Round.ForceGrowthCompatible = false;
-			RoomExitL_Round.Name = "RoomExitL_Round";
-			
-			RoomExitR_Round.ConnectsRight = true;
-			RoomExitR_Round.TraversableUp = true;
-			RoomExitR_Round.TraversableDown = true;
-			RoomExitR_Round.TraversableLeft = true;
-			RoomExitR_Round.TraversableRight = true;
-			RoomExitR_Round.RoomConnectsUp = true;
-			RoomExitR_Round.RoomConnectsDown = true;
-			RoomExitR_Round.InitialAvailableConnections = 1;
-			RoomExitR_Round.TextRep = "╞";
-			RoomExitR_Round.TextRep2 = "═";
-			RoomExitR_Round.DoorProbability = 0;
-			RoomExitR_Round.IsRoomType = true;
-			RoomExitR_Round.IsRoomExit = true;
-			RoomExitR_Round.IsFloodingIncompatible = true;
-			RoomExitR_Round.ForceGrowthCompatible = false;
-			RoomExitR_Round.Name = "RoomExitR_Round";
 			
 			// *** END ROOM CELLS ***
 			// *** ROOM CORNER EXITS ***

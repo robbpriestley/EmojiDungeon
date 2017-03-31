@@ -428,7 +428,6 @@ namespace DigitalWizardry.Dungeon
 			PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
-			PlaceRoundRoom();
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
@@ -491,39 +490,6 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private void PlaceRoundRoom()
-		{
-			bool place = Reference.PlaceRoundRoom;  // This is just to trick the compiler into not issuing an unreachable code warning for the code below.
-
-			if (place)
-			{
-				bool placed = false;
-				int attempts = 0, maxAttempts = Reference.GridWidth * Reference.GridHeight;
-				
-				while (attempts <= maxAttempts) 
-				{
-					attempts++;
-					Coords coords = RandomCell(true);
-
-					if (!RoomFits(coords, 3, 3, true))
-					{
-						continue;
-					}
-					else
-					{
-						_rooms.Add(BuildRoom(RoomType.Round, coords, 3, 3));
-						placed = true;
-						break;
-					}
-				}
-				
-				if (!placed)
-				{
-					throw new DungeonGenerateException();
-				}
-			}
-		}
-
 		private void PlaceMines()
 		{
 			int attempts = 0;
@@ -568,7 +534,7 @@ namespace DigitalWizardry.Dungeon
 			
 			Coords coords = RandomCell(true);  // Get a random empty cell as the attach point.
 			
-			if (!RoomFits(coords, width, height, false))
+			if (!RoomFits(coords, width, height))
 			{
 				return false;
 			}
@@ -596,7 +562,7 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		// Returns true if the room fits into the dungeon entirely within allowable, currently-empty cells.
-		private bool RoomFits(Coords coords, int width, int height, bool round)
+		private bool RoomFits(Coords coords, int width, int height)
 		{
 			Cell cell = null;
 			bool fits = true;  // Innocent until proven guilty.
@@ -626,11 +592,6 @@ namespace DigitalWizardry.Dungeon
 							fits = false;
 							break;
 						}
-						else if (round && !cell.Type.IsEmpty)
-						{
-							fits = false;
-							break;
-						}
 					}
 				}
 			}
@@ -639,13 +600,13 @@ namespace DigitalWizardry.Dungeon
 
 		private Room BuildRoom(RoomType roomType, Coords coords, int width, int height)
 		{
-			Description descr = roomType == RoomType.Round ? Descriptions.Constructed : Descriptions.Room_TBD;
+			Description descr = Descriptions.Room_TBD;
 			
 			Room room = new Room(coords.X, coords.Y, descr);
 			
 			int widthReduce = 0, heightReduce = 0;
 			
-			if (roomType != RoomType.Regular && roomType != RoomType.Round) 
+			if (roomType != RoomType.Regular) 
 			{
 				widthReduce = _r.Next(width - 2) + 1;
 				heightReduce = _r.Next(height - 2) + 1;
@@ -674,10 +635,6 @@ namespace DigitalWizardry.Dungeon
 						case RoomType.IrregularDR:
 							newType = IrregRoomTypeDR(x, y, coords, width, height, widthReduce, heightReduce);
 							break;
-						
-						case RoomType.Round:
-							newType = RoundRoomType(x, y, coords, width, height);
-							break;
 							
 						default:
 							newType = RegRoomType(x, y, coords, width, height);
@@ -698,13 +655,7 @@ namespace DigitalWizardry.Dungeon
 					Cell newCell = new Cell(x, y, newType, descr);
 					SetCellValue(x, y, newCell);
 					
-					if (roomType == RoomType.Round)
-					{
-						newCell.Merged = true;
-						newCell.DescrWeight = 0;
-					}
-					
-					if (newType == CellTypes.RoomSpace || newType == CellTypes.Fountain)
+					if (newType == CellTypes.RoomSpace)
 					{
 						room.Space.Add(newCell);
 					}
@@ -757,66 +708,6 @@ namespace DigitalWizardry.Dungeon
 			else
 			{
 				newType = CellTypes.RoomSpace;
-			}
-			
-			return newType;
-		}
-
-		private CellType RoundRoomType(int x, int y, Coords coords, int width, int height)
-		{
-			CellType newType = null;
-			
-			if (x == coords.X && y == coords.Y)                                    // Bottom-left corner.
-			{
-				newType = CellTypes.RoomWallDL_Round;
-			}
-			else if (x == coords.X + width - 1 && y == coords.Y)                   // Bottom-right corner.
-			{
-				newType = CellTypes.RoomWallDR_Round;
-			}
-			else if (x == coords.X && y == coords.Y + height - 1)                  // Top-left corner.
-			{
-				newType = CellTypes.RoomWallUL_Round;
-			}
-			else if (x == coords.X + width - 1 && y == coords.Y + height - 1)      // Top-right corner.
-			{
-				newType = CellTypes.RoomWallUR_Round;
-			}
-			else if (x == coords.X && x == 0)                                      // Left wall.
-			{
-				newType = CellTypes.RoomWallL_Round;
-			}
-			else if (x == coords.X)                                                // Left exit.
-			{
-				newType = CellTypes.RoomExitL_Round;
-			}
-			else if (x == coords.X + width - 1 && x == Reference.GridWidth - 1)    // Right wall.
-			{
-				newType = CellTypes.RoomWallR_Round; 
-			}
-			else if (x == coords.X + width - 1)                                    // Right exit.
-			{
-				newType = CellTypes.RoomExitR_Round;  
-			}
-			else if (y == coords.Y && y == 0)                                      // Bottom wall.
-			{
-				newType = CellTypes.RoomWallD_Round;
-			}
-			else if (y == coords.Y)                                                // Bottom exit.
-			{
-				newType = CellTypes.RoomExitD_Round;
-			}
-			else if (y == coords.Y + height - 1 && y == Reference.GridHeight - 1)  // Top wall.
-			{
-				newType = CellTypes.RoomWallU_Round;
-			}
-			else if (y == coords.Y + height - 1)                                   // Top exit.
-			{
-				newType = CellTypes.RoomExitU_Round;
-			}
-			else
-			{
-				newType = CellTypes.Fountain;
 			}
 			
 			return newType;

@@ -15,7 +15,6 @@ namespace DigitalWizardry.Dungeon
 		public static readonly int MaxMinesWidth = 4;
 		public static readonly int MaxMinesHeight = 8;
 		public static readonly int MinCatacombsVolume = 12;
-		public static readonly bool PlaceRoundRoom = false;
 		public static readonly int RoomExitProb = 20;
 		public static readonly int DoorLockedProb = 35;
 		public static readonly int DoorOpenProb = 20;
@@ -33,6 +32,6 @@ namespace DigitalWizardry.Dungeon
 
 	public enum RoomType
 	{
-    	Round, Regular, IrregularUL, IrregularUR, IrregularDL, IrregularDR
+    	Regular, IrregularUL, IrregularUR, IrregularDL, IrregularDR
 	}
 }
