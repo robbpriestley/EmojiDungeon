@@ -52,7 +52,7 @@ namespace DigitalWizardry.Dungeon
 					DungeonSolve();
 					PlaceKeys();
 					PlaceDownStairs();
-					AddDescriptions();
+					// AddDescriptions();    // Currently descriptions are not needed and are disabled.
 					dungeonComplete = true;  // i.e. No exceptions...
 				}
 				catch (DungeonGenerateException) 
