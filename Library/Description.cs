@@ -9,6 +9,7 @@ namespace DigitalWizardry.Dungeon
 		public string TextRep { get; set; }
 		public bool IsTBD { get; set; }
 		public bool IsMines { get; set; }
+		public bool IsCavern { get; set; }
 		public bool IsFlooded { get; set; }
 
 		public Description(){}
@@ -26,6 +27,7 @@ namespace DigitalWizardry.Dungeon
 			TextRep = source.TextRep;
 			IsTBD = source.IsTBD;
 			IsMines = source.IsMines;
+			IsCavern = source.IsCavern;
 			IsFlooded = source.IsFlooded;
 		}
 	}
@@ -105,9 +107,11 @@ namespace DigitalWizardry.Dungeon
 			Constructed_Flooded.WeightReduction = 2;
 
 			Cavern.Weight = 100;
+			Cavern.IsCavern = true;
 			Cavern.WeightReduction = 1;
-			Cavern_Flooded.IsFlooded = true;
+			Cavern_Flooded.IsCavern = true;
 			Cavern_Flooded.Weight = 20;
+			Cavern_Flooded.IsFlooded = true;
 			Cavern_Flooded.WeightReduction = 1;
 
 			Descrs.Add(Constructed);

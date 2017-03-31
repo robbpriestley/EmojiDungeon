@@ -3541,7 +3541,7 @@ namespace DigitalWizardry.Dungeon
 
 			foreach (Cell cell in _grid)
 			{
-				filepaths[cell.X, cell.Y] = cell.Type.Filepath;
+				filepaths[cell.X, cell.Y] = cell.Filepath;
 			}
 
 			return filepaths;

@@ -50,11 +50,6 @@ namespace DigitalWizardry.Dungeon
 		public string TextRep { get; set; }                   // Primary character used to represent a type in text.
 		public string TextRep2 { get; set; }                  // Used for better rendering of the text representation, which appears "squished" in the horizontal dimension.
 		public string Name { get; set; }                     // Name of type entity.
-		
-		public string Filepath
-		{
-			get { return "images/tiles/" + Name + ".png"; }
-		}
 
 		// *** END UTILITY MEMBERS ***
 
