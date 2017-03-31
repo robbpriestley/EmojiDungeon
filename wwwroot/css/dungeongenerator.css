@@ -1,17 +1,36 @@
-table.grid { 
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+html {
+    width: 100%;
+}
+
+body {
+    width: 100%;
+	color: white;
+	background-color: black;
+	font-family: 'Roboto', sans-serif;
+}
+
+table { 
+	margin: 0 auto;
 	border-collapse: collapse; 
 }
 
-tr.grid {	
+tr {	
 	margin: 0px;
 	border: none;
 	padding: 0px;
 }
 
-td.grid {	
+td {	
 	margin: 0px;
 	border: none;
 	padding: 0px;
+	vertical-align:top;
+}
+
+td.pad {	
+	padding-right: 10px;
 }
 
 img.grid {

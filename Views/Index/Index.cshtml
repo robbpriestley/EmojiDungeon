@@ -6,14 +6,37 @@
 
 @* @Html.DisplayFor(m => m.TextVisualization) *@
 
-<table class="grid">
-@for(var y = @Model.Filepaths.GetLength(1) - 1; y >= 0; y--)
-{
-	<tr class="grid">
-	@for(var x = 0; x <  Model.Filepaths.GetLength(0); x++)
-	{
-		<td class="grid"><img class="grid" src="@Model.Filepaths[@x, @y]" /></td>
-	}
+<table>
+	<tr>
+		<td class="pad">
+			<p>
+				Dungeon Generator
+				<br>Game Demo
+				<br>by <a target="_blank" href="http://www.digitalwizardry.ca">Digital Wizardry</a>
+			</p>
+			<p>
+				<a target="_blank" href="">About</a>
+				<br><a target="_blank" href="">How to Play</a>
+			</p>
+			<p>
+				<form action=""><input type="button" value="Start" onclick=""/></form>
+			</p>
+			<p>
+				Level: <span id="level">1</span>
+			</p>
+		</td>
+		<td>
+			<table>
+			@for(var y = @Model.Filepaths.GetLength(1) - 1; y >= 0; y--)
+			{
+				<tr>
+				@for(var x = 0; x <  Model.Filepaths.GetLength(0); x++)
+				{
+					<td><img class="grid" src="@Model.Filepaths[@x, @y]" /></td>
+				}
+				</tr>
+			}
+			</table>
+		</td>
 	</tr>
-}
 </table>
