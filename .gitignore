@@ -3,3 +3,4 @@ obj
 .DS_Store
 version.txt
 secrets.json
+wwwroot/js/*.js.map
