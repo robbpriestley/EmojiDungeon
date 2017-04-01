@@ -1,16 +1,14 @@
 {
     "version": "0.1.0",
-    "command": "dotnet",
+    "command": "build",
     "isShellCommand": true,
-    "args": [],
+    "showOutput": "always",
     "tasks": [
-        {
+		{
             "taskName": "build",
-            "args": [
-                "${workspaceRoot}/DungeonGenerator.csproj"
-            ],
-            "isBuildCommand": true,
-            "problemMatcher": "$msCompile"
+			"command": "${workspaceRoot}/build.sh",
+			"isShellCommand": true,
+			"isBuildCommand": true
         }
     ]
 }
