@@ -2,6 +2,6 @@ namespace DigitalWizardry.Dungeon.Models
 {
 	public class DungeonViewModel
 	{
-		public string[,] Filepaths { get; set; }
+		public string[,] CssNames { get; set; }
 	}
 }

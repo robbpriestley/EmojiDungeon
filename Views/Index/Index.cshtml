@@ -27,12 +27,12 @@
 		</td>
 		<td>
 			<table>
-			@for(var y = @Model.Filepaths.GetLength(1) - 1; y >= 0; y--)
+			@for(var y = @Model.CssNames.GetLength(1) - 1; y >= 0; y--)
 			{
 				<tr>
-				@for(var x = 0; x <  Model.Filepaths.GetLength(0); x++)
+				@for(var x = 0; x <  Model.CssNames.GetLength(0); x++)
 				{
-					<td><img class="grid" src="@Model.Filepaths[@x, @y]" /></td>
+					<td><div class="grid @Model.CssNames[@x, @y]"></div></td>
 				}
 				</tr>
 			}

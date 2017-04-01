@@ -9,7 +9,7 @@ namespace DigitalWizardry.Dungeon.Controllers
         {
 			Dungeon dungeon = new Dungeon(0);
 			DungeonViewModel model = new DungeonViewModel();
-			model.Filepaths = dungeon.Filepaths();
+			model.CssNames = dungeon.CssNames();
     		return View(model);
         }
     }

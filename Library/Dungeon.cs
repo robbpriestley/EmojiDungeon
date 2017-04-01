@@ -3549,16 +3549,16 @@ namespace DigitalWizardry.Dungeon
 				   "Catacombs Count: " + _catacombsCount.ToString();
 		}
 
-		public string[,] Filepaths()
+		public string[,] CssNames()
 		{
-			string[,] filepaths = new string[Reference.GridWidth, Reference.GridHeight];
+			string[,] cssNames = new string[Reference.GridWidth, Reference.GridHeight];
 
 			foreach (Cell cell in _grid)
 			{
-				filepaths[cell.X, cell.Y] = cell.Filepath;
+				cssNames[cell.X, cell.Y] = cell.CssName;
 			}
 
-			return filepaths;
+			return cssNames;
 		}
 
 		#endregion

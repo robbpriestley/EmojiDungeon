@@ -60,11 +60,11 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		public string Filepath
+		public string CssName
 		{
 			get
 			{
-				return "images/tiles/dungeon/" + Type.Name + ".png";
+				return Type.Name.ToLower().Replace("_", "-");
 			}
 		}
 	}
