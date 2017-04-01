@@ -7,7 +7,7 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Dungeon
 	{
-		private List<Cell> _grid;                  // Master grid data structure, a "simulated 2-D array".
+		private Cell[,] _grid;                  // Master grid data structure, a "simulated 2-D array".
 		private int _levelNumber;                  // Zero-indexed level identifier for multi-level dungeons.
 		private Random _r;                         // Re-usable random number generator.
 		private Cell _emptyCell;                   // This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
@@ -67,12 +67,15 @@ namespace DigitalWizardry.Dungeon
 
 		private void Initialize()
 		{
-			_grid = new List<Cell>();
+			_grid = new Cell[Reference.GridWidth, Reference.GridHeight];
 
 			// Fill in each cell with the "empty cell" object.
-			for (int i = 0; i < Reference.GridWidth * Reference.GridHeight; i++)
+			for (int y = 0; y < Reference.GridHeight; y++)
 			{
-				_grid.Add(_emptyCell);
+				for (int x = 0; x < Reference.GridWidth; x++)
+				{
+					_grid[x, y] = _emptyCell;
+				}
 			}
 
 			// The level 0 dungeon is outfitted with the start cell at bottom center.
@@ -116,7 +119,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					for (int x = 0; x < Reference.GridWidth; x++) 
 					{
-						cell = CellAt(x, y);
+						cell = _grid[x, y];
 						
 						if (!cell.Type.IsEmpty && !cell.AttachBlocked && cell.AvailableConnections > 0)
 						{
@@ -182,7 +185,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (cell.Y + 1 < Reference.GridHeight)
 			{
-				cellUp = CellAt(cell.X, cell.Y + 1);
+				cellUp = _grid[cell.X, cell.Y + 1];
 
 				if (cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
 				{
@@ -193,7 +196,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (cell.Y - 1 >= 0)
 			{
-				cellDown = CellAt(cell.X, cell.Y - 1);
+				cellDown = _grid[cell.X, cell.Y - 1];
 
 				if (cell.Type.ConnectsTo(cellDown.Type, Direction.Down))
 				{
@@ -204,7 +207,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (cell.X - 1 >= 0)
 			{
-				cellLeft = CellAt(cell.X - 1, cell.Y);
+				cellLeft = _grid[cell.X - 1, cell.Y];
 
 				if (cell.Type.ConnectsTo(cellLeft.Type, Direction.Left))
 				{
@@ -215,7 +218,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (cell.X + 1 < Reference.GridWidth)
 			{
-				cellRight = CellAt(cell.X + 1, cell.Y);
+				cellRight = _grid[cell.X + 1, cell.Y];
 
 				if (cell.Type.ConnectsTo(cellRight.Type, Direction.Right))
 				{
@@ -254,7 +257,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell above.
 			if (cell.Type.ConnectsUp && cell.Y + 1 < Reference.GridHeight)
 			{
-				if (CellAt(cell.X, cell.Y + 1).Type.IsEmpty)
+				if (_grid[cell.X, cell.Y + 1].Type.IsEmpty)
 				{
 					coordPotentials.Add(new Coords(cell.X, cell.Y + 1));
 				}
@@ -263,7 +266,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell below.
 			if (cell.Type.ConnectsDown && cell.Y - 1 >= 0)
 			{
-				if (CellAt(cell.X, cell.Y - 1).Type.IsEmpty)
+				if (_grid[cell.X, cell.Y - 1].Type.IsEmpty)
 				{
 					coordPotentials.Add(new Coords(cell.X, cell.Y - 1));
 				}
@@ -272,7 +275,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell left.
 			if (cell.Type.ConnectsLeft && cell.X - 1 >= 0)
 			{
-				if (CellAt(cell.X - 1, cell.Y).Type.IsEmpty)
+				if (_grid[cell.X - 1, cell.Y].Type.IsEmpty)
 				{
 					coordPotentials.Add(new Coords(cell.X - 1, cell.Y));
 				}
@@ -281,7 +284,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell right.
 			if (cell.Type.ConnectsRight && cell.X + 1 < Reference.GridWidth)
 			{
-				if (CellAt(cell.X + 1, cell.Y).Type.IsEmpty)
+				if (_grid[cell.X + 1, cell.Y].Type.IsEmpty)
 				{
 					coordPotentials.Add(new Coords(cell.X + 1, cell.Y));
 				}
@@ -353,7 +356,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (coords.Y + 1 < Reference.GridHeight)
 			{
-				cellUp = CellAt(coords.X, coords.Y + 1);
+				cellUp = _grid[coords.X, coords.Y + 1];
 				if (!newCellType.CompatibleWith(cellUp.Type, Direction.Up))
 				{
 					return false;
@@ -362,7 +365,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (coords.Y - 1 >= 0)
 			{
-				cellDown = CellAt(coords.X, coords.Y - 1);
+				cellDown = _grid[coords.X, coords.Y - 1];
 				if (!newCellType.CompatibleWith(cellDown.Type, Direction.Down))
 				{
 					return false;
@@ -371,7 +374,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (coords.X - 1 >= 0)
 			{
-				cellLeft = CellAt(coords.X - 1, coords.Y);
+				cellLeft = _grid[coords.X - 1, coords.Y];
 				if (!newCellType.CompatibleWith(cellLeft.Type, Direction.Left))
 				{
 					return false;
@@ -380,7 +383,7 @@ namespace DigitalWizardry.Dungeon
 			
 			if (coords.X + 1 < Reference.GridWidth)
 			{
-				cellRight = CellAt(coords.X + 1, coords.Y);
+				cellRight = _grid[coords.X + 1, coords.Y];
 				if (!newCellType.CompatibleWith(cellRight.Type, Direction.Right))
 				{
 					return false;
@@ -577,7 +580,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					for (int x = coords.X; x < coords.X + width; x++) 
 					{
-						cell = CellAt(x, y);
+						cell = _grid[x, y];
 						
 						if 
 						(
@@ -644,7 +647,7 @@ namespace DigitalWizardry.Dungeon
 					if (newType == null)
 						continue;
 					
-					Cell currentCell = CellAt(x, y);
+					Cell currentCell = _grid[x, y];
 					
 					if (IncompatibleCornerTypes(currentCell.Type, newType))
 					{
@@ -1252,7 +1255,7 @@ namespace DigitalWizardry.Dungeon
 						newType = CellTypes.Vert;
 					}
 					
-					Cell currentCell = CellAt(x, y);
+					Cell currentCell = _grid[x, y];
 					
 					if (currentCell.Type.IsEmpty)
 					{
@@ -1341,7 +1344,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = 0; x < Reference.GridWidth; x++)
 				{
-					Cell cell = CellAt(x, y);
+					Cell cell = _grid[x, y];
 					
 					if (cell.Type == CellTypes.RoomWallDL && !cell.Merged)
 					{
@@ -1382,7 +1385,7 @@ namespace DigitalWizardry.Dungeon
 					throw new DungeonGenerateException();
 				}
 				
-				currentCell = CellAt(x, y);
+				currentCell = _grid[x, y];
 				CellType newType = currentCell.Type;  // Default.
 				
 				// Arriving back at an already merged cell in the same room means that the rooms cannot be 
@@ -1394,16 +1397,16 @@ namespace DigitalWizardry.Dungeon
 				}
 				
 				cellUp = y + 1 >= 0 && y + 1 < Reference.GridHeight && x >= 0 && x < Reference.GridWidth 
-						? CellAt(x, y + 1) : null;
+						? _grid[x, y + 1] : null;
 				
 				cellDown  = y - 1 >= 0 && y - 1 < Reference.GridHeight && x >= 0 && x < Reference.GridWidth             
-						? CellAt(x, y - 1) : null;
+						? _grid[x, y - 1] : null;
 				
 				cellLeft  = x - 1 >= 0 && x - 1 < Reference.GridWidth && y >= 0 && y < Reference.GridWidth 
-						? CellAt(x - 1, y) : null;
+						? _grid[x - 1, y] : null;
 				
 				cellRight = x + 1 >= 0 && x + 1 < Reference.GridWidth && y >= 0 && y < Reference.GridWidth 
-						? CellAt(x + 1, y) : null;
+						? _grid[x + 1, y] : null;
 				
 				if (x == startX && y == startY)
 				{
@@ -1580,8 +1583,8 @@ namespace DigitalWizardry.Dungeon
 			while (!(x == startX && y == startY))
 			{
 				int up = 1;
-				currentCell = y < Reference.GridHeight ? CellAt(x, y) : null;
-				cellUp = y + up < Reference.GridHeight ? CellAt(x, y + up) : null;
+				currentCell = y < Reference.GridHeight ? _grid[x, y] : null;
+				cellUp = y + up < Reference.GridHeight ? _grid[x, y + up] : null;
 				
 				if (currentCell.Type.IsCleanStartWall)
 				{
@@ -1593,15 +1596,15 @@ namespace DigitalWizardry.Dungeon
 						SetCellValue(x, y + up, newCell);
 						room.Space.Add(newCell);
 						up += 1;
-						currentCell = CellAt(x, y + up);
-						cellUp = y + up < Reference.GridHeight ? CellAt(x, y + up) : null;
+						currentCell = _grid[x, y + up];
+						cellUp = y + up < Reference.GridHeight ? _grid[x, y + up] : null;
 					}
 				}
 				
-				cellUp    = y + 1 < Reference.GridHeight ? CellAt(x, y + 1) : null;
-				cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
-				cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
-				cellRight = x + 1 < Reference.GridWidth  ? CellAt(x + 1, y) : null;
+				cellUp    = y + 1 < Reference.GridHeight ? _grid[x, y + 1] : null;
+				cellDown  = y - 1 >= 0                   ? _grid[x, y - 1] : null;
+				cellLeft  = x - 1 >= 0                   ? _grid[x - 1, y] : null;
+				cellRight = x + 1 < Reference.GridWidth  ? _grid[x + 1, y] : null;
 				
 				if (dir != Direction.Right && cellLeft != null && cellLeft.Type.RoomConnectsRight && cellLeft.Merged)
 				{
@@ -1646,7 +1649,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = 0; x < Reference.GridWidth; x++) 
 				{
-					Cell cell = CellAt(x, y);
+					Cell cell = _grid[x, y];
 					
 					if (cell.Type.IsRoomType && !cell.Merged)
 					{
@@ -1665,7 +1668,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				foreach (Cell wall in room.Walls) 
 				{
-					if (!_grid.Contains(wall))
+					if (!GridContains(wall))
 					{
 						junk.Add(wall);
 					}
@@ -1673,7 +1676,7 @@ namespace DigitalWizardry.Dungeon
 				
 				foreach (Cell space in room.Space) 
 				{
-					if (!_grid.Contains(space))
+					if (!GridContains(space))
 					{
 						junk.Add(space);
 					}
@@ -1895,10 +1898,10 @@ namespace DigitalWizardry.Dungeon
 				{
 					ConnectCells(x, y);
 					
-					cellUp    = y + 1 < Reference.GridHeight ? CellAt(x, y + 1) : null;
-					cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
-					cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
-					cellRight = x + 1 < Reference.GridWidth  ? CellAt(x + 1, y) : null;
+					cellUp    = y + 1 < Reference.GridHeight ? _grid[x, y + 1] : null;
+					cellDown  = y - 1 >= 0                   ? _grid[x, y - 1] : null;
+					cellLeft  = x - 1 >= 0                   ? _grid[x - 1, y] : null;
+					cellRight = x + 1 < Reference.GridWidth  ? _grid[x + 1, y] : null;
 					
 					if (dir != Direction.Right && cellLeft != null && cellLeft.Type.RoomConnectsRight)
 					{
@@ -1941,7 +1944,7 @@ namespace DigitalWizardry.Dungeon
 
 		private void ConnectCells(int x, int y)
 		{
-			Cell cell = CellAt(x, y);
+			Cell cell = _grid[x, y];
 			
 			if (!cell.Type.IsRoomExit)
 			{
@@ -1985,7 +1988,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					return true;
 				}
-				else if (_grid.Contains(cell))
+				else if (GridContains(cell))
 				// Some cells are still in the room.walls array even though they are no longer in the dungeon
 				// because they were "plunked upon" by other room cells. Do not consider those for exits.
 				{
@@ -2131,19 +2134,19 @@ namespace DigitalWizardry.Dungeon
 				
 			if (dir == Direction.Up && cell.Y + 1 < Reference.GridHeight)
 			{
-				adjacentCell = CellAt(cell.X, cell.Y + 1);
+				adjacentCell = _grid[cell.X, cell.Y + 1];
 			}
 			else if (dir == Direction.Down && cell.Y - 1 >= 0)
 			{
-				adjacentCell = CellAt(cell.X, cell.Y - 1);
+				adjacentCell = _grid[cell.X, cell.Y - 1];
 			}
 			else if (dir == Direction.Left && cell.X - 1 >= 0)
 			{
-				adjacentCell = CellAt(cell.X - 1, cell.Y);
+				adjacentCell = _grid[cell.X - 1, cell.Y];
 			}
 			else if (dir == Direction.Right && cell.X + 1 < Reference.GridWidth)
 			{
-				adjacentCell = CellAt(cell.X + 1, cell.Y);
+				adjacentCell = _grid[cell.X + 1, cell.Y];
 			}
 				
 			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || (adjacentCell.Type.RoomExitCompatible && adjacentCell.Descr == Descriptions.Room_TBD)))
@@ -2156,7 +2159,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		// RP: 2017-03-22. Fixed what appeared to be a copy-paste bug in this method where the CellAt() calls 
+		// RP: 2017-03-22. Fixed what appeared to be a copy-paste bug in this method where the _grid[) calls 
 		// didn't match coords with the conditional checks immediately above them.
 		private Direction RoomCellsAdjacentOK(Cell cell)
 		{
@@ -2169,7 +2172,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (cell.Y + 1 < Reference.GridHeight)
 				{
-					adjCellUp = CellAt(cell.X, cell.Y + 1);
+					adjCellUp = _grid[cell.X, cell.Y + 1];
 
 					if (adjCellUp.Type.IsEmpty || (adjCellUp.Type.RoomExitCompatible && adjCellUp.Descr == Descriptions.Room_TBD))
 					{
@@ -2182,7 +2185,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (cell.Y - 1 >= 0)
 				{
-					adjCellDown = CellAt(cell.X, cell.Y - 1);
+					adjCellDown = _grid[cell.X, cell.Y - 1];
 
 					if (adjCellDown.Type.IsEmpty || (adjCellDown.Type.RoomExitCompatible && adjCellDown.Descr == Descriptions.Room_TBD))
 					{
@@ -2195,7 +2198,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (cell.X - 1 >= 0)
 				{
-					adjCellLeft = CellAt(cell.X - 1, cell.Y);
+					adjCellLeft = _grid[cell.X - 1, cell.Y];
 					if (adjCellLeft.Type.IsEmpty || (adjCellLeft.Type.RoomExitCompatible && adjCellLeft.Descr == Descriptions.Room_TBD))
 					{
 						okLeft = true;
@@ -2207,7 +2210,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				if (cell.X + 1 < Reference.GridWidth)
 				{
-					adjCellRight = CellAt(cell.X + 1, cell.Y);
+					adjCellRight = _grid[cell.X + 1, cell.Y];
 					if (adjCellRight.Type.IsEmpty || (adjCellRight.Type.RoomExitCompatible && adjCellRight.Descr == Descriptions.Room_TBD))
 					{
 						okRight = true;
@@ -2264,7 +2267,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			Cell newCell;
 			CellType newType;
-			Cell adjacent = CellAt(adjX, adjY);
+			Cell adjacent = _grid[adjX, adjY];
 			
 			// No point in trying to force connect two special rooms, they won't join anyways.
 			if (cell.Descr.IsMines && adjacent.Descr.IsMines)
@@ -2344,16 +2347,16 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = 0; x < Reference.GridWidth; x++)
 				{
-					Cell cell = CellAt(x, y);
+					Cell cell = _grid[x, y];
 					
 					if (cell.Type == CellTypes.Inter)
 					{
 						Cell cellUp, cellDown, cellLeft, cellRight;
 							
-						cellUp    = y + 1 < Reference.GridHeight ? CellAt(x, y + 1) : null;
-						cellDown  = y - 1 >= 0                   ? CellAt(x, y - 1) : null;
-						cellLeft  = x - 1 >= 0                   ? CellAt(x - 1, y) : null;
-						cellRight = x + 1 < Reference.GridWidth  ? CellAt(x + 1, y) : null;
+						cellUp    = y + 1 < Reference.GridHeight ? _grid[x, y + 1] : null;
+						cellDown  = y - 1 >= 0                   ? _grid[x, y - 1] : null;
+						cellLeft  = x - 1 >= 0                   ? _grid[x - 1, y] : null;
+						cellRight = x + 1 < Reference.GridWidth  ? _grid[x + 1, y] : null;
 						
 						if (!cellUp.Type.IsEmpty && !cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
 						{
@@ -2451,8 +2454,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			foreach (Cell wall in room.Walls) 
 			{
-				int i = (Reference.GridWidth * wall.X) + wall.Y;
-				_grid[i] = _emptyCell;
+				_grid[wall.X, wall.Y] = _emptyCell;
 			}
 		}
 
@@ -2469,7 +2471,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int y = 0; y < Reference.GridHeight; y++) 
 				{
-					cell = CellAt(x, y);
+					cell = _grid[x, y];
 					
 					if (!cell.Descr.IsMines && !(cell.Descr == Descriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
 					{
@@ -2495,7 +2497,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell above.
 			if (cell.Y + 1 < Reference.GridHeight)
 			{
-				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
+				Cell cellAbove = _grid[cell.X, cell.Y + 1];
 				
 				if (cellAbove.Doors != null && cellAbove.Doors.Count > 0)
 				{
@@ -2506,7 +2508,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell below.
 			if (cell.Y - 1 >= 0)
 			{
-				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
+				Cell cellBelow = _grid[cell.X, cell.Y - 1];
 				
 				if (cellBelow.Doors != null && cellBelow.Doors.Count > 0)
 				{
@@ -2517,7 +2519,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell left.
 			if (cell.X - 1 >= 0)
 			{
-				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
+				Cell cellLeft = _grid[cell.X - 1, cell.Y];
 				
 				if (cellLeft.Doors != null && cellLeft.Doors.Count > 0)
 				{
@@ -2528,7 +2530,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell right.
 			if (cell.X + 1 < Reference.GridWidth)
 			{
-				Cell cellRight = CellAt(cell.X + 1, cell.Y);
+				Cell cellRight = _grid[cell.X + 1, cell.Y];
 				
 				if (cellRight.Doors != null && cellRight.Doors.Count > 0)
 				{
@@ -2676,7 +2678,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int y = 0; y < Reference.GridHeight; y++) 
 				{
-					cell = CellAt(x, y);
+					cell = _grid[x, y];
 					
 					if (cell.Sequence >= 0 && cell.Sequence < endSequence && cell.Doors == null)
 					{
@@ -2691,24 +2693,36 @@ namespace DigitalWizardry.Dungeon
 		#endregion
 		#region Accessors
 
-		private Cell CellAt(int x, int y)
-		{
-			return _grid[Reference.GridWidth * x + y];
-		}
-
 		private void SetCellValue(int x, int y, Cell cell)
 		{
-			int i = Reference.GridWidth * x + y;
-			_grid[i] = cell;
+			_grid[x, y] = cell;
 			RecordNewAttachment(cell);
+		}
+
+		private bool GridContains(object value)
+		{
+			bool contains = false;
+			
+			for (int y = 0; y < Reference.GridHeight; y++)
+			{
+				for (int x = 0; x < Reference.GridWidth; x++)
+				{
+					if (_grid[x, y] == value)
+					{
+						contains = true;
+						break;
+					}
+				}
+			}
+
+			return contains;
 		}
 
 		// This is intended to be used only for special rooms durring the rooms connect phase to 
 		// avoid screwing up the available connections count of when converting room exits to walls.
 		private void ReplaceCellValue(int x, int y, Cell cell)
 		{
-			int i = (Reference.GridWidth * x) + y;
-			_grid[i] = cell;
+			_grid[x, y] = cell;
 		}
 
 		// Returns a random cell from the dungeon. If empty == true, then the random
@@ -2722,7 +2736,7 @@ namespace DigitalWizardry.Dungeon
 				int x = _r.Next(Reference.GridWidth);
 				int y = _r.Next(Reference.GridHeight);
 				
-				Cell cell = CellAt(x, y);
+				Cell cell = _grid[x, y];
 				
 				if (empty)  // Cell must be occupied.
 				{
@@ -2825,13 +2839,13 @@ namespace DigitalWizardry.Dungeon
 			_sequenceNumber = 0;
 			_downStairsCellDistance = 0;
 			
-			Solve(CellAt(_startCoords.X, _startCoords.Y));
+			Solve(_grid[_startCoords.X, _startCoords.Y]);
 			
 			for (int y = 0; y < Reference.GridHeight; y++) 
 			{
 				for (int x = 0; x < Reference.GridWidth; x++)
 				{
-					if (!CellAt(x, y).Visited)
+					if (!_grid[x, y].Visited)
 					{
 						throw new DungeonGenerateException();
 					}
@@ -2850,7 +2864,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell above.
 			if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
 			{
-				Cell cellAbove = CellAt(cell.X, cell.Y + 1);
+				Cell cellAbove = _grid[cell.X, cell.Y + 1];
 				
 				if (!cellAbove.Visited)
 				{
@@ -2861,7 +2875,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell below.
 			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 			{
-				Cell cellBelow = CellAt(cell.X, cell.Y - 1);
+				Cell cellBelow = _grid[cell.X, cell.Y - 1];
 				
 				if (!cellBelow.Visited)
 				{
@@ -2872,7 +2886,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell left.
 			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 			{
-				Cell cellLeft = CellAt(cell.X - 1, cell.Y);
+				Cell cellLeft = _grid[cell.X - 1, cell.Y];
 				
 				if (!cellLeft.Visited)
 				{
@@ -2883,7 +2897,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell right.
 			if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
 			{
-				Cell cellRight = CellAt(cell.X + 1, cell.Y);
+				Cell cellRight = _grid[cell.X + 1, cell.Y];
 				
 				if (!cellRight.Visited)
 				{
@@ -2933,11 +2947,11 @@ namespace DigitalWizardry.Dungeon
 			{
 				bool changed = false;
 				
-				for (int Y = 0; Y < Reference.GridHeight; Y++)
+				for (int y = 0; y < Reference.GridHeight; y++)
 				{
-					for (int X = 0; X < Reference.GridWidth; X++)
+					for (int x = 0; x < Reference.GridWidth; x++)
 					{
-						Cell cell = CellAt(X, Y);
+						Cell cell = _grid[x, y];
 						
 						if (cell.Descr == null || cell.Descr.IsTBD)
 						{
@@ -3009,7 +3023,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = 0; x < Reference.GridWidth; x++)
 				{
-					Cell cell = CellAt(x, y);
+					Cell cell = _grid[x, y];
 					
 					if (cell.Descr.IsTBD) 
 					{
@@ -3030,7 +3044,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell above.
 			if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
 			{
-				adjacentCell = CellAt(cell.X, cell.Y + 1);
+				adjacentCell = _grid[cell.X, cell.Y + 1];
 				
 				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
@@ -3041,7 +3055,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell below.
 			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 			{
-				adjacentCell = CellAt(cell.X, cell.Y - 1);
+				adjacentCell = _grid[cell.X, cell.Y - 1];
 				
 				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
@@ -3052,7 +3066,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell left.
 			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 			{
-				adjacentCell = CellAt(cell.X - 1, cell.Y);
+				adjacentCell = _grid[cell.X - 1, cell.Y];
 				
 				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
@@ -3063,7 +3077,7 @@ namespace DigitalWizardry.Dungeon
 			// Cell right.
 			if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
 			{
-				adjacentCell = CellAt(cell.X + 1, cell.Y);
+				adjacentCell = _grid[cell.X + 1, cell.Y];
 				
 				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
 				{
@@ -3180,7 +3194,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					for (int x = 0; x < Reference.GridWidth; x++)
 					{
-						Cell cell = CellAt(x, y);
+						Cell cell = _grid[x, y];
 						
 						if (cell.Descr.IsFlooded && !cell.Type.IsFloodingTransition)
 						{
@@ -3208,10 +3222,10 @@ namespace DigitalWizardry.Dungeon
 			RemoveMiniFloods();
 		}
 
-		private bool FloodCell(int X, int Y)
+		private bool FloodCell(int x, int y)
 		{
 			bool changed = false;
-			Cell cell = CellAt(X, Y);
+			Cell cell = _grid[x, y];
 			
 			if (!cell.Descr.IsFlooded)  // If the cell is not already flooded, then flood it.
 			{
@@ -3265,7 +3279,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int x = 0; x < Reference.GridWidth; x++)
 				{
-					Cell adjacentCell, cell = CellAt(x, y);
+					Cell adjacentCell, cell = _grid[x, y];
 					
 					bool adjacentFlooded = false;
 					
@@ -3274,28 +3288,28 @@ namespace DigitalWizardry.Dungeon
 						// Cell above.
 						if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
 						{
-							adjacentCell = CellAt(x, y + 1);
+							adjacentCell = _grid[x, y + 1];
 							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell below.
 						if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
 						{
-							adjacentCell = CellAt(x, y - 1);
+							adjacentCell = _grid[x, y - 1];
 							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell left.
 						if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
 						{
-							adjacentCell = CellAt(x - 1, y);
+							adjacentCell = _grid[x - 1, y];
 							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
 						// Cell right.
 						if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
 						{
-							adjacentCell = CellAt(x + 1, y);
+							adjacentCell = _grid[x + 1, y];
 							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
 						}
 						
@@ -3349,7 +3363,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				for (int y = 0; y < Reference.GridHeight; y++) 
 				{
-					if (!CellAt(x, y).Type.IsEmpty)
+					if (!_grid[x, y].Type.IsEmpty)
 					{
 						filledCellCount++;
 					}
@@ -3373,7 +3387,7 @@ namespace DigitalWizardry.Dungeon
 				
 				for (x = 0; x < Reference.GridWidth * 2; x++) 
 				{
-					cell = CellAt(x / 2, y);
+					cell = _grid[x / 2, y];
 
 					if (x % 2 == 0)
 					{  
@@ -3470,7 +3484,7 @@ namespace DigitalWizardry.Dungeon
 			string padding;
 			StringBuilder grid = new StringBuilder();
 			StringBuilder line = new StringBuilder();
-			Cell cell = CellAt(0, Reference.GridHeight - 1);
+			Cell cell = _grid[0, Reference.GridHeight - 1];
 			
 			int x;
 			
@@ -3481,7 +3495,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					if (x % 2 == 0)
 					{
-						cell = CellAt(x / 2, y);
+						cell = _grid[x / 2, y];
 						line.Append(cell.Descr.TextRep);
 					}
 					else
