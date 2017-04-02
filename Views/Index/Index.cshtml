@@ -19,24 +19,30 @@
 				<br><a target="_blank" href="">How to Play</a>
 			</p>
 			<p>
-				<form action=""><input type="button" value="Start" onclick=""/></form>
+				<form action=""><input type="button" value="Start" onclick="Start()"/></form>
 			</p>
 			<p>
 				Level: <span id="level">1</span>
 			</p>
 		</td>
 		<td>
-			<table>
+			<div class="grid">
+				<div class="tile g00-14 @Model.CssNames[0, 0]"></div>
+				<div class="tile g01-14 @Model.CssNames[0, 0]"></div>
+				<div class="tile g02-14 @Model.CssNames[0, 0]"></div>
+				<div class="tile g02-14 player"></div>
+			</div>
+			@*<table>
 			@for(var y = @Model.CssNames.GetLength(1) - 1; y >= 0; y--)
 			{
 				<tr>
 				@for(var x = 0; x <  Model.CssNames.GetLength(0); x++)
 				{
-					<td><div class="grid @Model.CssNames[@x, @y]"></div></td>
+					<td><div id="maptile" class="grid @Model.CssNames[@x, @y]"></div></td>
 				}
 				</tr>
 			}
-			</table>
+			</table>*@
 		</td>
 	</tr>
 </table>

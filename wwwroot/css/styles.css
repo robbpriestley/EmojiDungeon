@@ -33,9 +33,31 @@ td.pad {
 	padding-right: 10px;
 }
 
+div.tile {
+	z-index: 10;
+	position: absolute;
+}
+
+div.sprite {
+	z-index: 30;
+	position: absolute;
+}
+
 div.grid {
-	margin: 0px;
-	border: none;
-	padding: 0px;
-	display:block;
+	position: relative;
+}
+
+.g00-14 {
+	top: 0px;
+	left: 0px;
+}
+
+.g01-14 {
+	top: 0px;
+	left: 45px;
+}
+
+.g02-14 {
+	top: 0px;
+	left: 90px;
 }
