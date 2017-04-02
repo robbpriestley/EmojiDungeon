@@ -1,8 +1,4 @@
-class Startup {
-    public static main(): number {
-        console.log('Hello World');
-        return 0;
-    }
+function Start()
+{
+	alert("Hello");
 }
-
-Startup.main();
