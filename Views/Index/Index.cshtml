@@ -27,22 +27,19 @@
 		</td>
 		<td>
 			<div class="grid">
-				<div class="tile g00-14 @Model.CssNames[0, 0]"></div>
-				<div class="tile g01-14 @Model.CssNames[0, 0]"></div>
-				<div class="tile g02-14 @Model.CssNames[0, 0]"></div>
-				<div class="tile g02-14 player"></div>
-			</div>
-			@*<table>
-			@for(var y = @Model.CssNames.GetLength(1) - 1; y >= 0; y--)
-			{
-				<tr>
-				@for(var x = 0; x <  Model.CssNames.GetLength(0); x++)
+				<div class="sprite g07-00 player"></div>
+
+				@for(var y = @Model.CssNames.GetLength(1) - 1; y >= 0; y--)
 				{
-					<td><div id="maptile" class="grid @Model.CssNames[@x, @y]"></div></td>
+					@for(var x = 0; x <  Model.CssNames.GetLength(0); x++)
+					{
+						var xs = x < 10 ? "0" + x.ToString() : x.ToString();
+						var ys = y < 10 ? "0" + y.ToString() : y.ToString();
+						var locationClass = "g" + xs + "-" + ys;
+						<div class="tile @locationClass @Model.CssNames[@x, @y]"></div>
+					}
 				}
-				</tr>
-			}
-			</table>*@
+			</div>
 		</td>
 	</tr>
 </table>
