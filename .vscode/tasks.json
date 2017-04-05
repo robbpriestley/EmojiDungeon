@@ -3,12 +3,20 @@
     "command": "build",
     "isShellCommand": true,
     "showOutput": "always",
-    "tasks": [
+    "tasks": 
+	[
 		{
             "taskName": "build",
 			"command": "${workspaceRoot}/build.sh",
 			"isShellCommand": true,
 			"isBuildCommand": true
-        }
+        },
+		{
+			"taskName": "transpile",
+			"command": "tsc",
+			"args": ["-p", "./TypeScript/tsconfig.json", "--outDir", "./wwwroot/js/"],
+			"isShellCommand": true,
+			"isTestCommand": true
+		}
     ]
 }
