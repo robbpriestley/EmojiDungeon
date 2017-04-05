@@ -1,0 +1,44 @@
+*** RAZOR ***
+
+@* @Html.DisplayFor(m => m.TextVisualization) *@
+
+*** GETTING AJAX WORKING ***
+
+https://www.learnhowtoprogram.com/net/database-testing-and-ajax/using-basic-ajax-in-net-mvc
+
+$(document).ready(function () {
+	$('.sum').click(function () {
+		$.ajax({
+			type: 'GET',
+			data: { firstNumber: 1, secondNumber: 2 },
+			url: '/Index/Sum',
+			success: function (result) {
+				$('#result2').html(result);
+			}
+		});
+	});
+});
+
+$('.display-object').click(function () {
+	$.ajax({
+		type: 'GET',
+		dataType: 'json',
+		contentType: 'application/json',
+		url: '/Index/DisplayObject',
+		success: function (result) {
+			var resultString = 'Id: ' + result.id + '<br>City: ' + result.city + '<br>Country: ' + result.country;
+			$('#result3').html(resultString);
+		}
+	});
+});
+
+$('.display-view').click(function () {
+	$.ajax({
+		type: 'GET',
+		dataType: 'html',
+		url: '/Index/DungeonView',
+		success: function (result) {
+			$('#result4').html(result);
+		}
+	});
+});
