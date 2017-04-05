@@ -1,4 +1,17 @@
-<div id="display-view-with-ajax">
-    <h2>Welcome to DisplayViewWithAjax.cshtml</h2>
-    <h4>We just used AJAX to display a view!</h4>
-</div>
+@model DigitalWizardry.Dungeon.Models.DungeonViewModel
+
+<div id="player" class="sprite g07-00 player"></div>
+<div class="sprite g06-14 greengoblin"></div>
+<div class="sprite g07-14 greengoblin"></div>
+<div class="sprite g08-14 greengoblin"></div>
+
+@for(var y = @Model.CssNames.GetLength(1) - 1; y >= 0; y--)
+{
+	@for(var x = 0; x <  Model.CssNames.GetLength(0); x++)
+	{
+		var xs = x < 10 ? "0" + x.ToString() : x.ToString();
+		var ys = y < 10 ? "0" + y.ToString() : y.ToString();
+		var locationClass = "g" + xs + "-" + ys;
+		<div class="tile @locationClass @Model.CssNames[@x, @y]"></div>
+	}
+}
