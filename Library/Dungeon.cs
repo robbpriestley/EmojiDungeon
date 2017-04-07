@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using DigitalWizardry.Dungeon.Models;
 
 namespace DigitalWizardry.Dungeon
 {	
@@ -3549,16 +3550,38 @@ namespace DigitalWizardry.Dungeon
 				   "Catacombs Count: " + _catacombsCount.ToString();
 		}
 
-		public string[,] CssNames()
+		public string[,] CssNames
 		{
-			string[,] cssNames = new string[Reference.GridWidth, Reference.GridHeight];
-
-			foreach (Cell cell in _grid)
+			get
 			{
-				cssNames[cell.X, cell.Y] = cell.CssName;
-			}
+				string[,] cssNames = new string[Reference.GridWidth, Reference.GridHeight];
 
-			return cssNames;
+				foreach (Cell cell in _grid)
+				{
+					cssNames[cell.X, cell.Y] = cell.CssName;
+				}
+
+				return cssNames;
+			}
+		}
+
+		public string DungeonViewModel
+		{
+			get
+			{
+				DungeonViewModelCell[,] cells = new DungeonViewModelCell[Reference.GridWidth, Reference.GridHeight];
+
+				foreach (Cell cell in _grid)
+				{
+					DungeonViewModelCell model = new DungeonViewModelCell(cell.X, cell.Y);
+					model.CssName = cell.CssName;
+					model.CssLocation = cell.CssLocation;
+
+					cells[cell.X, cell.Y] = model;
+				}
+
+				return Utility.Json(cells);
+			}
 		}
 
 		#endregion

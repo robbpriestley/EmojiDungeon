@@ -6,7 +6,7 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Utility
 	{
-		public static ObjectResult SerializedJsonObjectResult(Object obj)
+		public static string Json(Object obj)
 		{
 			string json = 
 			
@@ -20,7 +20,12 @@ namespace DigitalWizardry.Dungeon
 				}
 			);
 			
-			return new ObjectResult(json);
+			return json;
+		}
+		
+		public static ObjectResult JsonObjectResult(Object obj)
+		{		
+			return new ObjectResult(Json(obj));
 		}
 	}
 }

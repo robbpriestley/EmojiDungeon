@@ -1,5 +1,7 @@
 "use strict";
 
+let dungeon = null;
+
 function Reset()
 {
 	var spinner = SpinnerSetup();
@@ -11,6 +13,18 @@ function Reset()
 		url: '/Index/DungeonView',
 		success: function (result) {
 			$('#grid').html(result);
+		}
+	});
+
+	$.ajax
+	({
+		type: 'GET',
+		dataType: 'json',
+		contentType: 'application/json',
+		url: '/Index/DungeonViewJson',
+		success: function (result) 
+		{
+			dungeon = [JSON.parse(result)];  // As this is a reset, assign the JSON to element 0 of the dungeon array.
 		}
 	});
 }
