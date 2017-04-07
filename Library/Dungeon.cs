@@ -3550,37 +3550,22 @@ namespace DigitalWizardry.Dungeon
 				   "Catacombs Count: " + _catacombsCount.ToString();
 		}
 
-		public string[,] CssNames
+		public string DungeonView
 		{
 			get
 			{
-				string[,] cssNames = new string[Reference.GridWidth, Reference.GridHeight];
+				DungeonViewModel[,] modelCells = new DungeonViewModel[Reference.GridWidth, Reference.GridHeight];
 
 				foreach (Cell cell in _grid)
 				{
-					cssNames[cell.X, cell.Y] = cell.CssName;
+					DungeonViewModel modelCell = new DungeonViewModel(cell.X, cell.Y);
+					modelCell.CssName = cell.CssName;
+					modelCell.CssLocation = cell.CssLocation;
+
+					modelCells[cell.X, cell.Y] = modelCell;
 				}
 
-				return cssNames;
-			}
-		}
-
-		public string DungeonViewModel
-		{
-			get
-			{
-				DungeonViewModelCell[,] cells = new DungeonViewModelCell[Reference.GridWidth, Reference.GridHeight];
-
-				foreach (Cell cell in _grid)
-				{
-					DungeonViewModelCell model = new DungeonViewModelCell(cell.X, cell.Y);
-					model.CssName = cell.CssName;
-					model.CssLocation = cell.CssLocation;
-
-					cells[cell.X, cell.Y] = model;
-				}
-
-				return Utility.Json(cells);
+				return Utility.Json(modelCells);
 			}
 		}
 

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using DigitalWizardry.Dungeon.Models;
 
 namespace DigitalWizardry.Dungeon.Controllers
 {
@@ -13,16 +12,7 @@ namespace DigitalWizardry.Dungeon.Controllers
 		public IActionResult DungeonView()
 		{
 			Dungeon dungeon = new Dungeon(0);
-			DungeonViewModel model = new DungeonViewModel();
-			model.CssNames = dungeon.CssNames;
-    		return View(model);
-		}
-
-		public IActionResult DungeonViewJson()
-		{
-			Dungeon dungeon = new Dungeon(0);
-			DungeonViewModel model = new DungeonViewModel();
-    		return Json(dungeon.DungeonViewModel);
+    		return Json(dungeon.DungeonView);
 		}
     }
 }
