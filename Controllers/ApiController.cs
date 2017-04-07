@@ -31,7 +31,6 @@ namespace DigitalWizardry.Dungeon.Controllers
 			output.AppendLine(dungeon.VisualizeAsTextWithDescription());
 
 			return new ObjectResult(output.ToString());
-			//return Utility.SerializedJsonObjectResult(visualize);
 		}
 
 		[HttpGet]
