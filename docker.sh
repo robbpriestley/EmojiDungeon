@@ -1,8 +1,8 @@
 ### HOW TO USE ###
 # 1) "cd /Users/wizard/DigitalWizardry/Projects/DungeonGenerator/"
 # 2) "git tag" (determine next highest tag)
-# 3) Call this script with next highest tag as arg "./build.sh v1.1.003"
-# 4) If no new tag is needed, call with "latest" ex: "./build.sh latest"
+# 3) Call this script with next highest tag as arg "./docker.sh v1.1.003"
+# 4) If no new tag is needed, call with "latest" ex: "./docker.sh latest"
 
 VERSION=$1
 
