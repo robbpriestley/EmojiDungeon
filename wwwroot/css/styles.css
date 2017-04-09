@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 html {
-    width: 100%;
+	width: 100%;
 }
 
 body {
-    width: 100%;
+	width: 100%;
 	color: white;
 	background-color: black;
 	font-family: 'Roboto', sans-serif;
@@ -21,14 +21,45 @@ td {
 }
 
 td.pad {	
+	width: 400px;
 	padding-right: 10px;
 }
 
+td.wide {	
+	width: 1075px;
+}
+
+a.normal:link {
+    color: fuchsia;
+}
+
+a.normal:visited {
+    color:fuchsia;
+}
+
+a.btn {
+	color: #ffffff;
+	font-family: Arial;
+	border-radius: 28px;
+	background: #3498db;
+	text-decoration: none;
+	padding: 10px 20px 10px 20px;
+}
+
+a.btn:hover {
+	background: #3cb0fd;
+}
+
+p.btn {
+	margin-top: 30px;
+	margin-bottom: 30px; 
+}
+
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.
-   The grid div needs to be position: relative because position: absolute works by the principle of 
-   "position yourself in relation to the nearest ancestor who has position: absolute or position: relative." 
-   http://stackoverflow.com/a/10487329/1348592 */
-   
+	 The grid div needs to be position: relative because position: absolute works by the principle of 
+	 "position yourself in relation to the nearest ancestor who has position: absolute or position: relative." 
+	 http://stackoverflow.com/a/10487329/1348592 */
+	 
 div.grid {
 	width: 675px;
 	height: 675px;
