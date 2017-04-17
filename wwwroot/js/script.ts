@@ -76,7 +76,7 @@ function BuildGrid(level : number, dungeon : object) : void
 			$(gridId).removeClass();                         // Remove all classes on the div.
 			$(gridId).addClass("tile");                      // Add "native" class.
 			$(gridId).addClass(gridReference);               // Add "native" class.
-			$(gridId).addClass(dungeon[x][y].CssName);  // Add tile name class.
+			$(gridId).addClass(dungeon[x][y].N);  // Add tile name class.
 		}
 	}
 }
