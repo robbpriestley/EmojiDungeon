@@ -3572,7 +3572,7 @@ namespace DigitalWizardry.Dungeon
 
 				foreach (Cell cell in _grid)
 				{
-					DungeonViewModel modelCell = new DungeonViewModel(cell.X, cell.Y);
+					DungeonViewModel modelCell = new DungeonViewModel();
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
 
