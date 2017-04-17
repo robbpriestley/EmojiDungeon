@@ -331,7 +331,7 @@ namespace DigitalWizardry.Dungeon
 			EmptyCell.TextRep2 = @" ";
 			EmptyCell.ForceGrowthCompatible = false;
 			EmptyCell.InitialAvailableConnections = 4;
-			EmptyCell.Name = "EmptyCell";
+			EmptyCell.Name = "a0";
 			
 			Entrance.Weight = 0;
 			Entrance.ConnectsUp = true;
@@ -340,7 +340,7 @@ namespace DigitalWizardry.Dungeon
 			Entrance.TextRep2 = @" ";
 			Entrance.ForceGrowthCompatible = false;
 			Entrance.InitialAvailableConnections = 1;
-			Entrance.Name = "Entrance";
+			Entrance.Name = "a1";
 			
 			// *** END SPECIAL CELLS ***
 			// *** BEGIN CORRIDOR CELLS ***
@@ -354,7 +354,7 @@ namespace DigitalWizardry.Dungeon
 			Vert.TextRep2 = @" ";
 			Vert.IsFloodingTransition = true;
 			Vert.InitialAvailableConnections = 2;
-			Vert.Name = "Vert";
+			Vert.Name = "a2";
 			
 			Horiz.Weight = 100;
 			Horiz.ConnectsLeft = true;
@@ -365,7 +365,7 @@ namespace DigitalWizardry.Dungeon
 			Horiz.TextRep2 = @"═";
 			Horiz.IsFloodingTransition = true;
 			Horiz.InitialAvailableConnections = 2;
-			Horiz.Name = "Horiz";
+			Horiz.Name = "a3";
 			
 			Inter.Weight = 20;
 			Inter.ConnectsUp = true;
@@ -381,7 +381,7 @@ namespace DigitalWizardry.Dungeon
 			Inter.IsJunction = true;
 			Inter.IsRoomExit = true;
 			Inter.InitialAvailableConnections = 4;
-			Inter.Name = "Inter";
+			Inter.Name = "a4";
 			
 			JuncULR.Weight = 20;
 			JuncULR.ConnectsUp = true;
@@ -394,7 +394,7 @@ namespace DigitalWizardry.Dungeon
 			JuncULR.TextRep2 = @"═";
 			JuncULR.IsJunction = true;
 			JuncULR.InitialAvailableConnections = 3;
-			JuncULR.Name = "JuncULR";
+			JuncULR.Name = "a5";
 			
 			JuncUDR.Weight = 20;
 			JuncUDR.ConnectsUp = true;
@@ -407,7 +407,7 @@ namespace DigitalWizardry.Dungeon
 			JuncUDR.TextRep2 = @"═";
 			JuncUDR.IsJunction = true;
 			JuncUDR.InitialAvailableConnections = 3;
-			JuncUDR.Name = "JuncUDR";
+			JuncUDR.Name = "a6";
 			
 			JuncDLR.Weight = 20;
 			JuncDLR.ConnectsDown = true;
@@ -420,7 +420,7 @@ namespace DigitalWizardry.Dungeon
 			JuncDLR.TextRep2 = @"═";
 			JuncDLR.IsJunction = true;
 			JuncDLR.InitialAvailableConnections = 3;
-			JuncDLR.Name = "JuncDLR";
+			JuncDLR.Name = "a7";
 			
 			JuncUDL.Weight = 20;
 			JuncUDL.ConnectsUp = true;
@@ -433,7 +433,7 @@ namespace DigitalWizardry.Dungeon
 			JuncUDL.TextRep2 = @" ";
 			JuncUDL.IsJunction = true;
 			JuncUDL.InitialAvailableConnections = 3;
-			JuncUDL.Name = "JuncUDL";
+			JuncUDL.Name = "a8";
 			
 			ElbUR.Weight = 20;
 			ElbUR.ConnectsUp = true;
@@ -443,7 +443,7 @@ namespace DigitalWizardry.Dungeon
 			ElbUR.TextRep = @"╚";
 			ElbUR.TextRep2 = @"═";
 			ElbUR.InitialAvailableConnections = 2;
-			ElbUR.Name = "ElbUR";
+			ElbUR.Name = "a9";
 			
 			ElbDR.Weight = 20;
 			ElbDR.ConnectsDown = true;
@@ -453,7 +453,7 @@ namespace DigitalWizardry.Dungeon
 			ElbDR.TextRep = @"╔";
 			ElbDR.TextRep2 = @"═";
 			ElbDR.InitialAvailableConnections = 2;
-			ElbDR.Name = "ElbDR";
+			ElbDR.Name = "b0";
 			
 			ElbDL.Weight = 20;
 			ElbDL.ConnectsDown = true;
@@ -463,7 +463,7 @@ namespace DigitalWizardry.Dungeon
 			ElbDL.TextRep = @"╗";
 			ElbDL.TextRep2 = @" ";
 			ElbDL.InitialAvailableConnections = 2;
-			ElbDL.Name = "ElbDL";
+			ElbDL.Name = "b1";
 			
 			ElbUL.Weight = 20;
 			ElbUL.ConnectsUp = true;
@@ -473,7 +473,7 @@ namespace DigitalWizardry.Dungeon
 			ElbUL.TextRep = @"╝";
 			ElbUL.TextRep2 = @" ";
 			ElbUL.InitialAvailableConnections = 2;
-			ElbUL.Name = "ElbUL";
+			ElbUL.Name = "b2";
 
 			// *** END CORRIDOR CELLS ***
 			// *** BEGIN DEAD END CELLS ***
@@ -485,7 +485,7 @@ namespace DigitalWizardry.Dungeon
 			DeadU.TextRep2 = @" ";
 			DeadU.IsDeadEnd = true;
 			DeadU.InitialAvailableConnections = 1;
-			DeadU.Name = "DeadU";
+			DeadU.Name = "b3";
 			
 			DeadD.Weight = 1;
 			DeadD.ConnectsDown = true;
@@ -494,7 +494,7 @@ namespace DigitalWizardry.Dungeon
 			DeadD.TextRep2 = @" ";
 			DeadD.IsDeadEnd = true;
 			DeadD.InitialAvailableConnections = 1;
-			DeadD.Name = "DeadD";
+			DeadD.Name = "b4";
 			
 			DeadL.Weight = 1;
 			DeadL.ConnectsLeft = true;
@@ -503,7 +503,7 @@ namespace DigitalWizardry.Dungeon
 			DeadL.TextRep2 = @" ";
 			DeadL.IsDeadEnd = true;
 			DeadL.InitialAvailableConnections = 1;
-			DeadL.Name = "DeadL";
+			DeadL.Name = "b5";
 			
 			DeadR.Weight = 1;
 			DeadR.ConnectsRight = true;
@@ -512,7 +512,7 @@ namespace DigitalWizardry.Dungeon
 			DeadR.TextRep2 = @"═";
 			DeadR.IsDeadEnd = true;
 			DeadR.InitialAvailableConnections = 1;
-			DeadR.Name = "DeadR";
+			DeadR.Name = "b6";
 
 			// *** END DEAD END CELLS ***
 			// *** BEGIN ROOM CELLS ***
@@ -525,7 +525,7 @@ namespace DigitalWizardry.Dungeon
 			RoomSpace.TextRep2 = " ";
 			RoomSpace.IsRoomType = true;
 			RoomSpace.ForceGrowthCompatible = false;
-			RoomSpace.Name = "RoomSpace";
+			RoomSpace.Name = "b7";
 		
 			RoomWallU.TraversableDown = true;
 			RoomWallU.TraversableLeft = true;
@@ -538,7 +538,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallU.IsRoomType = true;
 			RoomWallU.ForceGrowthCompatible = false;
 			RoomWallU.RoomWallDirection = Direction.Up;
-			RoomWallU.Name = "RoomWallU";
+			RoomWallU.Name = "b8";
 			
 			RoomWallD.TraversableUp = true;
 			RoomWallD.TraversableLeft = true;
@@ -552,7 +552,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallD.IsCleanStartWall = true;
 			RoomWallD.ForceGrowthCompatible = false;
 			RoomWallD.RoomWallDirection = Direction.Down;
-			RoomWallD.Name = "RoomWallD";
+			RoomWallD.Name = "b9";
 			
 			RoomWallL.TraversableUp = true;
 			RoomWallL.TraversableDown = true;
@@ -565,7 +565,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallL.IsRoomType = true;
 			RoomWallL.ForceGrowthCompatible = false;
 			RoomWallL.RoomWallDirection = Direction.Left;
-			RoomWallL.Name = "RoomWallL";
+			RoomWallL.Name = "c0";
 			
 			RoomWallR.TraversableUp = true;
 			RoomWallR.TraversableDown = true;
@@ -578,7 +578,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallR.IsRoomType = true;
 			RoomWallR.ForceGrowthCompatible = false;
 			RoomWallR.RoomWallDirection = Direction.Right;
-			RoomWallR.Name = "RoomWallR";
+			RoomWallR.Name = "c1";
 	
 			RoomWallUL.TraversableDown = true;
 			RoomWallUL.TraversableRight = true;
@@ -591,7 +591,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUL.IsRoomCorner = true;
 			RoomWallUL.ForceGrowthCompatible = false;
 			RoomWallUL.RoomWallDirection = Direction.UpLeft;
-			RoomWallUL.Name = "RoomWallUL";
+			RoomWallUL.Name = "c2";
 			
 			RoomWallUR.TraversableDown = true;
 			RoomWallUR.TraversableLeft = true;
@@ -604,7 +604,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallUR.IsRoomCorner = true;
 			RoomWallUR.ForceGrowthCompatible = false;
 			RoomWallUR.RoomWallDirection = Direction.UpRight;
-			RoomWallUR.Name = "RoomWallUR";
+			RoomWallUR.Name = "c3";
 			
 			RoomWallDL.TraversableUp = true;
 			RoomWallDL.TraversableRight = true;
@@ -617,7 +617,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDL.IsRoomCorner = true;
 			RoomWallDL.ForceGrowthCompatible = false;
 			RoomWallDL.RoomWallDirection = Direction.DownLeft;
-			RoomWallDL.Name = "RoomWallDL";
+			RoomWallDL.Name = "c4";
 			
 			RoomWallDR.TraversableUp = true;
 			RoomWallDR.TraversableLeft = true;
@@ -630,7 +630,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDR.IsRoomCorner = true;
 			RoomWallDR.ForceGrowthCompatible = false;
 			RoomWallDR.RoomWallDirection = Direction.DownRight;
-			RoomWallDR.Name = "RoomWallDR";
+			RoomWallDR.Name = "c5";
 			
 			RoomWallULinv.TraversableDown = true;
 			RoomWallULinv.TraversableRight = true;
@@ -641,7 +641,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallULinv.IsRoomType = true;
 			RoomWallULinv.IsCleanStartWall = true;
 			RoomWallULinv.ForceGrowthCompatible = false;
-			RoomWallULinv.Name = "RoomWallULinv";
+			RoomWallULinv.Name = "c6";
 			
 			RoomWallURinv.TraversableDown = true;
 			RoomWallURinv.TraversableLeft = true;
@@ -652,7 +652,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallURinv.IsRoomType = true;
 			RoomWallURinv.IsCleanStartWall = true;
 			RoomWallURinv.ForceGrowthCompatible = false;
-			RoomWallURinv.Name = "RoomWallURinv";
+			RoomWallURinv.Name = "c7";
 			
 			RoomWallDLinv.TraversableUp = true;
 			RoomWallDLinv.TraversableRight = true;
@@ -662,7 +662,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDLinv.TextRep2 = "─";
 			RoomWallDLinv.IsRoomType = true;
 			RoomWallDLinv.ForceGrowthCompatible = false;
-			RoomWallDLinv.Name = "RoomWallDLinv";
+			RoomWallDLinv.Name = "c8";
 			
 			RoomWallDRinv.TraversableUp = true;
 			RoomWallDRinv.TraversableLeft = true;
@@ -672,7 +672,7 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDRinv.TextRep2 = " ";
 			RoomWallDRinv.IsRoomType = true;
 			RoomWallDRinv.ForceGrowthCompatible = false;
-			RoomWallDRinv.Name = "RoomWallDRinv";
+			RoomWallDRinv.Name = "c9";
 			
 			RoomExitU.ConnectsUp = true;
 			RoomExitU.TraversableUp = true;
@@ -688,7 +688,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitU.IsRoomType = true;
 			RoomExitU.IsRoomExit = true;
 			RoomExitU.ForceGrowthCompatible = false;
-			RoomExitU.Name = "RoomExitU";
+			RoomExitU.Name = "d0";
 			
 			RoomExitD.ConnectsDown = true;
 			RoomExitD.TraversableUp = true;
@@ -705,7 +705,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitD.IsRoomExit = true;
 			RoomExitD.IsCleanStartWall = true;
 			RoomExitD.ForceGrowthCompatible = false;
-			RoomExitD.Name = "RoomExitD";
+			RoomExitD.Name = "d1";
 			
 			RoomExitL.ConnectsLeft = true;
 			RoomExitL.TraversableUp = true;
@@ -721,7 +721,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitL.IsRoomType = true;
 			RoomExitL.IsRoomExit = true;
 			RoomExitL.ForceGrowthCompatible = false;
-			RoomExitL.Name = "RoomExitL";
+			RoomExitL.Name = "d2";
 			
 			RoomExitR.ConnectsRight = true;
 			RoomExitR.TraversableUp = true;
@@ -737,7 +737,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitR.IsRoomType = true;
 			RoomExitR.IsRoomExit = true;
 			RoomExitR.ForceGrowthCompatible = false;
-			RoomExitR.Name = "RoomExitR";
+			RoomExitR.Name = "d3";
 			
 			// *** END ROOM CELLS ***
 			// *** ROOM CORNER EXITS ***
@@ -755,7 +755,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_U.IsRoomExit = true;
 			RoomExitUL_U.RoomExitCompatible = true;
 			RoomExitUL_U.ForceGrowthCompatible = false;
-			RoomExitUL_U.Name = "RoomExitUL_U";
+			RoomExitUL_U.Name = "d4";
 			
 			RoomExitUL_L.ConnectsLeft = true;
 			RoomExitUL_L.TraversableDown = true;
@@ -770,7 +770,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_L.IsRoomExit = true;
 			RoomExitUL_L.RoomExitCompatible = true;
 			RoomExitUL_L.ForceGrowthCompatible = false;
-			RoomExitUL_L.Name = "RoomExitUL_L";
+			RoomExitUL_L.Name = "d5";
 			
 			RoomExitUL_UL.ConnectsUp = true;
 			RoomExitUL_UL.ConnectsLeft = true;
@@ -786,7 +786,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_UL.DoorProbability = 50;
 			RoomExitUL_UL.IsRoomExit = true;
 			RoomExitUL_UL.ForceGrowthCompatible = false;
-			RoomExitUL_UL.Name = "RoomExitUL_UL";
+			RoomExitUL_UL.Name = "d6";
 			
 			RoomExitUR_U.ConnectsUp = true;
 			RoomExitUR_U.TraversableUp = true;
@@ -801,7 +801,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_U.IsRoomExit = true;
 			RoomExitUR_U.RoomExitCompatible = true;
 			RoomExitUR_U.ForceGrowthCompatible = false;
-			RoomExitUR_U.Name = "RoomExitUR_U";
+			RoomExitUR_U.Name = "d7";
 			
 			RoomExitUR_R.ConnectsRight = true;
 			RoomExitUR_R.TraversableDown = true;
@@ -816,7 +816,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_R.IsRoomExit = true;
 			RoomExitUR_R.RoomExitCompatible = true;
 			RoomExitUR_R.ForceGrowthCompatible = false;
-			RoomExitUR_R.Name = "RoomExitUR_R";
+			RoomExitUR_R.Name = "d8";
 			
 			RoomExitUR_UR.ConnectsUp = true;
 			RoomExitUR_UR.ConnectsRight = true;
@@ -832,7 +832,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_UR.DoorProbability = 50;
 			RoomExitUR_UR.IsRoomExit = true;
 			RoomExitUR_UR.ForceGrowthCompatible = false;
-			RoomExitUR_UR.Name = "RoomExitUR_UR";
+			RoomExitUR_UR.Name = "d9";
 			
 			RoomExitDL_D.ConnectsDown = true;
 			RoomExitDL_D.TraversableUp = true;
@@ -847,7 +847,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_D.IsRoomExit = true;
 			RoomExitDL_D.RoomExitCompatible = true;
 			RoomExitDL_D.ForceGrowthCompatible = false;
-			RoomExitDL_D.Name = "RoomExitDL_D";
+			RoomExitDL_D.Name = "e0";
 			
 			RoomExitDL_L.ConnectsLeft = true;
 			RoomExitDL_L.TraversableUp = true;
@@ -862,7 +862,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_L.IsRoomExit = true;
 			RoomExitDL_L.RoomExitCompatible = true;
 			RoomExitDL_L.ForceGrowthCompatible = false;
-			RoomExitDL_L.Name = "RoomExitDL_L";
+			RoomExitDL_L.Name = "e1";
 			
 			RoomExitDL_DL.ConnectsDown = true;
 			RoomExitDL_DL.ConnectsLeft = true;
@@ -878,7 +878,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_DL.DoorProbability = 50;
 			RoomExitDL_DL.IsRoomExit = true;
 			RoomExitDL_DL.ForceGrowthCompatible = false;
-			RoomExitDL_DL.Name = "RoomExitDL_DL";
+			RoomExitDL_DL.Name = "e2";
 			
 			RoomExitDR_D.ConnectsDown = true;
 			RoomExitDR_D.TraversableUp = true;
@@ -893,7 +893,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_D.IsRoomExit = true;
 			RoomExitDR_D.RoomExitCompatible = true;
 			RoomExitDR_D.ForceGrowthCompatible = false;
-			RoomExitDR_D.Name = "RoomExitDR_D";
+			RoomExitDR_D.Name = "e3";
 			
 			RoomExitDR_R.ConnectsRight = true;
 			RoomExitDR_R.TraversableUp = true;
@@ -908,7 +908,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_R.IsRoomExit = true;
 			RoomExitDR_R.RoomExitCompatible = true;
 			RoomExitDR_R.ForceGrowthCompatible = false;
-			RoomExitDR_R.Name = "RoomExitDR_R";
+			RoomExitDR_R.Name = "e4";
 			
 			RoomExitDR_DR.ConnectsDown = true;
 			RoomExitDR_DR.ConnectsRight = true;
@@ -924,7 +924,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_DR.DoorProbability = 50;
 			RoomExitDR_DR.IsRoomExit = true;
 			RoomExitDR_DR.ForceGrowthCompatible = false;
-			RoomExitDR_DR.Name = "RoomExitDR_DR";
+			RoomExitDR_DR.Name = "e5";
 
 			// *** END ROOM CORNER EXITS ***
 			// *** BEGIN STAIRWAY CELLS ***
@@ -937,7 +937,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairU.TextRep2 = " ";
 			UpStairU.InitialAvailableConnections = 1;
 			UpStairU.ForceGrowthCompatible = false;
-			UpStairU.Name = "UpStairU";
+			UpStairU.Name = "e6";
 			
 			UpStairD.Weight = 1;
 			UpStairD.ConnectsDown = true;
@@ -946,7 +946,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairD.TextRep2 = " ";
 			UpStairD.InitialAvailableConnections = 1;
 			UpStairD.ForceGrowthCompatible = false;
-			UpStairD.Name = "UpStairD";
+			UpStairD.Name = "e7";
 			
 			UpStairL.Weight = 1;
 			UpStairL.ConnectsLeft = true;
@@ -955,7 +955,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairL.TextRep2 = " ";
 			UpStairL.InitialAvailableConnections = 1;
 			UpStairL.ForceGrowthCompatible = false;
-			UpStairL.Name = "UpStairL";
+			UpStairL.Name = "e8";
 			
 			UpStairR.Weight = 1;
 			UpStairR.ConnectsRight = true;
@@ -964,7 +964,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairR.TextRep2 = " ";
 			UpStairR.InitialAvailableConnections = 1;
 			UpStairR.ForceGrowthCompatible = false;
-			UpStairR.Name = "UpStairR";
+			UpStairR.Name = "e9";
 			
 			DownStairU.Weight = 1;
 			DownStairU.ConnectsUp = true;
@@ -973,7 +973,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairU.TextRep2 = " ";
 			DownStairU.InitialAvailableConnections = 1;
 			DownStairU.ForceGrowthCompatible = false;
-			DownStairU.Name = "DownStairU";
+			DownStairU.Name = "f0";
 			
 			DownStairD.Weight = 1;
 			DownStairD.ConnectsDown = true;
@@ -982,7 +982,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairD.TextRep2 = " ";
 			DownStairD.InitialAvailableConnections = 1;
 			DownStairD.ForceGrowthCompatible = false;
-			DownStairD.Name = "DownStairD";
+			DownStairD.Name = "f1";
 			
 			DownStairL.Weight = 1;
 			DownStairL.ConnectsLeft = true;
@@ -991,7 +991,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairL.TextRep2 = " ";
 			DownStairL.InitialAvailableConnections = 1;
 			DownStairL.ForceGrowthCompatible = false;
-			DownStairL.Name = "DownStairL";
+			DownStairL.Name = "f2";
 			
 			DownStairR.Weight = 1;
 			DownStairR.ConnectsRight = true;
@@ -1000,7 +1000,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairR.TextRep2 = " ";
 			DownStairR.InitialAvailableConnections = 1;
 			DownStairR.ForceGrowthCompatible = false;
-			DownStairR.Name = "DownStairR";
+			DownStairR.Name = "f3";
 			
 			// *** END STAIRWAY CELLS ***	
 		}

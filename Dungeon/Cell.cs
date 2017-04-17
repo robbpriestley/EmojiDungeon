@@ -64,7 +64,7 @@ namespace DigitalWizardry.Dungeon
 		{
 			get
 			{
-				return Type.Name.ToLower().Replace("_", "-");
+				return Type.Name;
 			}
 		}
 
