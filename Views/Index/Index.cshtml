@@ -13,7 +13,16 @@
 				<br>©️ 2017 Digital Wizardry Software Solutions Ltd.
 			</p>
 			<p class="btn">
-				<a class="btn" href="" onclick="Reset()">Generate Maze!</a>
+				Level: <span id="level">1</span>
+			</p>
+			<p class="btn">
+				<button onclick="Start()">Start</button>
+			</p>
+			<p class="btn">
+				<button onclick="LevelDown();">Down</button>
+			</p>
+			<p class="btn">
+				<button onclick="LevelUp(true);">Up</button>
 			</p>
 		</td>
 		<td>
@@ -33,6 +42,3 @@
 		</td>
 	</tr>
 </table>
-
-<!-- Keep this call to Reset() down here for proper spinner activation! -->
-<script>Reset();</script>
