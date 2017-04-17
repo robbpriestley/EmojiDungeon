@@ -8,7 +8,7 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Dungeon
 	{
-		private Cell[,] _grid;                  // Master grid data structure, a "simulated 2-D array".
+		private Cell[,] _grid;                     // Master grid data structure, a "simulated 2-D array".
 		private int _levelNumber;                  // Zero-indexed level identifier for multi-level dungeons.
 		private Random _r;                         // Re-usable random number generator.
 		private Cell _emptyCell;                   // This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
@@ -442,36 +442,50 @@ namespace DigitalWizardry.Dungeon
 
 		private void CalcRooms()
 		{
-			int rand = 0;
-			_minesCount = 0;
-
-			rand = _r.Next(100);
-			
-			if (rand >= 85 && rand <= 99)
-			{
-				_minesCount = 1;
-			}
-	 
-			_catacombsCount = 0;
-
-			rand = _r.Next(100);
-			
-			if (rand >= 70 && rand < 92)
-			{
-				_catacombsCount = 1;
-			}
-			else if (rand >= 92 && rand < 98)
-			{	
-				_catacombsCount = 2;
-			}
-			else if (rand >= 98)
-			{
-				_catacombsCount = 3;
-			}
+			MinesCount();
+			CatacombsCount();
 
 			int rooms = _r.Next(Reference.MaxRooms - Reference.MinRooms + 1) + Reference.MinRooms;  // MinRooms ~ MaxRooms
 			
 			_roomsCount = rooms - _minesCount;
+		}
+
+		private void MinesCount()
+		{
+			_minesCount = 0;
+			
+			if (Reference.AddMines)
+			{
+				int rand = _r.Next(100);
+				
+				if (rand >= 85 && rand <= 99)
+				{
+					_minesCount = 1;
+				}
+			}
+		}
+		
+		private void CatacombsCount()
+		{
+			_catacombsCount = 0;
+			
+			if (Reference.AddCatacombs)
+			{
+				int rand = _r.Next(100);
+				
+				if (rand >= 70 && rand < 92)
+				{
+					_catacombsCount = 1;
+				}
+				else if (rand >= 92 && rand < 98)
+				{	
+					_catacombsCount = 2;
+				}
+				else if (rand >= 98)
+				{
+					_catacombsCount = 3;
+				}
+			}
 		}
 
 		private void PlaceRegularRooms()
