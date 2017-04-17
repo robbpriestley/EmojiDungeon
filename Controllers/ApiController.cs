@@ -17,18 +17,42 @@ namespace DigitalWizardry.Dungeon.Controllers
 
 		[HttpGet]
 		[Route("create")]
-		public IActionResult Dungeon()
+		public IActionResult Dungeon(int level, int startX, int startY, string direction)
 		{
 			if (!BasicAuthentication.Authenticate(Secrets, Request))
 			{
 				return new UnauthorizedResult();
 			}
+
+			Direction start = Direction.NoDir;
+
+			switch (direction)
+			{
+				case "U":
+					start = Direction.Up;
+					break;
+				
+				case "D":
+					start = Direction.Down;
+					break;
+				
+				case "L":
+					start = Direction.Left;
+					break;
+				
+				case "R":
+					start = Direction.Right;
+					break;
+
+				default:
+					break;
+			}
 			
-			Dungeon dungeon = new Dungeon(0, 7, 0, Direction.Up);
+			Dungeon dungeon = new Dungeon(level, startX, startY, start);
 			StringBuilder output = new StringBuilder();
 			output.AppendLine(dungeon.VisualizeAsText());
 			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
-			output.AppendLine(dungeon.VisualizeAsTextWithDescription());
+			//output.AppendLine(dungeon.VisualizeAsTextWithDescription());
 
 			return new ObjectResult(output.ToString());
 		}

@@ -31,6 +31,8 @@ namespace DigitalWizardry.Dungeon
 		public bool IsEmpty { get; set; }
 		public bool IsJunction { get; set; }
 		public bool IsDeadEnd { get; set; }
+		public bool IsStairsUp { get; set; }
+		public bool IsStairsDown { get; set; }
 		public bool IsRoomType { get; set; }
 		public bool IsRoomExit { get; set; }
 		public bool IsRoomCorner { get; set; }
@@ -937,6 +939,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsU.TextRep2 = " ";
 			UpStairsU.InitialAvailableConnections = 1;
 			UpStairsU.ForceGrowthCompatible = false;
+			UpStairsU.IsStairsUp = true;
 			UpStairsU.Name = "e6";
 			
 			UpStairsD.Weight = 1;
@@ -946,6 +949,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsD.TextRep2 = " ";
 			UpStairsD.InitialAvailableConnections = 1;
 			UpStairsD.ForceGrowthCompatible = false;
+			UpStairsD.IsStairsUp = true;
 			UpStairsD.Name = "e7";
 			
 			UpStairsL.Weight = 1;
@@ -955,6 +959,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsL.TextRep2 = " ";
 			UpStairsL.InitialAvailableConnections = 1;
 			UpStairsL.ForceGrowthCompatible = false;
+			UpStairsL.IsStairsUp = true;
 			UpStairsL.Name = "e8";
 			
 			UpStairsR.Weight = 1;
@@ -964,6 +969,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsR.TextRep2 = " ";
 			UpStairsR.InitialAvailableConnections = 1;
 			UpStairsR.ForceGrowthCompatible = false;
+			UpStairsR.IsStairsUp = true;
 			UpStairsR.Name = "e9";
 			
 			DownStairsU.Weight = 1;
@@ -973,6 +979,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsU.TextRep2 = " ";
 			DownStairsU.InitialAvailableConnections = 1;
 			DownStairsU.ForceGrowthCompatible = false;
+			DownStairsU.IsStairsDown = true;
 			DownStairsU.Name = "f0";
 			
 			DownStairsD.Weight = 1;
@@ -982,6 +989,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsD.TextRep2 = " ";
 			DownStairsD.InitialAvailableConnections = 1;
 			DownStairsD.ForceGrowthCompatible = false;
+			DownStairsD.IsStairsDown = true;
 			DownStairsD.Name = "f1";
 			
 			DownStairsL.Weight = 1;
@@ -991,6 +999,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsL.TextRep2 = " ";
 			DownStairsL.InitialAvailableConnections = 1;
 			DownStairsL.ForceGrowthCompatible = false;
+			DownStairsL.IsStairsDown = true;
 			DownStairsL.Name = "f2";
 			
 			DownStairsR.Weight = 1;
@@ -1000,6 +1009,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsR.TextRep2 = " ";
 			DownStairsR.InitialAvailableConnections = 1;
 			DownStairsR.ForceGrowthCompatible = false;
+			DownStairsR.IsStairsDown = true;
 			DownStairsR.Name = "f3";
 			
 			// *** END STAIRWAY CELLS ***	

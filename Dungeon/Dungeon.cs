@@ -2931,6 +2931,17 @@ namespace DigitalWizardry.Dungeon
 
 		private void CheckForDownStairsPlacement(Cell cell)
 		{
+			if
+			(
+				(cell.Type == CellTypes.DeadU && cell.Y == 0)                       ||
+				(cell.Type == CellTypes.DeadR && cell.X == 0)                       ||
+				(cell.Type == CellTypes.DeadL && cell.X + 1 == Reference.GridWidth) ||
+				(cell.Type == CellTypes.DeadD && cell.Y + 1 == Reference.GridHeight)
+			)
+			{
+				return;  // Stairs down cannot be at the edge of the dungeon (leading nowhere).
+			}
+			
 			double distance = DistanceFromStartCell(cell);
 			
 			if (distance >= _downStairsCellDistance) 
@@ -3421,7 +3432,7 @@ namespace DigitalWizardry.Dungeon
 								
 								if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == false)
 								{
-									line.Append("d");
+									line.Append("D");
 								}
 								else if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == true)
 								{
@@ -3451,7 +3462,15 @@ namespace DigitalWizardry.Dungeon
 						}
 						else if (cell.HasKey)
 						{
-								line.Append("K");
+							line.Append("K");
+						}
+						else if (cell.Type.IsStairsUp)
+						{
+							line.Append("u");
+						}
+						else if (cell.Type.IsStairsDown)
+						{
+							line.Append("d");
 						}
 						else
 						{
