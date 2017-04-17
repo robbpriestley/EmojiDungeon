@@ -32,9 +32,6 @@ function LevelDown() : void
 
 function RenderLevel(level : number)
 {
-	let spinner : Spinner = SpinnerSetup();
-	spinner.spin($('#grid')[0]);
-
 	let dungeon : object = GetDungeon(level);
 	
 	if (dungeon != null)
@@ -43,6 +40,9 @@ function RenderLevel(level : number)
 	}
 	else
 	{
+		let spinner : Spinner = SpinnerSetup();
+		spinner.spin($('#grid')[0]);
+		
 		$.ajax
 		({
 			type: 'GET',
