@@ -156,14 +156,14 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _deadD;
 		private static readonly CellType _deadL;
 		private static readonly CellType _deadR;
-		private static readonly CellType _upStairU;
-		private static readonly CellType _upStairD;
-		private static readonly CellType _upStairL;
-		private static readonly CellType _upStairR;
-		private static readonly CellType _downStairU;
-		private static readonly CellType _downStairD;
-		private static readonly CellType _downStairL;
-		private static readonly CellType _downStairR;
+		private static readonly CellType _upStairsU;
+		private static readonly CellType _upStairsD;
+		private static readonly CellType _upStairsL;
+		private static readonly CellType _upStairsR;
+		private static readonly CellType _downStairsU;
+		private static readonly CellType _downStairsD;
+		private static readonly CellType _downStairsL;
+		private static readonly CellType _downStairsR;
 		private static readonly CellType _roomSpace;
 		private static readonly CellType _roomWallU;
 		private static readonly CellType _roomWallD;
@@ -214,14 +214,14 @@ namespace DigitalWizardry.Dungeon
 		public static CellType DeadD { get { return _deadD; } }                        // Dead End Down                
 		public static CellType DeadL { get { return _deadL; } }                        // Dead End Left                
 		public static CellType DeadR { get { return _deadR; } }                        // Dead End Right 
-		public static CellType UpStairU { get { return _upStairU; } }                  // Stairs Up Connects Up        
-		public static CellType UpStairD { get { return _upStairD; } }                  // Stairs Up Connects Down      
-		public static CellType UpStairL { get { return _upStairL; } }                  // Stairs Up Connects Left      
-		public static CellType UpStairR { get { return _upStairR; } }                  // Stairs Up Connects Right     
-		public static CellType DownStairU { get { return _downStairU; } }              // Stairs Down Connects Up      
-		public static CellType DownStairD { get { return _downStairD; } }              // Stairs Down Connects Down    
-		public static CellType DownStairL { get { return _downStairL; } }              // Stairs Down Connects Left    
-		public static CellType DownStairR { get { return _downStairR; } }              // Stairs Down Connects Right 
+		public static CellType UpStairsU { get { return _upStairsU; } }                  // Stairs Up Connects Up        
+		public static CellType UpStairsD { get { return _upStairsD; } }                  // Stairs Up Connects Down      
+		public static CellType UpStairsL { get { return _upStairsL; } }                  // Stairs Up Connects Left      
+		public static CellType UpStairsR { get { return _upStairsR; } }                  // Stairs Up Connects Right     
+		public static CellType DownStairsU { get { return _downStairsU; } }              // Stairs Down Connects Up      
+		public static CellType DownStairsD { get { return _downStairsD; } }              // Stairs Down Connects Down    
+		public static CellType DownStairsL { get { return _downStairsL; } }              // Stairs Down Connects Left    
+		public static CellType DownStairsR { get { return _downStairsR; } }              // Stairs Down Connects Right 
 		public static CellType RoomSpace { get { return _roomSpace; } }                // Room Space
 		public static CellType RoomWallU { get { return _roomWallU; } }                // Room Wall Up
 		public static CellType RoomWallD { get { return _roomWallD; } }                // Room Wall Down
@@ -273,14 +273,14 @@ namespace DigitalWizardry.Dungeon
 			_deadD = new CellType();
 			_deadL = new CellType();
 			_deadR = new CellType();
-			_upStairU = new CellType();
-			_upStairD = new CellType();
-			_upStairL = new CellType();
-			_upStairR = new CellType();
-			_downStairU = new CellType();
-			_downStairD = new CellType();
-			_downStairL = new CellType();
-			_downStairR = new CellType();
+			_upStairsU = new CellType();
+			_upStairsD = new CellType();
+			_upStairsL = new CellType();
+			_upStairsR = new CellType();
+			_downStairsU = new CellType();
+			_downStairsD = new CellType();
+			_downStairsL = new CellType();
+			_downStairsR = new CellType();
 			_roomSpace = new CellType();
 			_roomWallU = new CellType();
 			_roomWallD = new CellType();
@@ -930,77 +930,77 @@ namespace DigitalWizardry.Dungeon
 			// *** BEGIN STAIRWAY CELLS ***
 			// These cells are specially placed, prior the falsermal cell placement routine.
 			
-			UpStairU.Weight = 1;
-			UpStairU.ConnectsUp = true;
-			UpStairU.TraversableUp = true;
-			UpStairU.TextRep = "^";
-			UpStairU.TextRep2 = " ";
-			UpStairU.InitialAvailableConnections = 1;
-			UpStairU.ForceGrowthCompatible = false;
-			UpStairU.Name = "e6";
+			UpStairsU.Weight = 1;
+			UpStairsU.ConnectsUp = true;
+			UpStairsU.TraversableUp = true;
+			UpStairsU.TextRep = "^";
+			UpStairsU.TextRep2 = " ";
+			UpStairsU.InitialAvailableConnections = 1;
+			UpStairsU.ForceGrowthCompatible = false;
+			UpStairsU.Name = "e6";
 			
-			UpStairD.Weight = 1;
-			UpStairD.ConnectsDown = true;
-			UpStairD.TraversableDown = true;
-			UpStairD.TextRep = "^";
-			UpStairD.TextRep2 = " ";
-			UpStairD.InitialAvailableConnections = 1;
-			UpStairD.ForceGrowthCompatible = false;
-			UpStairD.Name = "e7";
+			UpStairsD.Weight = 1;
+			UpStairsD.ConnectsDown = true;
+			UpStairsD.TraversableDown = true;
+			UpStairsD.TextRep = "^";
+			UpStairsD.TextRep2 = " ";
+			UpStairsD.InitialAvailableConnections = 1;
+			UpStairsD.ForceGrowthCompatible = false;
+			UpStairsD.Name = "e7";
 			
-			UpStairL.Weight = 1;
-			UpStairL.ConnectsLeft = true;
-			UpStairL.TraversableLeft = true;
-			UpStairL.TextRep = "^";
-			UpStairL.TextRep2 = " ";
-			UpStairL.InitialAvailableConnections = 1;
-			UpStairL.ForceGrowthCompatible = false;
-			UpStairL.Name = "e8";
+			UpStairsL.Weight = 1;
+			UpStairsL.ConnectsLeft = true;
+			UpStairsL.TraversableLeft = true;
+			UpStairsL.TextRep = "^";
+			UpStairsL.TextRep2 = " ";
+			UpStairsL.InitialAvailableConnections = 1;
+			UpStairsL.ForceGrowthCompatible = false;
+			UpStairsL.Name = "e8";
 			
-			UpStairR.Weight = 1;
-			UpStairR.ConnectsRight = true;
-			UpStairR.TraversableRight = true;
-			UpStairR.TextRep = "^";
-			UpStairR.TextRep2 = " ";
-			UpStairR.InitialAvailableConnections = 1;
-			UpStairR.ForceGrowthCompatible = false;
-			UpStairR.Name = "e9";
+			UpStairsR.Weight = 1;
+			UpStairsR.ConnectsRight = true;
+			UpStairsR.TraversableRight = true;
+			UpStairsR.TextRep = "^";
+			UpStairsR.TextRep2 = " ";
+			UpStairsR.InitialAvailableConnections = 1;
+			UpStairsR.ForceGrowthCompatible = false;
+			UpStairsR.Name = "e9";
 			
-			DownStairU.Weight = 1;
-			DownStairU.ConnectsUp = true;
-			DownStairU.TraversableUp = true;
-			DownStairU.TextRep = "v";
-			DownStairU.TextRep2 = " ";
-			DownStairU.InitialAvailableConnections = 1;
-			DownStairU.ForceGrowthCompatible = false;
-			DownStairU.Name = "f0";
+			DownStairsU.Weight = 1;
+			DownStairsU.ConnectsUp = true;
+			DownStairsU.TraversableUp = true;
+			DownStairsU.TextRep = "v";
+			DownStairsU.TextRep2 = " ";
+			DownStairsU.InitialAvailableConnections = 1;
+			DownStairsU.ForceGrowthCompatible = false;
+			DownStairsU.Name = "f0";
 			
-			DownStairD.Weight = 1;
-			DownStairD.ConnectsDown = true;
-			DownStairD.TraversableDown = true;
-			DownStairD.TextRep = "v";
-			DownStairD.TextRep2 = " ";
-			DownStairD.InitialAvailableConnections = 1;
-			DownStairD.ForceGrowthCompatible = false;
-			DownStairD.Name = "f1";
+			DownStairsD.Weight = 1;
+			DownStairsD.ConnectsDown = true;
+			DownStairsD.TraversableDown = true;
+			DownStairsD.TextRep = "v";
+			DownStairsD.TextRep2 = " ";
+			DownStairsD.InitialAvailableConnections = 1;
+			DownStairsD.ForceGrowthCompatible = false;
+			DownStairsD.Name = "f1";
 			
-			DownStairL.Weight = 1;
-			DownStairL.ConnectsLeft = true;
-			DownStairL.TraversableLeft = true;
-			DownStairL.TextRep = "v";
-			DownStairL.TextRep2 = " ";
-			DownStairL.InitialAvailableConnections = 1;
-			DownStairL.ForceGrowthCompatible = false;
-			DownStairL.Name = "f2";
+			DownStairsL.Weight = 1;
+			DownStairsL.ConnectsLeft = true;
+			DownStairsL.TraversableLeft = true;
+			DownStairsL.TextRep = "v";
+			DownStairsL.TextRep2 = " ";
+			DownStairsL.InitialAvailableConnections = 1;
+			DownStairsL.ForceGrowthCompatible = false;
+			DownStairsL.Name = "f2";
 			
-			DownStairR.Weight = 1;
-			DownStairR.ConnectsRight = true;
-			DownStairR.TraversableRight = true;
-			DownStairR.TextRep = "v";
-			DownStairR.TextRep2 = " ";
-			DownStairR.InitialAvailableConnections = 1;
-			DownStairR.ForceGrowthCompatible = false;
-			DownStairR.Name = "f3";
+			DownStairsR.Weight = 1;
+			DownStairsR.ConnectsRight = true;
+			DownStairsR.TraversableRight = true;
+			DownStairsR.TextRep = "v";
+			DownStairsR.TextRep2 = " ";
+			DownStairsR.InitialAvailableConnections = 1;
+			DownStairsR.ForceGrowthCompatible = false;
+			DownStairsR.Name = "f3";
 			
 			// *** END STAIRWAY CELLS ***	
 		}
@@ -1286,19 +1286,19 @@ namespace DigitalWizardry.Dungeon
 			
 			if (deadEnd == DeadU)
 			{
-				stairs = DownStairU;
+				stairs = DownStairsU;
 			}
 			else if (deadEnd == DeadD)
 			{
-				stairs = DownStairD;
+				stairs = DownStairsD;
 			}
 			else if (deadEnd == DeadL)
 			{
-				stairs = DownStairL; 
+				stairs = DownStairsL; 
 			}
 			else if (deadEnd == DeadR)
 			{
-				stairs = DownStairR; 
+				stairs = DownStairsR; 
 			}
 			
 			return stairs;

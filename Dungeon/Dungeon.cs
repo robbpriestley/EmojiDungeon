@@ -102,7 +102,7 @@ namespace DigitalWizardry.Dungeon
 
 		private void PlaceStairs(Direction start)
 		{
-			CellType startType = CellTypes.UpStairD;
+			CellType startType = CellTypes.UpStairsD;
 			Cell stairs = new Cell(_startCoords.X, _startCoords.Y, startType, Descriptions.Constructed);
 			stairs.DescrWeight = 100;
 			SetCellValue(_startCoords.X, _startCoords.Y, stairs);
