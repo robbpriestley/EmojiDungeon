@@ -24,7 +24,7 @@ namespace DigitalWizardry.Dungeon.Controllers
 				return new UnauthorizedResult();
 			}
 			
-			Dungeon dungeon = new Dungeon(0);
+			Dungeon dungeon = new Dungeon(0, 7, 0, Direction.Up);
 			StringBuilder output = new StringBuilder();
 			output.AppendLine(dungeon.VisualizeAsText());
 			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
@@ -46,7 +46,7 @@ namespace DigitalWizardry.Dungeon.Controllers
 
 			for (int i = 0; i < 100; i++)
 			{
-				Dungeon dungeon = new Dungeon(0);
+				Dungeon dungeon = new Dungeon(0, 7, 0, Direction.Up);
 				output.AppendLine(dungeon.VisualizeAsText());
 				output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
 				Console.WriteLine("Iteration: " + i.ToString());

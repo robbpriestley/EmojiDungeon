@@ -5,9 +5,9 @@ window.onload = function(){Start();}
 function Start() : void
 {
 	sessionStorage.clear();
-	SetLevel(0);            // Start at level 0...
-	$("#level").text("1");  // ...presented to user as level 1.
-	RenderLevel(0);
+	SetLevel(1);
+	$("#level").text("1");
+	RenderLevel(1);
 }
 
 function LevelUp() : void
@@ -16,7 +16,7 @@ function LevelUp() : void
 	level--  // Levels closer to the "surface" have smaller numbers.
 	SetLevel(level);
 	RenderLevel(level);
-	$("#level").text(level + 1);  // Add 1 for display as _level is zero-indexed.
+	$("#level").text(level);  // Add 1 for display as _level is zero-indexed.
 	sessionStorage.setItem("level", level.toString());
 }
 
@@ -26,7 +26,7 @@ function LevelDown() : void
 	level++  // Levels farther from the "surface" have larger numbers.
 	SetLevel(level);
 	RenderLevel(level);
-	$("#level").text(level + 1);  // Add 1 for display as _level is zero-indexed.
+	$("#level").text(level);  // Add 1 for display as _level is zero-indexed.
 	sessionStorage.setItem("level", level.toString());
 }
 
@@ -42,11 +42,16 @@ function RenderLevel(level : number)
 	{
 		let spinner : Spinner = SpinnerSetup();
 		spinner.spin($('#grid')[0]);
+
+		let sX : number = level == 1 ? 7 : Number(GetStartCoords(level).substring(1, 3));
+		let sY : number = level == 1 ? 0 : Number(GetStartCoords(level).substring(3, 6));
+		let sD : string = level == 1 ? "U" : GetStartCoords(level).substring(5, 6);
 		
 		$.ajax
 		({
 			type: 'GET',
 			dataType: 'json',
+			data: { level: level, startX: sX, startY: sY, direction: sD },
 			contentType: 'application/json',
 			url: '/Index/DungeonView',
 			success: function (result) 
@@ -76,7 +81,14 @@ function BuildGrid(level : number, dungeon : object) : void
 			$(gridId).removeClass();                         // Remove all classes on the div.
 			$(gridId).addClass("tile");                      // Add "native" class.
 			$(gridId).addClass(gridReference);               // Add "native" class.
-			$(gridId).addClass(dungeon[x][y].N);  // Add tile name class.
+			
+			let tileName : string = dungeon[x][y].N
+			$(gridId).addClass(tileName);                    // Add tile name class.
+
+			if (tileName == "f0" || tileName == "f1" || tileName == "f2" || tileName == "f3")
+			{
+				RecordStart(level, tileName, gridReference);
+			}
 		}
 	}
 }
@@ -89,6 +101,35 @@ function GridReference(x : number, y : number) : string
 	return "g" + xs + ys;
 }
 
+function RecordStart(level : number, tileName : string, gridReference : string) : void
+{
+	let direction : string = null;
+
+	switch (tileName)
+	{
+		case "f0":
+			direction = "U";
+			break;
+
+		case "f1":
+			direction = "D";
+			break;
+
+		case "f2":
+			direction = "L";
+			break;
+
+		case "f3":
+			direction = "R";
+			break;
+	
+		default:
+			break;
+	}
+
+	SetStartCoords(level + 1, gridReference + direction);
+}
+
 // *** BEGIN ACCESSORS ***
 
 function GetLevel() : number
@@ -99,6 +140,16 @@ function GetLevel() : number
 function SetLevel(level : number) : void
 {
 	sessionStorage.setItem("level", level.toString());
+}
+
+function GetStartCoords(level : number) : string
+{
+	return sessionStorage.getItem("start" + level.toString());
+}
+
+function SetStartCoords(level : number, coords : string) : void
+{
+	sessionStorage.setItem("start" + level.toString(), coords);
 }
 
 function GetDungeon(level : number) : object

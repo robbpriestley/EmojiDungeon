@@ -9,7 +9,6 @@ namespace DigitalWizardry.Dungeon
 	public class Dungeon
 	{
 		private Cell[,] _grid;                     // Master grid data structure, a "simulated 2-D array".
-		private int _levelNumber;                  // Zero-indexed level identifier for multi-level dungeons.
 		private Random _r;                         // Re-usable random number generator.
 		private Cell _emptyCell;                   // This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
 		private Coords _startCoords;               // Where the entrance to the dungeon is located.
@@ -25,20 +24,19 @@ namespace DigitalWizardry.Dungeon
 		private int _iterations;                   // Number of discarded attempts before arriving at a completed dungeon.
 		private TimeSpan _elapsedTime;             // How long in total did it take to build this dungeon?
 
-		public Dungeon(int levelNumber)
+		public Dungeon(int level, int startX, int startY, Direction start)
 		{	
 			_r = new Random();
-			_levelNumber = levelNumber;
+			_startCoords = new Coords(startX, startY);
 			_emptyCell = new Cell(-1, -1, CellTypes.EmptyCell, Descriptions.Empty);
 			_maxDistance = Math.Abs(Math.Sqrt(Math.Pow(Reference.GridWidth - 1, 2) + Math.Pow(Reference.GridHeight - 1, 2)));
-
-			Start();
+			Start(level, start);
 		}
 
-		private void Start()
+		private void Start(int level, Direction start)
 		{
 			bool dungeonComplete = false;
-			DateTime start = DateTime.Now;
+			DateTime startTime = DateTime.Now;
 
 			do
 			{
@@ -46,7 +44,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					_iterations++;
 					
-					Initialize();
+					Initialize(level, start);
 					PlaceRooms();
 					GenerateDungeon();
 					PlaceDoors();
@@ -63,10 +61,10 @@ namespace DigitalWizardry.Dungeon
 
 			} while (!dungeonComplete);
 
-			_elapsedTime = DateTime.Now - start;
+			_elapsedTime = DateTime.Now - startTime;
 		}
 
-		private void Initialize()
+		private void Initialize(int level, Direction start)
 		{
 			_grid = new Cell[Reference.GridWidth, Reference.GridHeight];
 
@@ -79,14 +77,14 @@ namespace DigitalWizardry.Dungeon
 				}
 			}
 
-			// The level 0 dungeon is outfitted with the start cell at bottom center.
-			if (_levelNumber == 0) 
+			// The first level (level 1) dungeon is outfitted with the start cell at bottom center.
+			if (level == 1) 
 			{
-				_startCoords = PlaceEntrance();
+				PlaceEntrance();
 			}
-			else  // Otherwise, it "inherits" start cell (i.e. stairs down) from above.
+			else  // Otherwise, it "inherits" start cell (i.e. stairs) leading up to "earlier" level.
 			{
-				// StartCoords = THIS CODE NEEDS TO BE COMPLETED;
+				PlaceStairs(start);
 			}
 
 			List<CellType> types = CellTypes.GetTypes(_startCoords);
@@ -94,15 +92,20 @@ namespace DigitalWizardry.Dungeon
 			_cellsWithLockedDoors = new List<Cell>();
 		}
 
-		// Set start cell at bottom centre.
-		private Coords PlaceEntrance()
+		private void PlaceEntrance()
 		{
-			int x = Reference.GridWidth / 2;
 			CellType startType = CellTypes.Entrance;
-			Cell entrance = new Cell(x, 0, startType, Descriptions.Constructed);
+			Cell entrance = new Cell(_startCoords.X, _startCoords.Y, startType, Descriptions.Constructed);
 			entrance.DescrWeight = 100;
-			SetCellValue(x, 0, entrance);
-			return new Coords(x, 0);
+			SetCellValue(_startCoords.X, _startCoords.Y, entrance);
+		}
+
+		private void PlaceStairs(Direction start)
+		{
+			CellType startType = CellTypes.UpStairD;
+			Cell stairs = new Cell(_startCoords.X, _startCoords.Y, startType, Descriptions.Constructed);
+			stairs.DescrWeight = 100;
+			SetCellValue(_startCoords.X, _startCoords.Y, stairs);
 		}
 
 		private void GenerateDungeon()
