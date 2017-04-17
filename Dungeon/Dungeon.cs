@@ -2634,39 +2634,9 @@ namespace DigitalWizardry.Dungeon
 				return null;
 			}
 			
-			DoorType type;
-			bool open = false, locked = false;
+			_cellsWithLockedDoors.Add(cell);
 			
-			int random = RandomPercent();
-			
-			if (random >= 60 && random < 75)
-			{
-				type = DoorType.Portcullis;
-			}
-			else if (random >= 75)
-			{
-				type = DoorType.SecretDoor;
-			}
-			else
-			{
-				type = DoorType.RegularDoor;
-			}
-			
-			if (type == DoorType.RegularDoor || type == DoorType.Portcullis)
-			{
-				locked = RandomPercent() < Reference.DoorLockedProb;
-				
-				if (locked)
-				{
-					_cellsWithLockedDoors.Add(cell);
-				}
-				else
-				{
-					open = RandomPercent() < Reference.DoorOpenProb;
-				}
-			}
-			
-			return new Door(dir, open, locked, type);
+			return new Door(dir);
 		}
 
 		private void PlaceKeys()
@@ -3428,36 +3398,7 @@ namespace DigitalWizardry.Dungeon
 							}
 							else
 							{
-								Door door = cell.Doors[0];
-								
-								if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == false)
-								{
-									line.Append("D");
-								}
-								else if (door.Type == DoorType.RegularDoor && door.Locked == false && door.Open == true)
-								{
-									line.Append("o");
-								}
-								else if (door.Type == DoorType.RegularDoor && door.Locked == true)
-								{
-									line.Append("D");
-								}
-								else if (door.Type == DoorType.Portcullis && door.Locked == false && door.Open == false)
-								{
-									line.Append("p");
-								}
-								else if (door.Type == DoorType.Portcullis && door.Locked == false && door.Open == true)
-								{
-									line.Append("b");
-								}
-								else if (door.Type == DoorType.Portcullis && door.Locked == true)
-								{
-									line.Append("P");
-								}
-								else if (door.Type == DoorType.SecretDoor)
-								{
-									line.Append("s");
-								}
+								line.Append("D");
 							}
 						}
 						else if (cell.HasKey)

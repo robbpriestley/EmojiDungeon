@@ -31,11 +31,6 @@ namespace DigitalWizardry.Dungeon
 		Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight, NoDir
 	}
 	
-	public enum DoorType
-	{
-    	RegularDoor, Portcullis, SecretDoor
-	}
-
 	public enum RoomType
 	{
     	Regular, IrregularUL, IrregularUR, IrregularDL, IrregularDR
