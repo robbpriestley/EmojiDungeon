@@ -74,7 +74,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				var xs = X < 10 ? "0" + X.ToString() : X.ToString();
 				var ys = Y < 10 ? "0" + Y.ToString() : Y.ToString();
-				return "g" + xs + "-" + ys;
+				return "g" + xs + ys;
 			}
 		}
 	}

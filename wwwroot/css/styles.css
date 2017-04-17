@@ -72,1354 +72,1357 @@ div.sprite {
 	position: absolute;
 }
 
-/* *** BEGIN GRID POSITIONS *** */
-/* C# Scriptlet: http://rextester.com/UJE12121 */
+/* *** BEGIN GRID LOCATIONS *** */
+/* I originally used a C# Scriptlet to generate the following code: http://rextester.com/UJE12121 */
+/* The class names are in the format gxxyy, where xx is the zero-padded x coordinate and yy is the zero-
+   padded y coordinate. The class names used to be in the format gxx-yy, but I removed the hyphen to 
+   (somewhat) reduce JSON size elsewhere. */
 
-.g00-00 {
+.g0000 {
 	top: 630px;
 	left: 0px;
 }
 
 
-.g00-01 {
+.g0001 {
 	top: 585px;
 	left: 0px;
 }
 
 
-.g00-02 {
+.g0002 {
 	top: 540px;
 	left: 0px;
 }
 
 
-.g00-03 {
+.g0003 {
 	top: 495px;
 	left: 0px;
 }
 
 
-.g00-04 {
+.g0004 {
 	top: 450px;
 	left: 0px;
 }
 
 
-.g00-05 {
+.g0005 {
 	top: 405px;
 	left: 0px;
 }
 
 
-.g00-06 {
+.g0006 {
 	top: 360px;
 	left: 0px;
 }
 
 
-.g00-07 {
+.g0007 {
 	top: 315px;
 	left: 0px;
 }
 
 
-.g00-08 {
+.g0008 {
 	top: 270px;
 	left: 0px;
 }
 
 
-.g00-09 {
+.g0009 {
 	top: 225px;
 	left: 0px;
 }
 
 
-.g00-10 {
+.g0010 {
 	top: 180px;
 	left: 0px;
 }
 
 
-.g00-11 {
+.g0011 {
 	top: 135px;
 	left: 0px;
 }
 
 
-.g00-12 {
+.g0012 {
 	top: 90px;
 	left: 0px;
 }
 
 
-.g00-13 {
+.g0013 {
 	top: 45px;
 	left: 0px;
 }
 
 
-.g00-14 {
+.g0014 {
 	top: 0px;
 	left: 0px;
 }
 
 
-.g01-00 {
+.g0100 {
 	top: 630px;
 	left: 45px;
 }
 
 
-.g01-01 {
+.g0101 {
 	top: 585px;
 	left: 45px;
 }
 
 
-.g01-02 {
+.g0102 {
 	top: 540px;
 	left: 45px;
 }
 
 
-.g01-03 {
+.g0103 {
 	top: 495px;
 	left: 45px;
 }
 
 
-.g01-04 {
+.g0104 {
 	top: 450px;
 	left: 45px;
 }
 
 
-.g01-05 {
+.g0105 {
 	top: 405px;
 	left: 45px;
 }
 
 
-.g01-06 {
+.g0106 {
 	top: 360px;
 	left: 45px;
 }
 
 
-.g01-07 {
+.g0107 {
 	top: 315px;
 	left: 45px;
 }
 
 
-.g01-08 {
+.g0108 {
 	top: 270px;
 	left: 45px;
 }
 
 
-.g01-09 {
+.g0109 {
 	top: 225px;
 	left: 45px;
 }
 
 
-.g01-10 {
+.g0110 {
 	top: 180px;
 	left: 45px;
 }
 
 
-.g01-11 {
+.g0111 {
 	top: 135px;
 	left: 45px;
 }
 
 
-.g01-12 {
+.g0112 {
 	top: 90px;
 	left: 45px;
 }
 
 
-.g01-13 {
+.g0113 {
 	top: 45px;
 	left: 45px;
 }
 
 
-.g01-14 {
+.g0114 {
 	top: 0px;
 	left: 45px;
 }
 
 
-.g02-00 {
+.g0200 {
 	top: 630px;
 	left: 90px;
 }
 
 
-.g02-01 {
+.g0201 {
 	top: 585px;
 	left: 90px;
 }
 
 
-.g02-02 {
+.g0202 {
 	top: 540px;
 	left: 90px;
 }
 
 
-.g02-03 {
+.g0203 {
 	top: 495px;
 	left: 90px;
 }
 
 
-.g02-04 {
+.g0204 {
 	top: 450px;
 	left: 90px;
 }
 
 
-.g02-05 {
+.g0205 {
 	top: 405px;
 	left: 90px;
 }
 
 
-.g02-06 {
+.g0206 {
 	top: 360px;
 	left: 90px;
 }
 
 
-.g02-07 {
+.g0207 {
 	top: 315px;
 	left: 90px;
 }
 
 
-.g02-08 {
+.g0208 {
 	top: 270px;
 	left: 90px;
 }
 
 
-.g02-09 {
+.g0209 {
 	top: 225px;
 	left: 90px;
 }
 
 
-.g02-10 {
+.g0210 {
 	top: 180px;
 	left: 90px;
 }
 
 
-.g02-11 {
+.g0211 {
 	top: 135px;
 	left: 90px;
 }
 
 
-.g02-12 {
+.g0212 {
 	top: 90px;
 	left: 90px;
 }
 
 
-.g02-13 {
+.g0213 {
 	top: 45px;
 	left: 90px;
 }
 
 
-.g02-14 {
+.g0214 {
 	top: 0px;
 	left: 90px;
 }
 
 
-.g03-00 {
+.g0300 {
 	top: 630px;
 	left: 135px;
 }
 
 
-.g03-01 {
+.g0301 {
 	top: 585px;
 	left: 135px;
 }
 
 
-.g03-02 {
+.g0302 {
 	top: 540px;
 	left: 135px;
 }
 
 
-.g03-03 {
+.g0303 {
 	top: 495px;
 	left: 135px;
 }
 
 
-.g03-04 {
+.g0304 {
 	top: 450px;
 	left: 135px;
 }
 
 
-.g03-05 {
+.g0305 {
 	top: 405px;
 	left: 135px;
 }
 
 
-.g03-06 {
+.g0306 {
 	top: 360px;
 	left: 135px;
 }
 
 
-.g03-07 {
+.g0307 {
 	top: 315px;
 	left: 135px;
 }
 
 
-.g03-08 {
+.g0308 {
 	top: 270px;
 	left: 135px;
 }
 
 
-.g03-09 {
+.g0309 {
 	top: 225px;
 	left: 135px;
 }
 
 
-.g03-10 {
+.g0310 {
 	top: 180px;
 	left: 135px;
 }
 
 
-.g03-11 {
+.g0311 {
 	top: 135px;
 	left: 135px;
 }
 
 
-.g03-12 {
+.g0312 {
 	top: 90px;
 	left: 135px;
 }
 
 
-.g03-13 {
+.g0313 {
 	top: 45px;
 	left: 135px;
 }
 
 
-.g03-14 {
+.g0314 {
 	top: 0px;
 	left: 135px;
 }
 
 
-.g04-00 {
+.g0400 {
 	top: 630px;
 	left: 180px;
 }
 
 
-.g04-01 {
+.g0401 {
 	top: 585px;
 	left: 180px;
 }
 
 
-.g04-02 {
+.g0402 {
 	top: 540px;
 	left: 180px;
 }
 
 
-.g04-03 {
+.g0403 {
 	top: 495px;
 	left: 180px;
 }
 
 
-.g04-04 {
+.g0404 {
 	top: 450px;
 	left: 180px;
 }
 
 
-.g04-05 {
+.g0405 {
 	top: 405px;
 	left: 180px;
 }
 
 
-.g04-06 {
+.g0406 {
 	top: 360px;
 	left: 180px;
 }
 
 
-.g04-07 {
+.g0407 {
 	top: 315px;
 	left: 180px;
 }
 
 
-.g04-08 {
+.g0408 {
 	top: 270px;
 	left: 180px;
 }
 
 
-.g04-09 {
+.g0409 {
 	top: 225px;
 	left: 180px;
 }
 
 
-.g04-10 {
+.g0410 {
 	top: 180px;
 	left: 180px;
 }
 
 
-.g04-11 {
+.g0411 {
 	top: 135px;
 	left: 180px;
 }
 
 
-.g04-12 {
+.g0412 {
 	top: 90px;
 	left: 180px;
 }
 
 
-.g04-13 {
+.g0413 {
 	top: 45px;
 	left: 180px;
 }
 
 
-.g04-14 {
+.g0414 {
 	top: 0px;
 	left: 180px;
 }
 
 
-.g05-00 {
+.g0500 {
 	top: 630px;
 	left: 225px;
 }
 
 
-.g05-01 {
+.g0501 {
 	top: 585px;
 	left: 225px;
 }
 
 
-.g05-02 {
+.g0502 {
 	top: 540px;
 	left: 225px;
 }
 
 
-.g05-03 {
+.g0503 {
 	top: 495px;
 	left: 225px;
 }
 
 
-.g05-04 {
+.g0504 {
 	top: 450px;
 	left: 225px;
 }
 
 
-.g05-05 {
+.g0505 {
 	top: 405px;
 	left: 225px;
 }
 
 
-.g05-06 {
+.g0506 {
 	top: 360px;
 	left: 225px;
 }
 
 
-.g05-07 {
+.g0507 {
 	top: 315px;
 	left: 225px;
 }
 
 
-.g05-08 {
+.g0508 {
 	top: 270px;
 	left: 225px;
 }
 
 
-.g05-09 {
+.g0509 {
 	top: 225px;
 	left: 225px;
 }
 
 
-.g05-10 {
+.g0510 {
 	top: 180px;
 	left: 225px;
 }
 
 
-.g05-11 {
+.g0511 {
 	top: 135px;
 	left: 225px;
 }
 
 
-.g05-12 {
+.g0512 {
 	top: 90px;
 	left: 225px;
 }
 
 
-.g05-13 {
+.g0513 {
 	top: 45px;
 	left: 225px;
 }
 
 
-.g05-14 {
+.g0514 {
 	top: 0px;
 	left: 225px;
 }
 
 
-.g06-00 {
+.g0600 {
 	top: 630px;
 	left: 270px;
 }
 
 
-.g06-01 {
+.g0601 {
 	top: 585px;
 	left: 270px;
 }
 
 
-.g06-02 {
+.g0602 {
 	top: 540px;
 	left: 270px;
 }
 
 
-.g06-03 {
+.g0603 {
 	top: 495px;
 	left: 270px;
 }
 
 
-.g06-04 {
+.g0604 {
 	top: 450px;
 	left: 270px;
 }
 
 
-.g06-05 {
+.g0605 {
 	top: 405px;
 	left: 270px;
 }
 
 
-.g06-06 {
+.g0606 {
 	top: 360px;
 	left: 270px;
 }
 
 
-.g06-07 {
+.g0607 {
 	top: 315px;
 	left: 270px;
 }
 
 
-.g06-08 {
+.g0608 {
 	top: 270px;
 	left: 270px;
 }
 
 
-.g06-09 {
+.g0609 {
 	top: 225px;
 	left: 270px;
 }
 
 
-.g06-10 {
+.g0610 {
 	top: 180px;
 	left: 270px;
 }
 
 
-.g06-11 {
+.g0611 {
 	top: 135px;
 	left: 270px;
 }
 
 
-.g06-12 {
+.g0612 {
 	top: 90px;
 	left: 270px;
 }
 
 
-.g06-13 {
+.g0613 {
 	top: 45px;
 	left: 270px;
 }
 
 
-.g06-14 {
+.g0614 {
 	top: 0px;
 	left: 270px;
 }
 
 
-.g07-00 {
+.g0700 {
 	top: 630px;
 	left: 315px;
 }
 
 
-.g07-01 {
+.g0701 {
 	top: 585px;
 	left: 315px;
 }
 
 
-.g07-02 {
+.g0702 {
 	top: 540px;
 	left: 315px;
 }
 
 
-.g07-03 {
+.g0703 {
 	top: 495px;
 	left: 315px;
 }
 
 
-.g07-04 {
+.g0704 {
 	top: 450px;
 	left: 315px;
 }
 
 
-.g07-05 {
+.g0705 {
 	top: 405px;
 	left: 315px;
 }
 
 
-.g07-06 {
+.g0706 {
 	top: 360px;
 	left: 315px;
 }
 
 
-.g07-07 {
+.g0707 {
 	top: 315px;
 	left: 315px;
 }
 
 
-.g07-08 {
+.g0708 {
 	top: 270px;
 	left: 315px;
 }
 
 
-.g07-09 {
+.g0709 {
 	top: 225px;
 	left: 315px;
 }
 
 
-.g07-10 {
+.g0710 {
 	top: 180px;
 	left: 315px;
 }
 
 
-.g07-11 {
+.g0711 {
 	top: 135px;
 	left: 315px;
 }
 
 
-.g07-12 {
+.g0712 {
 	top: 90px;
 	left: 315px;
 }
 
 
-.g07-13 {
+.g0713 {
 	top: 45px;
 	left: 315px;
 }
 
 
-.g07-14 {
+.g0714 {
 	top: 0px;
 	left: 315px;
 }
 
 
-.g08-00 {
+.g0800 {
 	top: 630px;
 	left: 360px;
 }
 
 
-.g08-01 {
+.g0801 {
 	top: 585px;
 	left: 360px;
 }
 
 
-.g08-02 {
+.g0802 {
 	top: 540px;
 	left: 360px;
 }
 
 
-.g08-03 {
+.g0803 {
 	top: 495px;
 	left: 360px;
 }
 
 
-.g08-04 {
+.g0804 {
 	top: 450px;
 	left: 360px;
 }
 
 
-.g08-05 {
+.g0805 {
 	top: 405px;
 	left: 360px;
 }
 
 
-.g08-06 {
+.g0806 {
 	top: 360px;
 	left: 360px;
 }
 
 
-.g08-07 {
+.g0807 {
 	top: 315px;
 	left: 360px;
 }
 
 
-.g08-08 {
+.g0808 {
 	top: 270px;
 	left: 360px;
 }
 
 
-.g08-09 {
+.g0809 {
 	top: 225px;
 	left: 360px;
 }
 
 
-.g08-10 {
+.g0810 {
 	top: 180px;
 	left: 360px;
 }
 
 
-.g08-11 {
+.g0811 {
 	top: 135px;
 	left: 360px;
 }
 
 
-.g08-12 {
+.g0812 {
 	top: 90px;
 	left: 360px;
 }
 
 
-.g08-13 {
+.g0813 {
 	top: 45px;
 	left: 360px;
 }
 
 
-.g08-14 {
+.g0814 {
 	top: 0px;
 	left: 360px;
 }
 
 
-.g09-00 {
+.g0900 {
 	top: 630px;
 	left: 405px;
 }
 
 
-.g09-01 {
+.g0901 {
 	top: 585px;
 	left: 405px;
 }
 
 
-.g09-02 {
+.g0902 {
 	top: 540px;
 	left: 405px;
 }
 
 
-.g09-03 {
+.g0903 {
 	top: 495px;
 	left: 405px;
 }
 
 
-.g09-04 {
+.g0904 {
 	top: 450px;
 	left: 405px;
 }
 
 
-.g09-05 {
+.g0905 {
 	top: 405px;
 	left: 405px;
 }
 
 
-.g09-06 {
+.g0906 {
 	top: 360px;
 	left: 405px;
 }
 
 
-.g09-07 {
+.g0907 {
 	top: 315px;
 	left: 405px;
 }
 
 
-.g09-08 {
+.g0908 {
 	top: 270px;
 	left: 405px;
 }
 
 
-.g09-09 {
+.g0909 {
 	top: 225px;
 	left: 405px;
 }
 
 
-.g09-10 {
+.g0910 {
 	top: 180px;
 	left: 405px;
 }
 
 
-.g09-11 {
+.g0911 {
 	top: 135px;
 	left: 405px;
 }
 
 
-.g09-12 {
+.g0912 {
 	top: 90px;
 	left: 405px;
 }
 
 
-.g09-13 {
+.g0913 {
 	top: 45px;
 	left: 405px;
 }
 
 
-.g09-14 {
+.g0914 {
 	top: 0px;
 	left: 405px;
 }
 
 
-.g10-00 {
+.g1000 {
 	top: 630px;
 	left: 450px;
 }
 
 
-.g10-01 {
+.g1001 {
 	top: 585px;
 	left: 450px;
 }
 
 
-.g10-02 {
+.g1002 {
 	top: 540px;
 	left: 450px;
 }
 
 
-.g10-03 {
+.g1003 {
 	top: 495px;
 	left: 450px;
 }
 
 
-.g10-04 {
+.g1004 {
 	top: 450px;
 	left: 450px;
 }
 
 
-.g10-05 {
+.g1005 {
 	top: 405px;
 	left: 450px;
 }
 
 
-.g10-06 {
+.g1006 {
 	top: 360px;
 	left: 450px;
 }
 
 
-.g10-07 {
+.g1007 {
 	top: 315px;
 	left: 450px;
 }
 
 
-.g10-08 {
+.g1008 {
 	top: 270px;
 	left: 450px;
 }
 
 
-.g10-09 {
+.g1009 {
 	top: 225px;
 	left: 450px;
 }
 
 
-.g10-10 {
+.g1010 {
 	top: 180px;
 	left: 450px;
 }
 
 
-.g10-11 {
+.g1011 {
 	top: 135px;
 	left: 450px;
 }
 
 
-.g10-12 {
+.g1012 {
 	top: 90px;
 	left: 450px;
 }
 
 
-.g10-13 {
+.g1013 {
 	top: 45px;
 	left: 450px;
 }
 
 
-.g10-14 {
+.g1014 {
 	top: 0px;
 	left: 450px;
 }
 
 
-.g11-00 {
+.g1100 {
 	top: 630px;
 	left: 495px;
 }
 
 
-.g11-01 {
+.g1101 {
 	top: 585px;
 	left: 495px;
 }
 
 
-.g11-02 {
+.g1102 {
 	top: 540px;
 	left: 495px;
 }
 
 
-.g11-03 {
+.g1103 {
 	top: 495px;
 	left: 495px;
 }
 
 
-.g11-04 {
+.g1104 {
 	top: 450px;
 	left: 495px;
 }
 
 
-.g11-05 {
+.g1105 {
 	top: 405px;
 	left: 495px;
 }
 
 
-.g11-06 {
+.g1106 {
 	top: 360px;
 	left: 495px;
 }
 
 
-.g11-07 {
+.g1107 {
 	top: 315px;
 	left: 495px;
 }
 
 
-.g11-08 {
+.g1108 {
 	top: 270px;
 	left: 495px;
 }
 
 
-.g11-09 {
+.g1109 {
 	top: 225px;
 	left: 495px;
 }
 
 
-.g11-10 {
+.g1110 {
 	top: 180px;
 	left: 495px;
 }
 
 
-.g11-11 {
+.g1111 {
 	top: 135px;
 	left: 495px;
 }
 
 
-.g11-12 {
+.g1112 {
 	top: 90px;
 	left: 495px;
 }
 
 
-.g11-13 {
+.g1113 {
 	top: 45px;
 	left: 495px;
 }
 
 
-.g11-14 {
+.g1114 {
 	top: 0px;
 	left: 495px;
 }
 
 
-.g12-00 {
+.g1200 {
 	top: 630px;
 	left: 540px;
 }
 
 
-.g12-01 {
+.g1201 {
 	top: 585px;
 	left: 540px;
 }
 
 
-.g12-02 {
+.g1202 {
 	top: 540px;
 	left: 540px;
 }
 
 
-.g12-03 {
+.g1203 {
 	top: 495px;
 	left: 540px;
 }
 
 
-.g12-04 {
+.g1204 {
 	top: 450px;
 	left: 540px;
 }
 
 
-.g12-05 {
+.g1205 {
 	top: 405px;
 	left: 540px;
 }
 
 
-.g12-06 {
+.g1206 {
 	top: 360px;
 	left: 540px;
 }
 
 
-.g12-07 {
+.g1207 {
 	top: 315px;
 	left: 540px;
 }
 
 
-.g12-08 {
+.g1208 {
 	top: 270px;
 	left: 540px;
 }
 
 
-.g12-09 {
+.g1209 {
 	top: 225px;
 	left: 540px;
 }
 
 
-.g12-10 {
+.g1210 {
 	top: 180px;
 	left: 540px;
 }
 
 
-.g12-11 {
+.g1211 {
 	top: 135px;
 	left: 540px;
 }
 
 
-.g12-12 {
+.g1212 {
 	top: 90px;
 	left: 540px;
 }
 
 
-.g12-13 {
+.g1213 {
 	top: 45px;
 	left: 540px;
 }
 
 
-.g12-14 {
+.g1214 {
 	top: 0px;
 	left: 540px;
 }
 
 
-.g13-00 {
+.g1300 {
 	top: 630px;
 	left: 585px;
 }
 
 
-.g13-01 {
+.g1301 {
 	top: 585px;
 	left: 585px;
 }
 
 
-.g13-02 {
+.g1302 {
 	top: 540px;
 	left: 585px;
 }
 
 
-.g13-03 {
+.g1303 {
 	top: 495px;
 	left: 585px;
 }
 
 
-.g13-04 {
+.g1304 {
 	top: 450px;
 	left: 585px;
 }
 
 
-.g13-05 {
+.g1305 {
 	top: 405px;
 	left: 585px;
 }
 
 
-.g13-06 {
+.g1306 {
 	top: 360px;
 	left: 585px;
 }
 
 
-.g13-07 {
+.g1307 {
 	top: 315px;
 	left: 585px;
 }
 
 
-.g13-08 {
+.g1308 {
 	top: 270px;
 	left: 585px;
 }
 
 
-.g13-09 {
+.g1309 {
 	top: 225px;
 	left: 585px;
 }
 
 
-.g13-10 {
+.g1310 {
 	top: 180px;
 	left: 585px;
 }
 
 
-.g13-11 {
+.g1311 {
 	top: 135px;
 	left: 585px;
 }
 
 
-.g13-12 {
+.g1312 {
 	top: 90px;
 	left: 585px;
 }
 
 
-.g13-13 {
+.g1313 {
 	top: 45px;
 	left: 585px;
 }
 
 
-.g13-14 {
+.g1314 {
 	top: 0px;
 	left: 585px;
 }
 
 
-.g14-00 {
+.g1400 {
 	top: 630px;
 	left: 630px;
 }
 
 
-.g14-01 {
+.g1401 {
 	top: 585px;
 	left: 630px;
 }
 
 
-.g14-02 {
+.g1402 {
 	top: 540px;
 	left: 630px;
 }
 
 
-.g14-03 {
+.g1403 {
 	top: 495px;
 	left: 630px;
 }
 
 
-.g14-04 {
+.g1404 {
 	top: 450px;
 	left: 630px;
 }
 
 
-.g14-05 {
+.g1405 {
 	top: 405px;
 	left: 630px;
 }
 
 
-.g14-06 {
+.g1406 {
 	top: 360px;
 	left: 630px;
 }
 
 
-.g14-07 {
+.g1407 {
 	top: 315px;
 	left: 630px;
 }
 
 
-.g14-08 {
+.g1408 {
 	top: 270px;
 	left: 630px;
 }
 
 
-.g14-09 {
+.g1409 {
 	top: 225px;
 	left: 630px;
 }
 
 
-.g14-10 {
+.g1410 {
 	top: 180px;
 	left: 630px;
 }
 
 
-.g14-11 {
+.g1411 {
 	top: 135px;
 	left: 630px;
 }
 
 
-.g14-12 {
+.g1412 {
 	top: 90px;
 	left: 630px;
 }
 
 
-.g14-13 {
+.g1413 {
 	top: 45px;
 	left: 630px;
 }
 
 
-.g14-14 {
+.g1414 {
 	top: 0px;
 	left: 630px;
 }
