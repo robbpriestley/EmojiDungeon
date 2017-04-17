@@ -34,7 +34,7 @@
 					@* Initialze grid with empty divs ready to take a tile name in the class *@
 					var xs = x < 10 ? "0" + x.ToString() : x.ToString();
 					var ys = y < 10 ? "0" + y.ToString() : y.ToString();
-					var location = "g" + xs + "-" + ys;
+					var location = "g" + xs + ys;
 					<div id="@location" class="tile @location"></div>
 				}
 			}

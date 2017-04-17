@@ -4,8 +4,8 @@ namespace DigitalWizardry.Dungeon.Models
 	{
 		public int X { get; set; }
 		public int Y { get; set; }
-		public string CssName { get; set; }
-		public string CssLocation { get; set; }
+		public string N { get; set; }  // CssName
+		public string L { get; set; }  // CssLocation
 
 		public DungeonViewModel(int x, int y)
 		{

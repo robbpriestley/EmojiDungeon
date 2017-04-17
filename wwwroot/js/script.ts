@@ -86,7 +86,7 @@ function GridReference(x : number, y : number) : string
 {
 	let xs = x < 10 ? "0" + x.toString() : x.toString();
 	let ys = y < 10 ? "0" + y.toString() : y.toString();
-	return "g" + xs + "-" + ys;
+	return "g" + xs + ys;
 }
 
 // *** BEGIN ACCESSORS ***
