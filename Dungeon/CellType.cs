@@ -338,7 +338,7 @@ namespace DigitalWizardry.Dungeon
 			Entrance.Weight = 0;
 			Entrance.ConnectsUp = true;
 			Entrance.TraversableUp = true;
-			Entrance.TextRep = @"❍";
+			Entrance.TextRep = @"║";
 			Entrance.TextRep2 = @" ";
 			Entrance.ForceGrowthCompatible = false;
 			Entrance.InitialAvailableConnections = 1;
