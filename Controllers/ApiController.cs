@@ -50,7 +50,7 @@ namespace DigitalWizardry.Dungeon.Controllers
 			
 			Dungeon dungeon = new Dungeon(level, startX, startY, start);
 			StringBuilder output = new StringBuilder();
-			output.AppendLine(dungeon.VisualizeAsText());
+			output.AppendLine(dungeon.VisualizeAsText(false, false));
 			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
 			//output.AppendLine(dungeon.VisualizeAsTextWithDescription());
 
@@ -71,7 +71,7 @@ namespace DigitalWizardry.Dungeon.Controllers
 			for (int i = 0; i < 100; i++)
 			{
 				Dungeon dungeon = new Dungeon(0, 7, 0, Direction.Up);
-				output.AppendLine(dungeon.VisualizeAsText());
+				output.AppendLine(dungeon.VisualizeAsText(true, true));
 				output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
 				Console.WriteLine("Iteration: " + i.ToString());
 			}

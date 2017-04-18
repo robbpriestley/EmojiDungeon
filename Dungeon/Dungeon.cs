@@ -3372,7 +3372,7 @@ namespace DigitalWizardry.Dungeon
 			return (filledCellCount * 100) / (Reference.GridWidth * Reference.GridHeight);
 		}
 		
-		public string VisualizeAsText()
+		public string VisualizeAsText(bool showDoors, bool showKeys)
 		{
 			int x;
 			Cell cell;
@@ -3390,7 +3390,7 @@ namespace DigitalWizardry.Dungeon
 
 					if (x % 2 == 0)
 					{  
-						if (cell.Doors != null)
+						if (cell.Doors != null && showDoors)
 						{
 							if (cell.Doors.Count == 2)
 							{
@@ -3401,7 +3401,7 @@ namespace DigitalWizardry.Dungeon
 								line.Append("D");
 							}
 						}
-						else if (cell.HasKey)
+						else if (cell.HasKey && showKeys)
 						{
 							line.Append("K");
 						}
