@@ -44,7 +44,7 @@ function RenderLevel(level : number)
 		spinner.spin($('#grid')[0]);
 
 		let sX : number = level == 1 ? 7 : Number(GetStartCoords(level).substring(1, 3));
-		let sY : number = level == 1 ? 0 : Number(GetStartCoords(level).substring(3, 6));
+		let sY : number = level == 1 ? 0 : Number(GetStartCoords(level).substring(3, 5));
 		let sD : string = level == 1 ? "U" : GetStartCoords(level).substring(5, 6);
 		
 		$.ajax

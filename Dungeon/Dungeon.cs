@@ -91,14 +91,36 @@ namespace DigitalWizardry.Dungeon
 
 		private void PlaceEntrance()
 		{
-			CellType startType = CellTypes.Entrance;
-			Cell entrance = new Cell(_startCoords.X, _startCoords.Y, startType);
+			Cell entrance = new Cell(_startCoords.X, _startCoords.Y, CellTypes.Entrance);
 			SetCellValue(_startCoords.X, _startCoords.Y, entrance);
 		}
 
 		private void PlaceStairs(Direction start)
 		{
-			CellType startType = CellTypes.UpStairsD;
+			CellType startType = null;
+
+			switch (start)
+			{
+				case Direction.Up:
+					startType = CellTypes.UpStairsD;
+					break;
+				
+				case Direction.Down:
+					startType = CellTypes.UpStairsU;
+					break;
+
+				case Direction.Left:
+					startType = CellTypes.UpStairsR;
+					break;
+
+				case Direction.Right:
+					startType = CellTypes.UpStairsL;
+					break;
+
+				default:
+					break;
+			}
+
 			Cell stairs = new Cell(_startCoords.X, _startCoords.Y, startType);
 			SetCellValue(_startCoords.X, _startCoords.Y, stairs);
 		}
