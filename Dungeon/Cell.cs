@@ -10,7 +10,6 @@ namespace DigitalWizardry.Dungeon
 		public int Sequence { get; set; }             // Sequence number used when solving the dungeon.
 		public bool Merged { get; set; }              // Used for room merge to record cells that have already been merged.
 		public bool Visited { get; set; }             // For use when traversing the dungeon.
-		public bool IsCatacombs { get; set; }
 		public bool ExitImpossible { get; set; }
 		public Coords SourceCoords { get; set; }       // For use when solving shortest-path.
 		public bool AttachBlocked { get; set; }        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to true.
@@ -40,7 +39,6 @@ namespace DigitalWizardry.Dungeon
 			Sequence = source.Sequence;
 			Merged = source.Merged;
 			Visited = source.Visited;
-			IsCatacombs = source.IsCatacombs;
 			ExitImpossible = source.ExitImpossible;
 			SourceCoords = source.SourceCoords == null ? null : new Coords(source.SourceCoords);
 			AttachBlocked = source.AttachBlocked;

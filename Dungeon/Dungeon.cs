@@ -17,7 +17,6 @@ namespace DigitalWizardry.Dungeon
 		private Cell _downStairsCell;              // The dead-end cell chosen to be replaced with a down stairs.
 		private Double _downStairsCellDistance;    // Distance from the start cell to the DownStairsCell.
 		private int _roomsCount;                   // Number of rooms randomly determined to be in the dungeon.
-		private int _catacombsCount;               // Number of catacombs randomly determined to be in the dungeon.
 		private List<Room> _rooms;                 // The collection of rooms added to the dungeon.
 		private List<Cell> _cellsWithLockedDoors;  // Convenience collection of door object.
 		private int _iterations;                   // Number of discarded attempts before arriving at a completed dungeon.
@@ -437,39 +436,13 @@ namespace DigitalWizardry.Dungeon
 			CleanRoomsArray();
 			ConnectRooms();
 			CleanRoomsArray();
-			ConvertRoomsToCatacombs();
 		}
 
 		private void CalcRooms()
 		{
-			CatacombsCount();
-
 			_roomsCount = _r.Next(Reference.MaxRooms - Reference.MinRooms + 1) + Reference.MinRooms;  // MinRooms ~ MaxRooms
 		}
 		
-		private void CatacombsCount()
-		{
-			_catacombsCount = 0;
-			
-			if (Reference.AddCatacombs)
-			{
-				int rand = _r.Next(100);
-				
-				if (rand >= 70 && rand < 92)
-				{
-					_catacombsCount = 1;
-				}
-				else if (rand >= 92 && rand < 98)
-				{	
-					_catacombsCount = 2;
-				}
-				else if (rand >= 98)
-				{
-					_catacombsCount = 3;
-				}
-			}
-		}
-
 		private void PlaceRegularRooms()
 		{
 			int attempts = 0;
@@ -2148,40 +2121,6 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private void ConvertRoomsToCatacombs()
-		{
-			if (_catacombsCount == 0)
-			{
-				return;
-			}
-			
-			List<Room> rooms = CloneRoomsList();
-			
-			int added = 0;
-			
-			do 
-			{
-				if (rooms.Count > 0)
-				{
-					Room room = rooms[_r.Next(rooms.Count)];
-					rooms.Remove(room);
-					
-					int volume = room.Walls.Count + room.Space.Count;
-					
-					if (room.Description == Descriptions.Room_TBD && volume >= Reference.MinCatacombsVolume) 
-					{
-						ConvertRoomToCatacombs(room);
-						added++;
-					}
-				}
-				else
-				{
-					return;
-				}
-				
-			} while (added < _catacombsCount);
-		}
-
 		// Make a deep copy clone of the Rooms list.
 		private List<Room> CloneRoomsList()
 		{
@@ -2198,25 +2137,6 @@ namespace DigitalWizardry.Dungeon
 			}
 
 			return rooms;
-		}
-
-		private void ConvertRoomToCatacombs(Room room)
-		{
-			foreach (Cell cell in room.Walls) 
-			{
-				CellType newType = CellTypes.ConvertRoomTypeToCatacomb(cell.Type);
-				Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
-				newCell.IsCatacombs = true;
-				ReplaceCellValue(cell.X, cell.Y, newCell);
-			}
-			
-			foreach (Cell cell in room.Space) 
-			{
-				CellType newType = CellTypes.ConvertRoomTypeToCatacomb(cell.Type);
-				Cell newCell =  new Cell(cell.X, cell.Y, newType, Descriptions.Catacombs_TBD);
-				newCell.IsCatacombs = true;
-				ReplaceCellValue(cell.X, cell.Y, newCell);
-			}
 		}
 
 		private void DeleteRoom(Room room)
