@@ -1198,7 +1198,7 @@ namespace DigitalWizardry.Dungeon
 			return exit;
 		}
 
-		public static CellType ConvertRoomExitToWall(CellType exit, Direction dir, Description descr)
+		public static CellType ConvertRoomExitToWall(CellType exit, Direction dir)
 		{
 			CellType wall;
 			

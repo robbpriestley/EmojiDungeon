@@ -14,19 +14,16 @@ namespace DigitalWizardry.Dungeon
 		public Coords SourceCoords { get; set; }       // For use when solving shortest-path.
 		public bool AttachBlocked { get; set; }        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to true.
 		public int AvailableConnections { get; set; }  // Records number of available connection points;
-		public int DescrWeight { get; set; }           // Essentially a percentage, used to determine how "sticky" the description is.
 		public CellType Type { get; set; }
-		public Description Descr { get; set; }
 		public List<Door> Doors { get; set; }
 		
 		public Cell(){}
 		
-		public Cell(int x, int y, CellType type, Description descr)
+		public Cell(int x, int y, CellType type)
 		{
 				X = x;
 				Y = y;
 				Type = type;
-				Descr = descr;
 				AvailableConnections = Type.InitialAvailableConnections;
 		}
 
@@ -43,9 +40,7 @@ namespace DigitalWizardry.Dungeon
 			SourceCoords = source.SourceCoords == null ? null : new Coords(source.SourceCoords);
 			AttachBlocked = source.AttachBlocked;
 			AvailableConnections = source.AvailableConnections;
-			DescrWeight = source.DescrWeight;
 			Type = source.Type;    // This does not require deep copy.
-			Descr = source.Descr;  // This does not require deep copy.
 			
 			if (source.Doors != null)
 			{

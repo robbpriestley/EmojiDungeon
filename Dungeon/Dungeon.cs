@@ -26,7 +26,7 @@ namespace DigitalWizardry.Dungeon
 		{	
 			_r = new Random();
 			_startCoords = new Coords(startX, startY);
-			_emptyCell = new Cell(-1, -1, CellTypes.EmptyCell, Descriptions.Empty);
+			_emptyCell = new Cell(-1, -1, CellTypes.EmptyCell);
 			_maxDistance = Math.Abs(Math.Sqrt(Math.Pow(Reference.GridWidth - 1, 2) + Math.Pow(Reference.GridHeight - 1, 2)));
 			Start(level, start);
 		}
@@ -49,12 +49,11 @@ namespace DigitalWizardry.Dungeon
 					DungeonSolve();
 					PlaceKeys();
 					PlaceDownStairs();
-					// AddDescriptions();    // Currently descriptions are not needed and are disabled.
-					dungeonComplete = true;  // i.e. No exceptions...
+					dungeonComplete = true;
 				}
 				catch (DungeonGenerateException) 
 				{
-					dungeonComplete = false;  // Try again.
+					dungeonComplete = false;
 				}
 
 			} while (!dungeonComplete);
@@ -93,16 +92,14 @@ namespace DigitalWizardry.Dungeon
 		private void PlaceEntrance()
 		{
 			CellType startType = CellTypes.Entrance;
-			Cell entrance = new Cell(_startCoords.X, _startCoords.Y, startType, Descriptions.Constructed);
-			entrance.DescrWeight = 100;
+			Cell entrance = new Cell(_startCoords.X, _startCoords.Y, startType);
 			SetCellValue(_startCoords.X, _startCoords.Y, entrance);
 		}
 
 		private void PlaceStairs(Direction start)
 		{
 			CellType startType = CellTypes.UpStairsD;
-			Cell stairs = new Cell(_startCoords.X, _startCoords.Y, startType, Descriptions.Constructed);
-			stairs.DescrWeight = 100;
+			Cell stairs = new Cell(_startCoords.X, _startCoords.Y, startType);
 			SetCellValue(_startCoords.X, _startCoords.Y, stairs);
 		}
 
@@ -110,7 +107,6 @@ namespace DigitalWizardry.Dungeon
 		{    
 			Cell cell;
 			bool modified = false;
-			Description descr = Descriptions.Corridor_TBD;
 			
 			// As long as the dungeon is not considered complete, keep adding stuff to it.
 			do 
@@ -127,7 +123,7 @@ namespace DigitalWizardry.Dungeon
 						{
 							// Attach a new random cell to current cell, if possible. If the cell has 
 							// available connections but nothing can be added to it, consider it blocked.
-							if (AttachNewCell(cell, descr)) 
+							if (AttachNewCell(cell)) 
 							{
 								modified = true;
 							}
@@ -141,7 +137,7 @@ namespace DigitalWizardry.Dungeon
 			} while (!CompleteCheck(modified));
 		}
 
-		private bool AttachNewCell(Cell cell, Description descr)
+		private bool AttachNewCell(Cell cell)
 		{
 			bool attachSuccessful = false;
 			Coords coords = RandomAttachCoords(cell);
@@ -167,7 +163,7 @@ namespace DigitalWizardry.Dungeon
 					// The new cell needs to be compatible with each adjacent cell.
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
 					{
-						newCell = new Cell(coords.X, coords.Y, newType, descr);
+						newCell = new Cell(coords.X, coords.Y, newType);
 					}
 				}
 				
@@ -237,7 +233,7 @@ namespace DigitalWizardry.Dungeon
 			CellType newType;
 			
 			newType = CellTypes.ConvertDeadEndToDownStairs(_downStairsCell.Type);
-			newCell = new Cell(_downStairsCell.X, _downStairsCell.Y, newType, _downStairsCell.Descr);
+			newCell = new Cell(_downStairsCell.X, _downStairsCell.Y, newType);
 			SetCellValue(_downStairsCell.X, _downStairsCell.Y, newCell);
 		}
 
@@ -451,7 +447,7 @@ namespace DigitalWizardry.Dungeon
 			
 			while (roomsCount > 0 && attempts <= maxAttempts) 
 			{
-				if (RandomRoom(Descriptions.Room_TBD, Reference.MaxRoomWidth, Reference.MaxRoomHeight, Reference.MinRoomWidth, Reference.MinRoomHeight))
+				if (RandomRoom(Reference.MaxRoomWidth, Reference.MaxRoomHeight, Reference.MinRoomWidth, Reference.MinRoomHeight))
 				{
 					roomsCount--;
 					attempts = 0;
@@ -463,7 +459,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private bool RandomRoom(Description descr, int maxWidth, int maxHeight, int minWidth, int minHeight)
+		private bool RandomRoom(int maxWidth, int maxHeight, int minWidth, int minHeight)
 		{
 			int width = _r.Next(maxWidth - minWidth + 1) + minWidth;
 			int height = _r.Next(maxHeight - minHeight + 1) + minHeight;
@@ -527,10 +523,8 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		private Room BuildRoom(RoomType roomType, Coords coords, int width, int height)
-		{
-			Description descr = Descriptions.Room_TBD;
-			
-			Room room = new Room(coords.X, coords.Y, descr);
+		{	
+			Room room = new Room(coords.X, coords.Y);
 			
 			int widthReduce = 0, heightReduce = 0;
 			
@@ -580,7 +574,7 @@ namespace DigitalWizardry.Dungeon
 						return null;
 					}
 					
-					Cell newCell = new Cell(x, y, newType, descr);
+					Cell newCell = new Cell(x, y, newType);
 					SetCellValue(x, y, newCell);
 					
 					if (newType == CellTypes.RoomSpace)
@@ -1166,7 +1160,7 @@ namespace DigitalWizardry.Dungeon
 			Direction dir = Direction.Up;
 			int newX = 0, newY = 0;
 			int x = startX, y = startY;
-			Room room = new Room(startX, startY, Descriptions.Room_TBD);
+			Room room = new Room(startX, startY);
 			Cell currentCell, cellUp, cellDown, cellLeft, cellRight;
 			
 			do
@@ -1350,7 +1344,7 @@ namespace DigitalWizardry.Dungeon
 					dir = Direction.Down;
 				}
 				
-				Cell newCell = new Cell(x, y, newType, Descriptions.Room_TBD);
+				Cell newCell = new Cell(x, y, newType);
 				newCell.Merged = true;
 				SetCellValue(x, y, newCell);
 				room.Walls.Add(newCell);
@@ -1385,7 +1379,7 @@ namespace DigitalWizardry.Dungeon
 					while (!cellUp.Merged)
 					{
 						CellType newType = CellTypes.RoomSpace;
-						Cell newCell = new Cell(x, y + up, newType, Descriptions.Room_TBD);
+						Cell newCell = new Cell(x, y + up, newType);
 						newCell.Merged = true;
 						SetCellValue(x, y + up, newCell);
 						room.Space.Add(newCell);
@@ -1827,7 +1821,7 @@ namespace DigitalWizardry.Dungeon
 					directionOK = FilterDirection(directionOK);
 					CellType newType = CellTypes.ConvertRoomWallToExit(cell.Type, directionOK);
 					
-					Cell newCell = new Cell(cell.X, cell.Y, newType, Descriptions.Room_TBD);
+					Cell newCell = new Cell(cell.X, cell.Y, newType);
 					
 					SetCellValue(cell.X, cell.Y, newCell);
 					room.Walls.Add(newCell);
@@ -1943,7 +1937,7 @@ namespace DigitalWizardry.Dungeon
 				adjacentCell = _grid[cell.X + 1, cell.Y];
 			}
 				
-			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || (adjacentCell.Type.RoomExitCompatible && adjacentCell.Descr == Descriptions.Room_TBD)))
+			if (adjacentCell != null && (adjacentCell.Type.IsEmpty || adjacentCell.Type.RoomExitCompatible))
 			{
 				return dir;
 			}
@@ -1968,7 +1962,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					adjCellUp = _grid[cell.X, cell.Y + 1];
 
-					if (adjCellUp.Type.IsEmpty || (adjCellUp.Type.RoomExitCompatible && adjCellUp.Descr == Descriptions.Room_TBD))
+					if (adjCellUp.Type.IsEmpty || adjCellUp.Type.RoomExitCompatible)
 					{
 						okUp = true;
 					}
@@ -1981,7 +1975,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					adjCellDown = _grid[cell.X, cell.Y - 1];
 
-					if (adjCellDown.Type.IsEmpty || (adjCellDown.Type.RoomExitCompatible && adjCellDown.Descr == Descriptions.Room_TBD))
+					if (adjCellDown.Type.IsEmpty || adjCellDown.Type.RoomExitCompatible)
 					{
 						okDown = true;
 					}
@@ -1993,7 +1987,7 @@ namespace DigitalWizardry.Dungeon
 				if (cell.X - 1 >= 0)
 				{
 					adjCellLeft = _grid[cell.X - 1, cell.Y];
-					if (adjCellLeft.Type.IsEmpty || (adjCellLeft.Type.RoomExitCompatible && adjCellLeft.Descr == Descriptions.Room_TBD))
+					if (adjCellLeft.Type.IsEmpty || adjCellLeft.Type.RoomExitCompatible)
 					{
 						okLeft = true;
 					}
@@ -2005,7 +1999,7 @@ namespace DigitalWizardry.Dungeon
 				if (cell.X + 1 < Reference.GridWidth)
 				{
 					adjCellRight = _grid[cell.X + 1, cell.Y];
-					if (adjCellRight.Type.IsEmpty || (adjCellRight.Type.RoomExitCompatible && adjCellRight.Descr == Descriptions.Room_TBD))
+					if (adjCellRight.Type.IsEmpty || adjCellRight.Type.RoomExitCompatible)
 					{
 						okRight = true;
 					}
@@ -2070,14 +2064,14 @@ namespace DigitalWizardry.Dungeon
 			else if (adjacent.Type.RoomExitCompatible)
 			{
 				newType = CellTypes.ConvertRoomWallToExit(adjacent.Type, OppositeDir(dir));
-				newCell = new Cell(adjX, adjY, newType, adjacent.Descr);
+				newCell = new Cell(adjX, adjY, newType);
 				SetCellValue(adjX, adjY, newCell);
 				AddNewCellToRoom(adjacent, newCell);
 			}
 			else
 			{
-				newType = CellTypes.ConvertRoomExitToWall(cell.Type, dir, cell.Descr);
-				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
+				newType = CellTypes.ConvertRoomExitToWall(cell.Type, dir);
+				newCell = new Cell(cell.X, cell.Y, newType);
 				SetCellValue(cell.X, cell.Y, newCell);
 				AddNewCellToRoom(cell, newCell);
 			}
@@ -2150,8 +2144,6 @@ namespace DigitalWizardry.Dungeon
 		#endregion
 		#region Doors and Keys
 			
-		// Put in some random doors. Only certain cell descriptions "allow" doors. 
-		// Also, doors should not "cluster" up too much.
 		private void PlaceDoors()
 		{
 			Cell cell;
@@ -2427,7 +2419,6 @@ namespace DigitalWizardry.Dungeon
 			bool typeMatch = false;
 			
 			CellType newType = null;
-			Description descr = null;
 			List<Cell> cells = ForceGrowthCells();
 			
 			while (!success && cells.Count > 0) 
@@ -2451,8 +2442,6 @@ namespace DigitalWizardry.Dungeon
 					// The new cell needs to be compatible with each adjacent cell.
 					if (TypeCompatibleWithAdjacentCells(newType, coords))
 					{
-						// It is? Cool.
-						descr = cell.Descr;
 						typeMatch = true;
 					}
 				}
@@ -2460,7 +2449,7 @@ namespace DigitalWizardry.Dungeon
 				if (typeMatch) 
 				{
 					// Now set the new cell.
-					Cell newCell = new Cell(coords.X, coords.Y, newType, descr);
+					Cell newCell = new Cell(coords.X, coords.Y, newType);
 					SetCellValue(coords.X, coords.Y, newCell);
 					success = true;
 				}
@@ -2607,395 +2596,6 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		#endregion
-		#region Descriptions
-
-		private void AddDescriptions()
-		{ 
-			bool forceChange = false;
-			
-			do 
-			{
-				bool changed = false;
-				
-				for (int y = 0; y < Reference.GridHeight; y++)
-				{
-					for (int x = 0; x < Reference.GridWidth; x++)
-					{
-						Cell cell = _grid[x, y];
-						
-						if (cell.Descr == null || cell.Descr.IsTBD)
-						{
-							int dominantWeight = -1;
-							Description dominantDescr = Descriptions.Empty;  // Initialize to empty to satisfy compiler.
-							DominantDescr(cell, ref dominantWeight, ref dominantDescr);
-							
-							if (dominantWeight == -1 && !forceChange)
-							{
-								continue;
-							}
-							else
-							{
-								int weight = 0, randomPercent = RandomPercent();
-								Description descr;
-								
-								if (randomPercent >= dominantWeight || forceChange)
-								{
-									descr = RandomCellDescr(dominantDescr, cell.Type);
-									weight = 100;
-								}
-								else
-								{
-									descr = dominantDescr;
-									
-									if (weight > 0)
-									{
-										weight = dominantWeight -= dominantDescr.WeightReduction;
-									}
-								}
-								
-								// Update descr for either entire room, or individual cell.
-								if (cell.Type.IsRoomType)
-								{
-									UpdateRoomDescr(cell, descr, weight);
-								}
-								else
-								{
-									cell.Descr = descr;
-									cell.DescrWeight = weight;
-								}
-								
-								changed = true;
-							}
-						}
-					}
-				}
-				
-				if (!changed)
-				{
-					forceChange = true;
-				}
-				else
-				{
-					forceChange = false;
-				}
-				
-			} while (!DescriptionsComplete());
-			
-			CompleteFlooding();
-		}
-
-
-		private bool DescriptionsComplete()
-		{
-			bool complete = true;
-			
-			for (int y = 0; y < Reference.GridHeight; y++)
-			{
-				for (int x = 0; x < Reference.GridWidth; x++)
-				{
-					Cell cell = _grid[x, y];
-					
-					if (cell.Descr.IsTBD) 
-					{
-						complete = false;
-						break;
-					}
-				}
-			}
-			
-			return complete;
-		}
-
-		private void DominantDescr(Cell cell, ref int weight, ref Description descr)
-		{    
-			Cell adjacentCell;
-			List<Cell> cells = new List<Cell>();
-			
-			// Cell above.
-			if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
-			{
-				adjacentCell = _grid[cell.X, cell.Y + 1];
-				
-				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
-				{
-					cells.Add(adjacentCell);
-				}
-			}
-			
-			// Cell below.
-			if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
-			{
-				adjacentCell = _grid[cell.X, cell.Y - 1];
-				
-				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
-				{
-					cells.Add(adjacentCell);
-				}
-			}
-			
-			// Cell left.
-			if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
-			{
-				adjacentCell = _grid[cell.X - 1, cell.Y];
-				
-				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
-				{
-					cells.Add(adjacentCell);
-				}
-			}
-			
-			// Cell right.
-			if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
-			{
-				adjacentCell = _grid[cell.X + 1, cell.Y];
-				
-				if (adjacentCell.Descr != null && !adjacentCell.Descr.IsTBD) 
-				{
-					cells.Add(adjacentCell);
-				}
-			}
-			
-			if (cells.Count == 0)
-			{
-				return;
-			}
-
-			cells = cells.OrderByDescending(d => d.DescrWeight).ToList();
-			
-			int i = 0;
-			
-			if (cells[i].DescrWeight == 0)
-			{
-				// All weights are 0. Choose a key at random.
-				i = _r.Next(cells.Count);
-			}
-
-			weight = cells[i].DescrWeight;
-			descr = cells[i].Descr;
-		}
-
-		// Incoming cell, locate room, and update all room cells with provided descr and weight.
-		private void UpdateRoomDescr(Cell cell, Description descr, int weight)
-		{
-			Room updateRoom = null;
-			
-			foreach (Room room in _rooms) 
-			{
-				if (room.Walls.Contains(cell))
-				{
-					updateRoom = room;
-					break;
-				}
-				else if (room.Space.Contains(cell))
-				{
-					updateRoom = room;
-					break;
-				}
-			}
-			
-			foreach (Cell updateCell in updateRoom.Walls) 
-			{
-				updateCell.Descr = descr;
-				updateCell.DescrWeight = weight;
-			}
-			
-			foreach (Cell updateCell in updateRoom.Space) 
-			{
-				updateCell.Descr = descr;
-				updateCell.DescrWeight = weight;
-			}
-		}
-
-		private Description RandomCellDescr(Description previousDescr, CellType cellType)
-		{
-			// DungeonCellDescr objects have weights, so some are more likely to be picked than others.
-			
-			List<Description> descrs = new List<Description>();
-
-			foreach (Description descr in Descriptions.Descrs)
-			{
-				descrs.Add(descr);  // Make a shallow copy clone of the descriptions.
-			}
-
-			descrs.Remove(previousDescr);
-			
-			// Flooding transitions can only occur with certain cell types.
-			
-			if (!cellType.IsFloodingTransition)
-			{
-				descrs.Remove(Descriptions.Constructed_Flooded);
-				descrs.Remove(Descriptions.Cavern_Flooded);
-			}
-			
-			int total = 0;
-			
-			foreach (Description descr in descrs) 
-			{
-				total += descr.Weight;
-			}
-			
-			int threshold = _r.Next(total);
-			
-			Description randomDescr = null;
-			
-			foreach (Description descr in descrs) 
-			{
-				randomDescr = descr;
-				threshold -= descr.Weight;
-				
-				if (threshold < 0)
-				{
-					break;
-				}
-			}
-			
-			return randomDescr;
-		}
-
-		private void CompleteFlooding()
-		{
-			bool changed = false;
-			
-			do 
-			{
-				changed = false;
-			
-				for (int y = 0; y < Reference.GridHeight; y++)
-				{
-					for (int x = 0; x < Reference.GridWidth; x++)
-					{
-						Cell cell = _grid[x, y];
-						
-						if (cell.Descr.IsFlooded && !cell.Type.IsFloodingTransition)
-						{
-							// Cell above.
-							if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
-								changed = FloodCell(x, y + 1) || changed;
-							
-							// Cell below.
-							if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
-								changed = FloodCell(x, y - 1) || changed;
-							
-							// Cell left.
-							if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
-								changed = FloodCell(x - 1, y) || changed;
-							
-							// Cell right.
-							if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
-								changed = FloodCell(x + 1, y) || changed;
-						}
-					}
-				}
-				
-			} while (changed);
-			
-			RemoveMiniFloods();
-		}
-
-		private bool FloodCell(int x, int y)
-		{
-			bool changed = false;
-			Cell cell = _grid[x, y];
-			
-			if (!cell.Descr.IsFlooded)  // If the cell is not already flooded, then flood it.
-			{
-				if (cell.Type.IsFloodingIncompatible || cell.Type == CellTypes.Entrance)
-				{
-					throw new DungeonGenerateException();  // Except when the cell cannot be flooded.
-				}
-				else
-				{
-					Description descr = Descriptions.Empty;  // Initialize with empty to satisfy the compiler.
-					
-					if (cell.Descr == Descriptions.Constructed)
-					{
-						descr = Descriptions.Constructed_Flooded;
-					}
-					else if (cell.Descr == Descriptions.Cavern)
-					{
-						descr = Descriptions.Cavern_Flooded;
-					}
-					
-					// Update descr for either entire room, or individual cell.
-					if (cell.Type.IsRoomType)
-					{
-						UpdateRoomDescr(cell, descr, 0);
-					}
-					else
-					{
-						cell.Descr = descr;
-						cell.DescrWeight = 0;
-					}
-					
-					changed = true;
-				}
-			}
-			
-			return changed;
-		}
-
-		// Floods must be at least two cells wide.
-		private void RemoveMiniFloods()
-		{
-			for (int y = 0; y < Reference.GridHeight; y++)
-			{
-				for (int x = 0; x < Reference.GridWidth; x++)
-				{
-					Cell adjacentCell, cell = _grid[x, y];
-					
-					bool adjacentFlooded = false;
-					
-					if (cell.Descr.IsFlooded)
-					{
-						// Cell above.
-						if (cell.Type.TraversableUp && cell.Y + 1 < Reference.GridHeight)
-						{
-							adjacentCell = _grid[x, y + 1];
-							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
-						}
-						
-						// Cell below.
-						if (cell.Type.TraversableDown && cell.Y - 1 >= 0)
-						{
-							adjacentCell = _grid[x, y - 1];
-							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
-						}
-						
-						// Cell left.
-						if (cell.Type.TraversableLeft && cell.X - 1 >= 0)
-						{
-							adjacentCell = _grid[x - 1, y];
-							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
-						}
-						
-						// Cell right.
-						if (cell.Type.TraversableRight && cell.X + 1 < Reference.GridWidth)
-						{
-							adjacentCell = _grid[x + 1, y];
-							adjacentFlooded = adjacentCell.Descr.IsFlooded || adjacentFlooded;
-						}
-						
-						if (!adjacentFlooded)
-						{
-							Description descr = Descriptions.Empty;  // Initialize with empty to satisfy the compiler.
-							
-							if (cell.Descr == Descriptions.Constructed_Flooded)
-							{
-								descr = Descriptions.Constructed;
-							}
-							else if (cell.Descr == Descriptions.Cavern_Flooded)
-							{
-								descr = Descriptions.Cavern;
-							}
-							
-							cell.Descr = descr;
-						}
-					}
-				}
-			}
-		}
-
-		#endregion
 		#region Utility
 
 		// Returns a random number 0 >= x < 100, representing percent.
@@ -3085,66 +2685,6 @@ namespace DigitalWizardry.Dungeon
 				padding = (y < 10) ? "0" : "";  // For co-ordinate printing.
 				
 				grid.AppendLine(padding + y + line.ToString());
-			}
-			
-			// Now print X co-ordinate names at the bottom.
-			
-			grid.Append("  ");
-			
-			for (x = 0; x < Reference.GridWidth * 2; x++) 
-			{
-				if (x % 2 == 0)
-					grid.Append((x/2)/10);
-				else
-					grid.Append(" "); 
-			}
-			
-			grid.Append("\n  ");
-			
-			for (x = 0; x < Reference.GridWidth * 2; x++) 
-			{
-				if (x % 2 == 0)
-					grid.Append((x/2) % 10);
-				else
-					grid.Append(" "); 
-			}
-
-			return grid.ToString();
-		}
-
-		public string VisualizeAsTextWithDescription()
-		{
-			string padding;
-			StringBuilder grid = new StringBuilder();
-			StringBuilder line = new StringBuilder();
-			Cell cell = _grid[0, Reference.GridHeight - 1];
-			
-			int x;
-			
-			// Because it is console printing, start with the "top" of the dungeon, and work down.
-			for (int y = Reference.GridHeight - 1; y >= 0; y--) 
-			{
-				for (x = 0; x < Reference.GridWidth * 2; x++) 
-				{
-					if (x % 2 == 0)
-					{
-						cell = _grid[x / 2, y];
-						line.Append(cell.Descr.TextRep);
-					}
-					else
-					{
-						line.Append(cell.Descr.TextRep);
-					}
-				}
-				
-				padding = (y < 10) ? "0" : "";  // For co-ordinate printing.
-
-				grid.AppendLine(padding + y + line.ToString());
-							
-				if (y >= 0)
-				{
-					line = new StringBuilder();
-				}
 			}
 			
 			// Now print X co-ordinate names at the bottom.

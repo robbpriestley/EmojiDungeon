@@ -52,7 +52,6 @@ namespace DigitalWizardry.Dungeon.Controllers
 			StringBuilder output = new StringBuilder();
 			output.AppendLine(dungeon.VisualizeAsText(false, false));
 			output.AppendLine(dungeon.BuildStats() + Environment.NewLine);
-			//output.AppendLine(dungeon.VisualizeAsTextWithDescription());
 
 			return new ObjectResult(output.ToString());
 		}

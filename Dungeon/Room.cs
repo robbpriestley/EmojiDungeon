@@ -7,17 +7,15 @@ namespace DigitalWizardry.Dungeon
 		// Coordinates record the bottom-left corner of the room.
 		public int X { get; set; } 
 		public int Y { get; set; }
-		public Description Description { get; set; }
 		public List<Cell> Walls { get; set; }
 		public List<Cell> Space { get; set; }
 
 		public Room(){}
 		
-		public Room(int x, int y, Description descr)
+		public Room(int x, int y)
 		{
 			X = x;
 			Y = y;
-			Description = descr;
 			Walls = new List<Cell>();
 			Space = new List<Cell>();
 		}
@@ -27,7 +25,6 @@ namespace DigitalWizardry.Dungeon
 		{
 			X = source.X;
 			Y = source.Y;
-			Description = source.Description;
 			
 			if (source.Walls != null)
 			{
