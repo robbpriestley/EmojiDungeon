@@ -17,7 +17,6 @@ namespace DigitalWizardry.Dungeon
 		private Cell _downStairsCell;              // The dead-end cell chosen to be replaced with a down stairs.
 		private Double _downStairsCellDistance;    // Distance from the start cell to the DownStairsCell.
 		private int _roomsCount;                   // Number of rooms randomly determined to be in the dungeon.
-		private int _minesCount;                   // Number of mines randomly determined to be in the dungeon.
 		private int _catacombsCount;               // Number of catacombs randomly determined to be in the dungeon.
 		private List<Room> _rooms;                 // The collection of rooms added to the dungeon.
 		private List<Cell> _cellsWithLockedDoors;  // Convenience collection of door object.
@@ -432,40 +431,20 @@ namespace DigitalWizardry.Dungeon
 			_rooms = new List<Room>();
 			
 			CalcRooms();
-			PlaceMines();
 			PlaceRegularRooms();
 			MergeRooms();
 			CleanRoomScraps();
 			CleanRoomsArray();
 			ConnectRooms();
-			ConnectMines();
 			CleanRoomsArray();
 			ConvertRoomsToCatacombs();
 		}
 
 		private void CalcRooms()
 		{
-			MinesCount();
 			CatacombsCount();
 
-			int rooms = _r.Next(Reference.MaxRooms - Reference.MinRooms + 1) + Reference.MinRooms;  // MinRooms ~ MaxRooms
-			
-			_roomsCount = rooms - _minesCount;
-		}
-
-		private void MinesCount()
-		{
-			_minesCount = 0;
-			
-			if (Reference.AddMines)
-			{
-				int rand = _r.Next(100);
-				
-				if (rand >= 85 && rand <= 99)
-				{
-					_minesCount = 1;
-				}
-			}
+			_roomsCount = _r.Next(Reference.MaxRooms - Reference.MinRooms + 1) + Reference.MinRooms;  // MinRooms ~ MaxRooms
 		}
 		
 		private void CatacombsCount()
@@ -511,43 +490,6 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private void PlaceMines()
-		{
-			int attempts = 0;
-			int count = _minesCount;  // Preserve original count.
-			int maxAttempts = Reference.GridWidth * Reference.GridHeight;
-			
-			while (count > 0 && attempts <= maxAttempts) 
-			{
-				bool horiz = RandomBool();
-			
-				if (horiz)
-				{
-					if (RandomRoom(Descriptions.Mines_Horiz, Reference.MaxMinesHeight, Reference.MaxMinesWidth, Reference.MinMinesHeight, Reference.MinMinesWidth))
-					{
-						count--;
-						attempts = 0;
-					}
-					else
-					{
-						attempts++;
-					}
-				}
-				else
-				{
-					if (RandomRoom(Descriptions.Mines_Vert, Reference.MaxMinesWidth, Reference.MaxMinesHeight, Reference.MinMinesWidth, Reference.MinMinesHeight))
-					{
-						count--;
-						attempts = 0;
-					}
-					else
-					{
-						attempts++;
-					}
-				}
-			}
-		}
-
 		private bool RandomRoom(Description descr, int maxWidth, int maxHeight, int minWidth, int minHeight)
 		{
 			int width = _r.Next(maxWidth - minWidth + 1) + minWidth;
@@ -561,22 +503,15 @@ namespace DigitalWizardry.Dungeon
 			}
 			else
 			{
-				if (descr == Descriptions.Room_TBD)
+				bool irregularlyShapedRoom = RandomBool();
+				
+				if (irregularlyShapedRoom && width > 2 && height > 2)
 				{
-					bool irregularlyShapedRoom = RandomBool();
-					
-					if (irregularlyShapedRoom && width > 2 && height > 2)
-					{
-						BuildIrregularlyShapedRoom(coords, width, height);
-					}
-					else
-					{
-						BuildRoom(RoomType.Regular, coords, width, height);
-					}
+					BuildIrregularlyShapedRoom(coords, width, height);
 				}
-				else 
+				else
 				{
-					BuildMines(coords, width, height, descr);
+					BuildRoom(RoomType.Regular, coords, width, height);
 				}
 			}
 			return true;
@@ -602,7 +537,6 @@ namespace DigitalWizardry.Dungeon
 						
 						if 
 						(
-							(cell.Descr.IsMines) ||
 							(
 								y > _startCoords.Y - 2 && y < _startCoords.Y + 2 && 
 								x > _startCoords.X - 2 && x < _startCoords.X + 2
@@ -1222,137 +1156,6 @@ namespace DigitalWizardry.Dungeon
 			}
 			
 			return newType;
-		}
-
-		private void BuildMines(Coords coords, int width, int height, Description descr)
-		{
-			CellType newType = null;
-			
-			for (int y = coords.Y; y < coords.Y + height; y++) 
-			{
-				for (int x = coords.X; x < coords.X + width; x++) 
-				{
-					if (x == coords.X && y == coords.Y)                                // Bottom-left corner.
-					{
-						newType = CellTypes.ElbUR;
-					}
-					else if (x == coords.X + width - 1 && y == coords.Y)               // Bottom-right corner.
-					{
-						newType = CellTypes.ElbUL;
-					}
-					else if (x == coords.X && y == coords.Y + height - 1)              // Top-left corner.
-					{
-						newType = CellTypes.ElbDR;
-					}
-					else if (x == coords.X + width - 1 && y == coords.Y + height - 1)  // Top-right corner.
-					{
-						newType = CellTypes.ElbDL;
-					}
-					else if (x == coords.X)                                            // Left wall.
-					{
-						newType = MinesWall(x, y, Direction.Left, descr);
-					}
-					else if (x == coords.X + width - 1)                                // Right wall.
-					{
-						newType = MinesWall(x, y, Direction.Right, descr);   
-					}
-					else if (y == coords.Y)                                            // Bottom wall.
-					{
-						newType = MinesWall(x, y, Direction.Down, descr);
-					}
-					else if (y == coords.Y + height - 1)                               // Top wall.
-					{
-						newType = MinesWall(x, y, Direction.Up, descr);
-					}
-					else if (descr == Descriptions.Mines_Horiz)
-					{
-						newType = CellTypes.Horiz;
-					}
-					else if (descr == Descriptions.Mines_Vert)
-					{
-						newType = CellTypes.Vert;
-					}
-					
-					Cell currentCell = _grid[x, y];
-					
-					if (currentCell.Type.IsEmpty)
-					{
-						Cell newCell = new Cell(x, y, newType, descr);
-						SetCellValue(x, y, newCell);
-					}
-				}
-			}
-		}
-
-		private CellType MinesWall(int x, int y, Direction dir, Description desc)
-		{
-			CellType type = null;
-		
-			// Room exits can only occur if the room wall in question is at least 1 cell from the dungeon 
-			// edge, to allow the resulting corridors to grow or be "capped".
-			
-			if (dir == Direction.Up)                             
-			{
-				if (desc == Descriptions.Mines_Horiz)
-				{
-					type = CellTypes.Horiz;    // No exit for horizontal mine.
-				}
-				else if (y + 1 < Reference.GridHeight)
-				{
-					type = CellTypes.Inter;    // Exit for vertical mine.
-				}
-				else
-				{
-					type = CellTypes.JuncDLR;  // No exit for vertical mine.
-				}
-			}
-			else if (dir == Direction.Down)                                            
-			{
-				if (desc == Descriptions.Mines_Horiz)
-				{
-					type = CellTypes.Horiz;    // No exit for horizontal mine.
-				}
-				else if (y - 1 >= 0)
-				{
-					type = CellTypes.Inter;    // Exit for vertical mine.
-				}
-				else
-				{
-					type = CellTypes.JuncULR;  // No exit for vertical mine.
-				}
-			}
-			else if (dir == Direction.Left)                                              
-			{        
-				if (desc == Descriptions.Mines_Vert)
-				{
-					type = CellTypes.Vert;    // No exit for vertical mine.
-				}
-				else if (x - 1 >= 0)
-				{
-					type = CellTypes.Inter;    // Exit for horizontal mine.
-				}
-				else
-				{
-					type = CellTypes.JuncUDR;  // No exit for horizontal mine.
-				}
-			}                                
-			else if (dir == Direction.Right)                                  
-			{
-				if (desc == Descriptions.Mines_Vert)
-				{
-					type = CellTypes.Vert;    // No exit for vertical mine.
-				}
-				else if (x + 1 < Reference.GridHeight)
-				{
-					type = CellTypes.Inter;    // Exit for horizontal mine.
-				}
-				else
-				{
-					type = CellTypes.JuncUDL;  // No exit for horizontal mine.
-				}
-			}
-			
-			return type;
 		}
 
 		// Kerplunk, the rooms are all superimposed. Each room needs to be outlined properly with no gaps.
@@ -2287,12 +2090,6 @@ namespace DigitalWizardry.Dungeon
 			CellType newType;
 			Cell adjacent = _grid[adjX, adjY];
 			
-			// No point in trying to force connect two special rooms, they won't join anyways.
-			if (cell.Descr.IsMines && adjacent.Descr.IsMines)
-			{
-				throw new DungeonGenerateException();
-			}
-			
 			if (adjacent.Type.IsEmpty || cell.Type.ConnectsTo(adjacent.Type, dir))
 			{
 				return;
@@ -2308,16 +2105,8 @@ namespace DigitalWizardry.Dungeon
 			{
 				newType = CellTypes.ConvertRoomExitToWall(cell.Type, dir, cell.Descr);
 				newCell = new Cell(cell.X, cell.Y, newType, cell.Descr);
-				
-				if (newCell.Descr.IsMines) 
-				{
-					ReplaceCellValue(cell.X, cell.Y, newCell);
-				}
-				else
-				{
-					SetCellValue(cell.X, cell.Y, newCell);
-					AddNewCellToRoom(cell, newCell);
-				}
+				SetCellValue(cell.X, cell.Y, newCell);
+				AddNewCellToRoom(cell, newCell);
 			}
 		}
 
@@ -2355,44 +2144,6 @@ namespace DigitalWizardry.Dungeon
 				{
 					room.Walls.Add(newCell);
 					return;
-				}
-			}
-		}
-
-		private void ConnectMines()
-		{
-			for (int y = 0; y < Reference.GridHeight; y++)
-			{
-				for (int x = 0; x < Reference.GridWidth; x++)
-				{
-					Cell cell = _grid[x, y];
-					
-					if (cell.Type == CellTypes.Inter)
-					{
-						Cell cellUp, cellDown, cellLeft, cellRight;
-							
-						cellUp    = y + 1 < Reference.GridHeight ? _grid[x, y + 1] : null;
-						cellDown  = y - 1 >= 0                   ? _grid[x, y - 1] : null;
-						cellLeft  = x - 1 >= 0                   ? _grid[x - 1, y] : null;
-						cellRight = x + 1 < Reference.GridWidth  ? _grid[x + 1, y] : null;
-						
-						if (!cellUp.Type.IsEmpty && !cell.Type.ConnectsTo(cellUp.Type, Direction.Up))
-						{
-							ConnectRoomCells(cellUp, x, y + 1, Direction.Up);
-						}
-						else if (!cellDown.Type.IsEmpty && !cell.Type.ConnectsTo(cellDown.Type, Direction.Down))
-						{
-							ConnectRoomCells(cellDown, x, y - 1, Direction.Down);
-						}
-						else if (!cellLeft.Type.IsEmpty && !cell.Type.ConnectsTo(cellLeft.Type, Direction.Left))
-						{
-							ConnectRoomCells(cellLeft, x - 1, y, Direction.Left);
-						}
-						else if (!cellRight.Type.IsEmpty && !cell.Type.ConnectsTo(cellRight.Type, Direction.Right))
-						{
-							ConnectRoomCells(cellRight, x + 1, y, Direction.Right);
-						}
-					}
 				}
 			}
 		}
@@ -2491,7 +2242,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if (!cell.Descr.IsMines && !(cell.Descr == Descriptions.Catacombs_TBD) && !SuppressDoor(cell)) 
+					if (!SuppressDoor(cell)) 
 					{
 						cell.Doors = RandomDoorSetup(cell);
 					}
@@ -3244,14 +2995,6 @@ namespace DigitalWizardry.Dungeon
 					{
 						descr = Descriptions.Cavern_Flooded;
 					}
-					else if (cell.Descr == Descriptions.Mines_Horiz)
-					{
-						descr = Descriptions.Mines_Horiz_Flooded;
-					}
-					else if (cell.Descr == Descriptions.Mines_Vert)
-					{
-						descr = Descriptions.Mines_Vert_Flooded;
-					}
 					
 					// Update descr for either entire room, or individual cell.
 					if (cell.Type.IsRoomType)
@@ -3323,14 +3066,6 @@ namespace DigitalWizardry.Dungeon
 							else if (cell.Descr == Descriptions.Cavern_Flooded)
 							{
 								descr = Descriptions.Cavern;
-							}
-							else if (cell.Descr == Descriptions.Mines_Horiz_Flooded)
-							{
-								descr = Descriptions.Mines_Horiz;
-							}
-							else if (cell.Descr == Descriptions.Mines_Vert_Flooded)
-							{
-								descr = Descriptions.Mines_Vert;
 							}
 							
 							cell.Descr = descr;
@@ -3522,9 +3257,7 @@ namespace DigitalWizardry.Dungeon
 			return Environment.NewLine +
 			       "Iterations: " + _iterations.ToString() + Environment.NewLine +
 				   "Elapsed Time: " + _elapsedTime.ToString() + Environment.NewLine +
-				   "Room Count: " + _roomsCount.ToString() + Environment.NewLine +
-				   "Mines Count: " + _minesCount.ToString() + Environment.NewLine +
-				   "Catacombs Count: " + _catacombsCount.ToString();
+				   "Room Count: " + _roomsCount.ToString() + Environment.NewLine;
 		}
 
 		public string DungeonView

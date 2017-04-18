@@ -1218,22 +1218,6 @@ namespace DigitalWizardry.Dungeon
 			{
 				wall = RoomWallR; 
 			}
-			else if (dir == Direction.Up && exit == Inter && descr == Descriptions.Mines_Vert)
-			{
-				wall = JuncDLR;
-			}
-			else if (dir == Direction.Down && exit == Inter && descr == Descriptions.Mines_Vert)
-			{
-				wall = JuncULR;
-			}
-			else if (dir == Direction.Left && exit == Inter && descr == Descriptions.Mines_Horiz)
-			{
-				wall = JuncUDR;
-			}
-			else if (dir == Direction.Right && exit == Inter && descr == Descriptions.Mines_Horiz)
-			{
-				wall = JuncUDL;
-			}
 			else if (exit == RoomExitUL_U || exit == RoomExitUL_L)
 			{
 				wall = RoomWallUL;

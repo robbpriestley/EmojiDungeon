@@ -12,12 +12,6 @@ namespace DigitalWizardry.Dungeon
 		public static readonly int MaxRoomWidth = 4;
 		public static readonly int MaxRoomHeight = 4;
 		public static readonly int RoomExitProb = 20;
-		// *** MINES ***
-		public static readonly bool AddMines = false;
-		public static readonly int MinMinesWidth = 3;
-		public static readonly int MinMinesHeight = 6;
-		public static readonly int MaxMinesWidth = 4;
-		public static readonly int MaxMinesHeight = 8;
 		// *** CATACOMBS ***
 		public static readonly bool AddCatacombs = false;
 		public static readonly int MinCatacombsVolume = 12;
