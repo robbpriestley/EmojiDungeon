@@ -2746,19 +2746,56 @@ namespace DigitalWizardry.Dungeon
 		{
 			get
 			{
-				DungeonViewModel[,] modelCells = new DungeonViewModel[Reference.GridWidth, Reference.GridHeight];
+				DungeonViewModelCell[,] modelCells = new DungeonViewModelCell[Reference.GridWidth, Reference.GridHeight];
 
 				foreach (Cell cell in _grid)
 				{
-					DungeonViewModel modelCell = new DungeonViewModel();
+					DungeonViewModelCell modelCell = new DungeonViewModelCell();
+
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
+					modelCell.K = cell.HasKey ? "1" : "";
+					modelCell.D = DungeonViewDoors(cell.Doors);
 
 					modelCells[cell.X, cell.Y] = modelCell;
 				}
 
 				return Utility.Json(modelCells);
 			}
+		}
+
+		private string DungeonViewDoors(List<Door> doorsList)
+		{
+			string doors = "";
+
+			if (doorsList != null)
+			{
+				foreach (Door door in doorsList)
+				{
+					switch (door.Dir)
+					{
+						case Direction.Up:
+							doors += "U";
+							break;
+						
+						case Direction.Down:
+							doors += "D";
+							break;
+						
+						case Direction.Left:
+							doors += "L";
+							break;
+						
+						case Direction.Right:
+							doors += "R";
+							break;
+
+						default:
+							break;
+					}
+				}
+			}
+			return doors;
 		}
 
 		#endregion
