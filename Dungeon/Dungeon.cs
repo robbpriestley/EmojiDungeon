@@ -18,7 +18,7 @@ namespace DigitalWizardry.Dungeon
 		private Double _downStairsCellDistance;    // Distance from the start cell to the DownStairsCell.
 		private int _roomsCount;                   // Number of rooms randomly determined to be in the dungeon.
 		private List<Room> _rooms;                 // The collection of rooms added to the dungeon.
-		private List<Cell> _cellsWithLockedDoors;  // Convenience collection of door object.
+		private List<Cell> _cellsWithDoors;        // Convenience collection of door objects.
 		private int _iterations;                   // Number of discarded attempts before arriving at a completed dungeon.
 		private TimeSpan _elapsedTime;             // How long in total did it take to build this dungeon?
 
@@ -86,7 +86,7 @@ namespace DigitalWizardry.Dungeon
 
 			List<CellType> types = CellTypes.GetTypes(_startCoords);
 
-			_cellsWithLockedDoors = new List<Cell>();
+			_cellsWithDoors = new List<Cell>();
 		}
 
 		private void PlaceEntrance()
@@ -2319,7 +2319,7 @@ namespace DigitalWizardry.Dungeon
 				return null;
 			}
 			
-			_cellsWithLockedDoors.Add(cell);
+			_cellsWithDoors.Add(cell);
 			
 			return new Door(dir);
 		}
@@ -2329,9 +2329,9 @@ namespace DigitalWizardry.Dungeon
 			Cell keyCell;
 			List<Cell> potentials;
 
-			_cellsWithLockedDoors = _cellsWithLockedDoors.OrderBy(cell => cell.Sequence).ToList();
+			_cellsWithDoors = _cellsWithDoors.OrderBy(cell => cell.Sequence).ToList();
 			
-			foreach (Cell cell in _cellsWithLockedDoors) 
+			foreach (Cell cell in _cellsWithDoors) 
 			{
 				foreach (Door door in cell.Doors) 
 				{
