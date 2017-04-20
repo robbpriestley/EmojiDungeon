@@ -1296,5 +1296,6 @@ namespace DigitalWizardry.Dungeon
 			}
 			
 			return stairs;
+		}
 	}
 }
