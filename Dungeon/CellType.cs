@@ -185,16 +185,12 @@ namespace DigitalWizardry.Dungeon
 		private static readonly CellType _roomExitR;
 		private static readonly CellType _roomExitUL_U;
 		private static readonly CellType _roomExitUL_L;
-		private static readonly CellType _roomExitUL_UL;
 		private static readonly CellType _roomExitUR_U;
 		private static readonly CellType _roomExitUR_R;
-		private static readonly CellType _roomExitUR_UR;
 		private static readonly CellType _roomExitDL_D;
 		private static readonly CellType _roomExitDL_L;
-		private static readonly CellType _roomExitDL_DL;
 		private static readonly CellType _roomExitDR_D;
 		private static readonly CellType _roomExitDR_R;
-		private static readonly CellType _roomExitDR_DR;
 		
 		// *** END FIELD DECLARATIONS ***
 		// *** BEGIN PROPERTY DECLARATIONS ***
@@ -243,16 +239,12 @@ namespace DigitalWizardry.Dungeon
 		public static CellType RoomExitR { get { return _roomExitR; } }                // Room Exit Right
 		public static CellType RoomExitUL_U { get { return _roomExitUL_U; } }          // Room Exit Up Left Corner, Exit Up
 		public static CellType RoomExitUL_L { get { return _roomExitUL_L; } }          // Room Exit Up Left Corner, Exit Left
-		public static CellType RoomExitUL_UL { get { return _roomExitUL_UL; } }        // Room Exit Up Left Corner, Exits Up and Left
 		public static CellType RoomExitUR_U { get { return _roomExitUR_U; } }          // Room Exit Up Right Corner, Exit Up
 		public static CellType RoomExitUR_R { get { return _roomExitUR_R; } }          // Room Exit Up Right Corner, Exit Right
-		public static CellType RoomExitUR_UR { get { return _roomExitUR_UR; } }        // Room Exit Up Right Corner, Exits Up and Right
 		public static CellType RoomExitDL_D { get { return _roomExitDL_D; } }          // Room Exit Down Left Corner, Exit Down
 		public static CellType RoomExitDL_L { get { return _roomExitDL_L; } }          // Room Exit Down Left Corner, Exit Left
-		public static CellType RoomExitDL_DL { get { return _roomExitDL_DL; } }        // Room Exit Down Left Corner, Exits Down and Left
 		public static CellType RoomExitDR_D { get { return _roomExitDR_D; } }          // Room Exit Down Right Corner, Exit Down
 		public static CellType RoomExitDR_R { get { return _roomExitDR_R; } }          // Room Exit Down Right Corner, Exit Right
-		public static CellType RoomExitDR_DR { get { return _roomExitDR_DR; } }        // Room Exit Down Right Corner, Exits Down and Right
 		
 		// *** END PROPERTY DECLARATIONS ***
 
@@ -302,16 +294,12 @@ namespace DigitalWizardry.Dungeon
 			_roomExitR = new CellType();
 			_roomExitUL_U = new CellType();
 			_roomExitUL_L = new CellType();
-			_roomExitUL_UL = new CellType();
 			_roomExitUR_U = new CellType();
 			_roomExitUR_R = new CellType();
-			_roomExitUR_UR = new CellType();
 			_roomExitDL_D = new CellType();
 			_roomExitDL_L = new CellType();
-			_roomExitDL_DL = new CellType();
 			_roomExitDR_D = new CellType();
 			_roomExitDR_R = new CellType();
-			_roomExitDR_DR = new CellType();
 
 			Initialize();
 		}
@@ -381,7 +369,6 @@ namespace DigitalWizardry.Dungeon
 			Inter.TextRep = @"╬";
 			Inter.TextRep2 = @"═";
 			Inter.IsJunction = true;
-			Inter.IsRoomExit = true;
 			Inter.InitialAvailableConnections = 4;
 			Inter.Name = "a4";
 			
@@ -774,22 +761,6 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUL_L.ForceGrowthCompatible = false;
 			RoomExitUL_L.Name = "d5";
 			
-			RoomExitUL_UL.ConnectsUp = true;
-			RoomExitUL_UL.ConnectsLeft = true;
-			RoomExitUL_UL.TraversableUp = true;
-			RoomExitUL_UL.TraversableDown = true;
-			RoomExitUL_UL.TraversableLeft = true;
-			RoomExitUL_UL.TraversableRight = true;
-			RoomExitUL_UL.RoomConnectsDown = true;
-			RoomExitUL_UL.RoomConnectsRight = true;
-			RoomExitUL_UL.InitialAvailableConnections = 2;
-			RoomExitUL_UL.TextRep = "╃";
-			RoomExitUL_UL.TextRep2 = "─";
-			RoomExitUL_UL.DoorProbability = 50;
-			RoomExitUL_UL.IsRoomExit = true;
-			RoomExitUL_UL.ForceGrowthCompatible = false;
-			RoomExitUL_UL.Name = "d6";
-			
 			RoomExitUR_U.ConnectsUp = true;
 			RoomExitUR_U.TraversableUp = true;
 			RoomExitUR_U.TraversableDown = true;
@@ -819,22 +790,6 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_R.RoomExitCompatible = true;
 			RoomExitUR_R.ForceGrowthCompatible = false;
 			RoomExitUR_R.Name = "d8";
-			
-			RoomExitUR_UR.ConnectsUp = true;
-			RoomExitUR_UR.ConnectsRight = true;
-			RoomExitUR_UR.TraversableUp = true;
-			RoomExitUR_UR.TraversableDown = true;
-			RoomExitUR_UR.TraversableLeft = true;
-			RoomExitUR_UR.TraversableRight = true;
-			RoomExitUR_UR.RoomConnectsDown = true;
-			RoomExitUR_UR.RoomConnectsLeft = true;
-			RoomExitUR_UR.InitialAvailableConnections = 2;
-			RoomExitUR_UR.TextRep = "╄";
-			RoomExitUR_UR.TextRep2 = "═";
-			RoomExitUR_UR.DoorProbability = 50;
-			RoomExitUR_UR.IsRoomExit = true;
-			RoomExitUR_UR.ForceGrowthCompatible = false;
-			RoomExitUR_UR.Name = "d9";
 			
 			RoomExitDL_D.ConnectsDown = true;
 			RoomExitDL_D.TraversableUp = true;
@@ -866,22 +821,6 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_L.ForceGrowthCompatible = false;
 			RoomExitDL_L.Name = "e1";
 			
-			RoomExitDL_DL.ConnectsDown = true;
-			RoomExitDL_DL.ConnectsLeft = true;
-			RoomExitDL_DL.TraversableUp = true;
-			RoomExitDL_DL.TraversableDown = true;
-			RoomExitDL_DL.TraversableLeft = true;
-			RoomExitDL_DL.TraversableRight = true;
-			RoomExitDL_DL.RoomConnectsUp = true;
-			RoomExitDL_DL.RoomConnectsRight = true;
-			RoomExitDL_DL.InitialAvailableConnections = 2;
-			RoomExitDL_DL.TextRep = "╅";
-			RoomExitDL_DL.TextRep2 = "─";
-			RoomExitDL_DL.DoorProbability = 50;
-			RoomExitDL_DL.IsRoomExit = true;
-			RoomExitDL_DL.ForceGrowthCompatible = false;
-			RoomExitDL_DL.Name = "e2";
-			
 			RoomExitDR_D.ConnectsDown = true;
 			RoomExitDR_D.TraversableUp = true;
 			RoomExitDR_D.TraversableDown = true;
@@ -911,22 +850,6 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_R.RoomExitCompatible = true;
 			RoomExitDR_R.ForceGrowthCompatible = false;
 			RoomExitDR_R.Name = "e4";
-			
-			RoomExitDR_DR.ConnectsDown = true;
-			RoomExitDR_DR.ConnectsRight = true;
-			RoomExitDR_DR.TraversableUp = true;
-			RoomExitDR_DR.TraversableDown = true;
-			RoomExitDR_DR.TraversableLeft = true;
-			RoomExitDR_DR.TraversableRight = true;
-			RoomExitDR_DR.RoomConnectsUp = true;
-			RoomExitDR_DR.RoomConnectsLeft = true;
-			RoomExitDR_DR.InitialAvailableConnections = 2;
-			RoomExitDR_DR.TextRep = "╆";
-			RoomExitDR_DR.TextRep2 = "═";
-			RoomExitDR_DR.DoorProbability = 50;
-			RoomExitDR_DR.IsRoomExit = true;
-			RoomExitDR_DR.ForceGrowthCompatible = false;
-			RoomExitDR_DR.Name = "e5";
 
 			// *** END ROOM CORNER EXITS ***
 			// *** BEGIN STAIRWAY CELLS ***
@@ -1108,170 +1031,98 @@ namespace DigitalWizardry.Dungeon
 
 		public static CellType ConvertRoomWallToExit(CellType wall, Direction dir)
 		{
-			CellType exit;
-			
 			if (wall == RoomWallU)
 			{
-				exit = RoomExitU;
+				return RoomExitU;
 			}
 			else if (wall == RoomWallD)
 			{
-				exit = RoomExitD;
+				return RoomExitD;
 			}
 			else if (wall == RoomWallL)
 			{
-				exit = RoomExitL; 
+				return RoomExitL; 
 			}
 			else if (wall == RoomWallR)
 			{
-				exit = RoomExitR;
+				return RoomExitR;
 			}
 			else if (wall == RoomWallUL && dir == Direction.Up)
 			{
-				exit = RoomExitUL_U;
+				return RoomExitUL_U;
 			}
 			else if (wall == RoomWallUL && dir == Direction.Left)
 			{
-				exit = RoomExitUL_L;
+				return RoomExitUL_L;
 			}
 			else if (wall == RoomWallUR && dir == Direction.Up) 
 			{
-				exit = RoomExitUR_U;
+				return RoomExitUR_U;
 			}
 			else if (wall == RoomWallUR && dir == Direction.Right)
 			{
-				exit = RoomExitUR_R;
+				return RoomExitUR_R;
 			}
 			else if (wall == RoomWallDL && dir == Direction.Down)
 			{
-				exit = RoomExitDL_D;
+				return RoomExitDL_D;
 			}
 			else if (wall == RoomWallDL && dir == Direction.Left)
 			{
-				exit = RoomExitDL_L;
+				return RoomExitDL_L;
 			}
 			else if (wall == RoomWallDR && dir == Direction.Down)
 			{
-				exit = RoomExitDR_D;
+				return RoomExitDR_D;
 			}
 			else if (wall == RoomWallDR && dir == Direction.Right)
 			{
-				exit = RoomExitDR_R;
-			}
-			else if (wall == RoomWallUL && dir == Direction.UpLeft)
-			{
-				exit = RoomExitUL_UL;
-			}
-			else if (wall == RoomWallUR && dir == Direction.UpRight) 
-			{
-				exit = RoomExitUR_UR;
-			}
-			else if (wall == RoomWallDL && dir == Direction.DownLeft)
-			{
-				exit = RoomExitDL_DL;
-			}
-			else if (wall == RoomWallDR && dir == Direction.DownRight)
-			{
-				exit = RoomExitDR_DR;
-			}
-			else if ((wall == RoomExitUL_U && dir == Direction.Left) || (wall == RoomExitUL_L && dir == Direction.Up))
-			{
-				exit = RoomExitUL_UL;
-			}
-			else if ((wall == RoomExitUR_U && dir == Direction.Right) || (wall == RoomExitUR_R && dir == Direction.Up))
-			{
-				exit = RoomExitUR_UR;
-			}
-			else if ((wall == RoomExitDL_D && dir == Direction.Left) || (wall == RoomExitDL_L && dir == Direction.Down))
-			{
-				exit = RoomExitDL_DL;
-			}
-			else if ((wall == RoomExitDR_D && dir == Direction.Right) || (wall == RoomExitDR_R && dir == Direction.Down))
-			{
-				exit = RoomExitDR_DR;
-			}
-			else
-			{
-				exit = Inter;
-			}
-			
-			return exit;
-		}
-
-		public static CellType ConvertRoomExitToWall(CellType exit, Direction dir)
-		{
-			CellType wall;
-			
-			if (exit == RoomExitU)
-			{
-				wall = RoomWallU;
-			}
-			else if (exit == RoomExitD)
-			{
-				wall = RoomWallD;
-			}
-			else if (exit == RoomExitL)
-			{
-				wall = RoomWallL; 
-			}
-			else if (exit == RoomExitR)
-			{
-				wall = RoomWallR; 
-			}
-			else if (exit == RoomExitUL_U || exit == RoomExitUL_L)
-			{
-				wall = RoomWallUL;
-			}
-			else if (exit == RoomExitUR_U || exit == RoomExitUR_R)
-			{
-				wall = RoomWallUR;
-			}
-			else if (exit == RoomExitDL_D || exit == RoomExitDL_L)
-			{
-				wall = RoomWallDL;
-			}
-			else if (exit == RoomExitDR_D || exit == RoomExitDR_R)
-			{
-				wall = RoomWallDR;
-			}
-			else if (exit == RoomExitUL_UL && dir == Direction.Up)
-			{
-				wall = RoomExitUL_L;
-			}
-			else if (exit == RoomExitUL_UL && dir == Direction.Left)
-			{
-				wall = RoomExitUL_U;
-			}
-			else if (exit == RoomExitUR_UR && dir == Direction.Up)
-			{
-				wall = RoomExitUR_R;
-			}
-			else if (exit == RoomExitUR_UR && dir == Direction.Right)
-			{
-				wall = RoomExitUR_U;
-			}
-			else if (exit == RoomExitDL_DL && dir == Direction.Down)
-			{
-				wall = RoomExitDL_L;
-			}
-			else if (exit == RoomExitDL_DL && dir == Direction.Left)
-			{
-				wall = RoomExitDL_D;
-			}
-			else if (exit == RoomExitDR_DR && dir == Direction.Down)
-			{
-				wall = RoomExitDR_R;
-			}
-			else if (exit == RoomExitDR_DR && dir == Direction.Right)
-			{
-				wall = RoomExitDR_D;
+				return RoomExitDR_R;
 			}
 			else
 			{
 				throw new DungeonGenerateException();  // Unknown... scrap it (never happens).
 			}
-			
-			return wall;
+		}
+
+		public static CellType ConvertRoomExitToWall(CellType exit, Direction dir)
+		{		
+			if (exit == RoomExitU)
+			{
+				return RoomWallU;
+			}
+			else if (exit == RoomExitD)
+			{
+				return RoomWallD;
+			}
+			else if (exit == RoomExitL)
+			{
+				return RoomWallL; 
+			}
+			else if (exit == RoomExitR)
+			{
+				return RoomWallR; 
+			}
+			else if (exit == RoomExitUL_U || exit == RoomExitUL_L)
+			{
+				return RoomWallUL;
+			}
+			else if (exit == RoomExitUR_U || exit == RoomExitUR_R)
+			{
+				return RoomWallUR;
+			}
+			else if (exit == RoomExitDL_D || exit == RoomExitDL_L)
+			{
+				return RoomWallDL;
+			}
+			else if (exit == RoomExitDR_D || exit == RoomExitDR_R)
+			{
+				return RoomWallDR;
+			}
+			else
+			{
+				throw new DungeonGenerateException();  // Unknown... scrap it (never happens).
+			}
 		}
 
 		public static CellType ConvertDeadEndToDownStairs(CellType deadEnd)

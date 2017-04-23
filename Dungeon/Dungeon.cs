@@ -1570,11 +1570,6 @@ namespace DigitalWizardry.Dungeon
 					possibleExitTypes.Add(CellTypes.RoomExitUL_L);
 				}
 				
-				if (x - 1 >= 0 && y + 1 < Reference.GridHeight)
-				{
-					possibleExitTypes.Add(CellTypes.RoomExitUL_UL);
-				}
-				
 				if (possibleExitTypes.Count > 0)
 				{
 					type = possibleExitTypes[_r.Next(possibleExitTypes.Count)];
@@ -1599,11 +1594,6 @@ namespace DigitalWizardry.Dungeon
 				if (x + 1 < Reference.GridHeight)
 				{
 					possibleExitTypes.Add(CellTypes.RoomExitUR_R);
-				}
-				
-				if (x + 1 < Reference.GridHeight && y + 1 < Reference.GridHeight)
-				{
-					possibleExitTypes.Add(CellTypes.RoomExitUR_UR);
 				}
 				
 				if (possibleExitTypes.Count > 0)
@@ -1632,11 +1622,6 @@ namespace DigitalWizardry.Dungeon
 					possibleExitTypes.Add(CellTypes.RoomExitDL_L);
 				}
 				
-				if (x - 1 >= 0 && y - 1 >= 0)
-				{
-					possibleExitTypes.Add(CellTypes.RoomExitDL_DL);
-				}
-				
 				if (possibleExitTypes.Count > 0)
 				{
 					type = possibleExitTypes[_r.Next(possibleExitTypes.Count)];
@@ -1661,11 +1646,6 @@ namespace DigitalWizardry.Dungeon
 				if (x + 1 < Reference.GridHeight)
 				{
 					possibleExitTypes.Add(CellTypes.RoomExitDR_R);
-				}
-				
-				if (x + 1 < Reference.GridHeight && y - 1 >= 0)
-				{
-					possibleExitTypes.Add(CellTypes.RoomExitDR_DR);
 				}
 				
 				if (possibleExitTypes.Count > 0)
