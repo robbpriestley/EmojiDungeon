@@ -85,7 +85,7 @@ function BuildGrid(level : number, dungeon : object) : void
 			let tileName : string = dungeon[x][y].N
 			$(gridId).addClass(tileName);                    // Add tile name class.
 
-			if (tileName == "f0" || tileName == "f1" || tileName == "f2" || tileName == "f3")
+			if (tileName == "e6" || tileName == "e7" || tileName == "e8" || tileName == "e9")
 			{
 				RecordStart(level, tileName, gridReference);
 			}
@@ -107,19 +107,19 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 
 	switch (tileName)
 	{
-		case "f0":
+		case "e6":
 			direction = "U";
 			break;
 
-		case "f1":
+		case "e7":
 			direction = "D";
 			break;
 
-		case "f2":
+		case "e8":
 			direction = "L";
 			break;
 
-		case "f3":
+		case "e9":
 			direction = "R";
 			break;
 	

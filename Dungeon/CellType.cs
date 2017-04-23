@@ -774,7 +774,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_U.IsRoomExit = true;
 			RoomExitUR_U.RoomExitCompatible = true;
 			RoomExitUR_U.ForceGrowthCompatible = false;
-			RoomExitUR_U.Name = "d7";
+			RoomExitUR_U.Name = "d6";
 			
 			RoomExitUR_R.ConnectsRight = true;
 			RoomExitUR_R.TraversableDown = true;
@@ -789,7 +789,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitUR_R.IsRoomExit = true;
 			RoomExitUR_R.RoomExitCompatible = true;
 			RoomExitUR_R.ForceGrowthCompatible = false;
-			RoomExitUR_R.Name = "d8";
+			RoomExitUR_R.Name = "d7";
 			
 			RoomExitDL_D.ConnectsDown = true;
 			RoomExitDL_D.TraversableUp = true;
@@ -804,7 +804,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_D.IsRoomExit = true;
 			RoomExitDL_D.RoomExitCompatible = true;
 			RoomExitDL_D.ForceGrowthCompatible = false;
-			RoomExitDL_D.Name = "e0";
+			RoomExitDL_D.Name = "d8";
 			
 			RoomExitDL_L.ConnectsLeft = true;
 			RoomExitDL_L.TraversableUp = true;
@@ -819,7 +819,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDL_L.IsRoomExit = true;
 			RoomExitDL_L.RoomExitCompatible = true;
 			RoomExitDL_L.ForceGrowthCompatible = false;
-			RoomExitDL_L.Name = "e1";
+			RoomExitDL_L.Name = "d9";
 			
 			RoomExitDR_D.ConnectsDown = true;
 			RoomExitDR_D.TraversableUp = true;
@@ -834,7 +834,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_D.IsRoomExit = true;
 			RoomExitDR_D.RoomExitCompatible = true;
 			RoomExitDR_D.ForceGrowthCompatible = false;
-			RoomExitDR_D.Name = "e3";
+			RoomExitDR_D.Name = "e0";
 			
 			RoomExitDR_R.ConnectsRight = true;
 			RoomExitDR_R.TraversableUp = true;
@@ -849,7 +849,7 @@ namespace DigitalWizardry.Dungeon
 			RoomExitDR_R.IsRoomExit = true;
 			RoomExitDR_R.RoomExitCompatible = true;
 			RoomExitDR_R.ForceGrowthCompatible = false;
-			RoomExitDR_R.Name = "e4";
+			RoomExitDR_R.Name = "e1";
 
 			// *** END ROOM CORNER EXITS ***
 			// *** BEGIN STAIRWAY CELLS ***
@@ -863,7 +863,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsU.InitialAvailableConnections = 1;
 			UpStairsU.ForceGrowthCompatible = false;
 			UpStairsU.IsStairsUp = true;
-			UpStairsU.Name = "e6";
+			UpStairsU.Name = "e2";
 			
 			UpStairsD.Weight = 1;
 			UpStairsD.ConnectsDown = true;
@@ -873,7 +873,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsD.InitialAvailableConnections = 1;
 			UpStairsD.ForceGrowthCompatible = false;
 			UpStairsD.IsStairsUp = true;
-			UpStairsD.Name = "e7";
+			UpStairsD.Name = "e3";
 			
 			UpStairsL.Weight = 1;
 			UpStairsL.ConnectsLeft = true;
@@ -883,7 +883,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsL.InitialAvailableConnections = 1;
 			UpStairsL.ForceGrowthCompatible = false;
 			UpStairsL.IsStairsUp = true;
-			UpStairsL.Name = "e8";
+			UpStairsL.Name = "e4";
 			
 			UpStairsR.Weight = 1;
 			UpStairsR.ConnectsRight = true;
@@ -893,7 +893,7 @@ namespace DigitalWizardry.Dungeon
 			UpStairsR.InitialAvailableConnections = 1;
 			UpStairsR.ForceGrowthCompatible = false;
 			UpStairsR.IsStairsUp = true;
-			UpStairsR.Name = "e9";
+			UpStairsR.Name = "e5";
 			
 			DownStairsU.Weight = 1;
 			DownStairsU.ConnectsUp = true;
@@ -903,7 +903,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsU.InitialAvailableConnections = 1;
 			DownStairsU.ForceGrowthCompatible = false;
 			DownStairsU.IsStairsDown = true;
-			DownStairsU.Name = "f0";
+			DownStairsU.Name = "e6";
 			
 			DownStairsD.Weight = 1;
 			DownStairsD.ConnectsDown = true;
@@ -913,7 +913,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsD.InitialAvailableConnections = 1;
 			DownStairsD.ForceGrowthCompatible = false;
 			DownStairsD.IsStairsDown = true;
-			DownStairsD.Name = "f1";
+			DownStairsD.Name = "e7";
 			
 			DownStairsL.Weight = 1;
 			DownStairsL.ConnectsLeft = true;
@@ -923,7 +923,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsL.InitialAvailableConnections = 1;
 			DownStairsL.ForceGrowthCompatible = false;
 			DownStairsL.IsStairsDown = true;
-			DownStairsL.Name = "f2";
+			DownStairsL.Name = "e8";
 			
 			DownStairsR.Weight = 1;
 			DownStairsR.ConnectsRight = true;
@@ -933,7 +933,7 @@ namespace DigitalWizardry.Dungeon
 			DownStairsR.InitialAvailableConnections = 1;
 			DownStairsR.ForceGrowthCompatible = false;
 			DownStairsR.IsStairsDown = true;
-			DownStairsR.Name = "f3";
+			DownStairsR.Name = "e9";
 			
 			// *** END STAIRWAY CELLS ***	
 		}
