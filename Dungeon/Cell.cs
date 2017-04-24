@@ -15,7 +15,7 @@ namespace DigitalWizardry.Dungeon
 		public bool AttachBlocked { get; set; }        // There are frequent cases where the cell has an available connection point, but nothing can be attached there. In those cases, attachBlocked is set to true.
 		public int AvailableConnections { get; set; }  // Records number of available connection points;
 		public CellType Type { get; set; }
-		public List<Door> Doors { get; set; }
+		public Door Door { get; set; }
 		
 		public Cell(){}
 		
@@ -42,14 +42,9 @@ namespace DigitalWizardry.Dungeon
 			AvailableConnections = source.AvailableConnections;
 			Type = source.Type;    // This does not require deep copy.
 			
-			if (source.Doors != null)
+			if (source.Door != null)
 			{
-				Doors = new List<Door>();
-
-				foreach (Door door in source.Doors)
-				{
-					Doors.Add(new Door(door));
-				}
+				Door = new Door(source.Door);
 			}
 		}
 

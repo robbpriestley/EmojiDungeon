@@ -2158,7 +2158,7 @@ namespace DigitalWizardry.Dungeon
 					
 					if (!SuppressDoor(cell)) 
 					{
-						cell.Doors = RandomDoorSetup(cell);
+						cell.Door = RandomDoorSetup(cell);
 					}
 				}
 			}
@@ -2182,7 +2182,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				Cell cellAbove = _grid[cell.X, cell.Y + 1];
 				
-				if (cellAbove.Doors != null && cellAbove.Doors.Count > 0)
+				if (cellAbove.Door != null && cellAbove.Door != null)
 				{
 					return true;
 				}
@@ -2193,7 +2193,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				Cell cellBelow = _grid[cell.X, cell.Y - 1];
 				
-				if (cellBelow.Doors != null && cellBelow.Doors.Count > 0)
+				if (cellBelow.Door != null && cellBelow.Door != null)
 				{
 					return true;
 				}
@@ -2204,7 +2204,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				Cell cellLeft = _grid[cell.X - 1, cell.Y];
 				
-				if (cellLeft.Doors != null && cellLeft.Doors.Count > 0)
+				if (cellLeft.Door != null && cellLeft.Door != null)
 				{
 					return true;
 				}
@@ -2215,7 +2215,7 @@ namespace DigitalWizardry.Dungeon
 			{
 				Cell cellRight = _grid[cell.X + 1, cell.Y];
 				
-				if (cellRight.Doors != null && cellRight.Doors.Count > 0)
+				if (cellRight.Door != null && cellRight.Door != null)
 				{
 					return true;
 				}
@@ -2225,71 +2225,31 @@ namespace DigitalWizardry.Dungeon
 		}
 
 
-		private List<Door> RandomDoorSetup(Cell cell)
+		private Door RandomDoorSetup(Cell cell)
 		{    
-			List<Door> doors = null;
+			Door door = null;
 			
 			if (cell.Type.ConnectsUp)
 			{
-				Door door = RandomDoor(cell, Direction.Up);
-				
-				if (door != null)
-				{
-					if (doors == null)
-					{
-						doors = new List<Door>();
-					}
-
-					doors.Add(door);
-				}
+				door = RandomDoor(cell, Direction.Up);
 			}
 			
 			if (cell.Type.ConnectsDown)
 			{
-				Door door = RandomDoor(cell, Direction.Down);
-				
-				if (door != null)
-				{
-					if (doors == null)
-					{
-						doors = new List<Door>();
-					}
-					
-					doors.Add(door);
-				}
+				door = RandomDoor(cell, Direction.Down);
 			}
 			
 			if (cell.Type.ConnectsLeft)
 			{
-				Door door = RandomDoor(cell, Direction.Left);
-				
-				if (door != null)
-				{
-					if (doors == null)
-					{
-						doors = new List<Door>();
-					}
-					
-					doors.Add(door);
-				}
+				door = RandomDoor(cell, Direction.Left);
 			}
 			
 			if (cell.Type.ConnectsRight)
 			{
-				Door door = RandomDoor(cell, Direction.Right);
-				
-				if (door != null)
-				{
-					if (doors == null)
-					{
-						doors = new List<Door>();
-					}
-					
-					doors.Add(door);
-				}
+				door = RandomDoor(cell, Direction.Right);
 			}
 			
-			return doors;
+			return door;
 		}
 
 		private Door RandomDoor(Cell cell, Direction dir)
@@ -2313,12 +2273,9 @@ namespace DigitalWizardry.Dungeon
 			
 			foreach (Cell cell in _cellsWithDoors) 
 			{
-				foreach (Door door in cell.Doors) 
-				{
-					potentials = KeyLocationPotentials(cell.Sequence);
-					keyCell = potentials[_r.Next(potentials.Count)];  // Pick a key cell at random.
-					keyCell.HasKey = true;
-				}
+				potentials = KeyLocationPotentials(cell.Sequence);
+				keyCell = potentials[_r.Next(potentials.Count)];  // Pick a key cell at random.
+				keyCell.HasKey = true;
 			}
 		}
 
@@ -2333,7 +2290,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if (cell.Sequence >= 0 && cell.Sequence < endSequence && cell.Doors == null)
+					if (cell.Sequence >= 0 && cell.Sequence < endSequence && cell.Door == null)
 					{
 						potentials.Add(cell);
 					}
@@ -2647,16 +2604,9 @@ namespace DigitalWizardry.Dungeon
 
 					if (x % 2 == 0)
 					{  
-						if (cell.Doors != null && showDoors)
+						if (cell.Door != null && showDoors)
 						{
-							if (cell.Doors.Count == 2)
-							{
-								line.Append("2");
-							}
-							else
-							{
-								line.Append("D");
-							}
+							line.Append("D");
 						}
 						else if (cell.HasKey && showKeys)
 						{
@@ -2735,7 +2685,7 @@ namespace DigitalWizardry.Dungeon
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
 					modelCell.K = cell.HasKey ? "1" : "";
-					modelCell.D = DungeonViewDoors(cell.Doors);
+					modelCell.D = DungeonViewDoor(cell.Door);
 
 					modelCells[cell.X, cell.Y] = modelCell;
 				}
@@ -2744,38 +2694,36 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		private string DungeonViewDoors(List<Door> doorsList)
+		private string DungeonViewDoor(Door door)
 		{
-			string doors = "";
+			string viewDoor = "";
 
-			if (doorsList != null)
+			if (door != null)
 			{
-				foreach (Door door in doorsList)
+				switch (door.Dir)
 				{
-					switch (door.Dir)
-					{
-						case Direction.Up:
-							doors += "U";
-							break;
-						
-						case Direction.Down:
-							doors += "D";
-							break;
-						
-						case Direction.Left:
-							doors += "L";
-							break;
-						
-						case Direction.Right:
-							doors += "R";
-							break;
+					case Direction.Up:
+						viewDoor += "U";
+						break;
+					
+					case Direction.Down:
+						viewDoor += "D";
+						break;
+					
+					case Direction.Left:
+						viewDoor += "L";
+						break;
+					
+					case Direction.Right:
+						viewDoor += "R";
+						break;
 
-						default:
-							break;
-					}
+					default:
+						break;
 				}
 			}
-			return doors;
+
+			return viewDoor;
 		}
 
 		#endregion
