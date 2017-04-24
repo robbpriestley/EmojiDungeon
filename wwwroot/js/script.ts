@@ -72,6 +72,8 @@ function RenderLevel(level : number)
 // tile sprite sheet.
 function BuildDungeon(level : number, dungeon : object) : void
 {
+	RemoveDoors();
+	
 	for (var x = 0; x <= 14; x++) 
 	{
 		for (let y = 0; y <= 14; y++)
@@ -92,7 +94,7 @@ function BuildDungeon(level : number, dungeon : object) : void
 
 			if (dungeon[x][y].D != "")
 			{
-				AddDoor(x, y, dungeon[x][y].D, tileName);
+				AddDoor(x, y, dungeon[x][y].D);
 			}
 		}
 	}
@@ -135,12 +137,33 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	SetStartCoords(level + 1, gridReference + direction);
 }
 
-function AddDoor(x : number, y : number, direction : string, tileName : string) : void
+// *** BEGIN DOORS ***
+
+function RemoveDoors() : void
+{
+	$('.doorh').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.doorv').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+}
+
+function AddDoor(x : number, y : number, direction : string) : void
 {
 	let xPixels : number = x * 45 + DoorXFudge(direction);
 	let yPixels : number = 630 - (y * 45) + DoorYFudge(direction);
 	let doorClass : string = direction == "U" || direction == "D" ? "doorh" : "doorv";
-	$("#grid").append('<div id="door' + tileName + '" class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#grid").append('<div class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
 function DoorXFudge(direction : string) : number
@@ -201,6 +224,7 @@ function DoorYFudge(direction : string) : number
 	return fudge;
 }
 
+// *** END DOORS ***
 // *** BEGIN ACCESSORS ***
 
 function GetLevel() : number
