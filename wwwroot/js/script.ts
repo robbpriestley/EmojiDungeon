@@ -72,7 +72,7 @@ function RenderLevel(level : number)
 // tile sprite sheet.
 function BuildDungeon(level : number, dungeon : object) : void
 {
-	RemoveDoors();
+	RemoveSprites();
 	
 	for (var x = 0; x <= 14; x++) 
 	{
@@ -95,6 +95,11 @@ function BuildDungeon(level : number, dungeon : object) : void
 			if (dungeon[x][y].D != "")
 			{
 				AddDoor(x, y, dungeon[x][y].D);
+			}
+
+			if (dungeon[x][y].K != "")
+			{
+				AddKey(x, y);
 			}
 		}
 	}
@@ -137,9 +142,7 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	SetStartCoords(level + 1, gridReference + direction);
 }
 
-// *** BEGIN DOORS ***
-
-function RemoveDoors() : void
+function RemoveSprites() : void
 {
 	$('.doorh').each
 	(
@@ -156,7 +159,17 @@ function RemoveDoors() : void
 			obj.remove();
 		}
 	);
+
+	$('.key').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
 }
+
+// *** BEGIN DOORS & KEYS ***
 
 function AddDoor(x : number, y : number, direction : string) : void
 {
@@ -224,7 +237,14 @@ function DoorYFudge(direction : string) : number
 	return fudge;
 }
 
-// *** END DOORS ***
+function AddKey(x : number, y : number) : void
+{
+	let xPixels : number = x * 45;
+	let yPixels : number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite key" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+// *** END DOORS & KEYS ***
 // *** BEGIN ACCESSORS ***
 
 function GetLevel() : number
