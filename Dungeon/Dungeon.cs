@@ -2684,7 +2684,7 @@ namespace DigitalWizardry.Dungeon
 
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
-					modelCell.K = cell.HasKey ? "1" : "";
+					modelCell.K = cell.HasKey ? "K" : "";
 					modelCell.D = DungeonViewDoor(cell.Door);
 
 					modelCells[cell.X, cell.Y] = modelCell;
