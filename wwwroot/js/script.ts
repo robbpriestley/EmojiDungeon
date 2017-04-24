@@ -36,7 +36,7 @@ function RenderLevel(level : number)
 	
 	if (dungeon != null)
 	{
-		BuildGrid(level, dungeon);
+		BuildDungeon(level, dungeon);
 	}
 	else
 	{
@@ -57,7 +57,7 @@ function RenderLevel(level : number)
 			success: function (result) 
 			{
 				dungeon = JSON.parse(result);  // As this is a reset, assign the JSON to element 0 of the dungeon array.
-				BuildGrid(level, dungeon);
+				BuildDungeon(level, dungeon);
 				SetDungeon(level, dungeon);
 				spinner.stop();
 			}
@@ -70,7 +70,7 @@ function RenderLevel(level : number)
 // also removes the "native" classes the div needs ("tile" and it's location class). Those classes are 
 // added back on, as well as the tile name class that allows the div to display a graphical tile from the
 // tile sprite sheet.
-function BuildGrid(level : number, dungeon : object) : void
+function BuildDungeon(level : number, dungeon : object) : void
 {
 	for (var x = 0; x <= 14; x++) 
 	{
@@ -88,6 +88,11 @@ function BuildGrid(level : number, dungeon : object) : void
 			if (tileName == "e6" || tileName == "e7" || tileName == "e8" || tileName == "e9")
 			{
 				RecordStart(level, tileName, gridReference);
+			}
+
+			if (dungeon[x][y].D != "")
+			{
+				AddDoor(x, y, dungeon[x][y].D, tileName);
 			}
 		}
 	}
@@ -128,6 +133,72 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	}
 
 	SetStartCoords(level + 1, gridReference + direction);
+}
+
+function AddDoor(x : number, y : number, direction : string, tileName : string) : void
+{
+	let xPixels : number = x * 45 + DoorXFudge(direction);
+	let yPixels : number = 630 - (y * 45) + DoorYFudge(direction);
+	let doorClass : string = direction == "U" || direction == "D" ? "doorh" : "doorv";
+	$("#grid").append('<div id="door' + tileName + '" class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function DoorXFudge(direction : string) : number
+{
+	let fudge : number = 0;
+
+	switch (direction)
+	{
+		case "U":
+			fudge = 4;
+			break;
+		
+		case "D":
+			fudge = 4;
+			break;
+		
+		case "L":
+			fudge = -8;
+			break;
+		
+		case "R":
+			fudge = 38;
+			break;
+	
+		default:
+			break;
+	}
+
+	return fudge;
+}
+
+function DoorYFudge(direction : string) : number
+{
+	let fudge : number = 0;
+
+	switch (direction)
+	{
+		case "U":
+			fudge = -5;
+			break;
+		
+		case "D":
+			fudge = 40;
+			break;
+		
+		case "L":
+			fudge = 9;
+			break;
+		
+		case "R":
+			fudge = 9;
+			break;
+	
+		default:
+			break;
+	}
+
+	return fudge;
 }
 
 // *** BEGIN ACCESSORS ***
