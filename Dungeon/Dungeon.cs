@@ -2255,14 +2255,15 @@ namespace DigitalWizardry.Dungeon
 
 		private Door RandomDoor(Cell cell, Direction dir)
 		{    
-			if (RandomPercent() >= cell.Type.DoorProbability)
+			Door door = null;
+			
+			if (RandomPercent() < cell.Type.DoorProbability)
 			{
-				return null;
+				_cellsWithDoors.Add(cell);
+				door = new Door(dir);
 			}
 			
-			_cellsWithDoors.Add(cell);
-			
-			return new Door(dir);
+			return door;
 		}
 
 		private void PlaceKeys()
