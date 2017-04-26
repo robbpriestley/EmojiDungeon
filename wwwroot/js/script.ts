@@ -97,6 +97,42 @@ function BuildDungeon(level : number, dungeon : object) : void
 	}
 }
 
+// Remove any sprites that are "local" to a different dungeon level.
+function RemoveSprites() : void
+{
+	$('.doorh').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.doorv').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.key').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.gem').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+}
+
 // Synthesize a grid reference given X and Y coords.
 function GridReference(x : number, y : number) : string
 {
@@ -132,41 +168,6 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	}
 
 	SetStartCoords(level + 1, gridReference + direction);
-}
-
-function RemoveSprites() : void
-{
-	$('.doorh').each
-	(
-		function(i, obj) 
-		{
-			obj.remove();
-		}
-	);
-
-	$('.doorv').each
-	(
-		function(i, obj) 
-		{
-			obj.remove();
-		}
-	);
-
-	$('.key').each
-	(
-		function(i, obj) 
-		{
-			obj.remove();
-		}
-	);
-
-	$('.gem').each
-	(
-		function(i, obj) 
-		{
-			obj.remove();
-		}
-	);
 }
 
 // *** BEGIN DOORS, KEYS, and GEMS ***
