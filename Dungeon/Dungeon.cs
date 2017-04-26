@@ -2224,7 +2224,6 @@ namespace DigitalWizardry.Dungeon
 			return false;  // Made it this far...
 		}
 
-
 		private Door RandomDoorSetup(Cell cell)
 		{    
 			Door door = null;
@@ -2290,7 +2289,15 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if (cell.Sequence >= 0 && cell.Sequence < endSequence && cell.Door == null)
+					if 
+					(
+						cell.Sequence >= 0 &&
+						cell.Sequence < endSequence &&
+						cell.Door == null && 
+						cell.Type != CellTypes.Entrance &&
+						!cell.Type.IsStairsDown &&
+						!cell.Type.IsStairsUp
+					)
 					{
 						potentials.Add(cell);
 					}
