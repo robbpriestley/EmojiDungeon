@@ -2750,6 +2750,8 @@ namespace DigitalWizardry.Dungeon
 					modelCell.K = cell.HasKey ? "1" : "";
 					modelCell.D = DungeonViewDoor(cell.Door);
 
+					// modelCell.X goblin G: green, B: black
+
 					modelCells[cell.X, cell.Y] = modelCell;
 				}
 

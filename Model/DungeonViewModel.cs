@@ -9,5 +9,6 @@ namespace DigitalWizardry.Dungeon.Models
 		public string K { get; set; }  // Key exists at this cell location, "1": key, "": no key.
 		public string L { get; set; }  // CssLocation
 		public string N { get; set; }  // CssName
+		public string X { get; set; }  // Goblin, "G": green, "B": black, "": none.
 	}
 }
