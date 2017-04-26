@@ -109,11 +109,12 @@ function BuildDungeon(level : number, dungeon : object) : void
 				RecordStart(level, tileName, gridReference);
 			}
 
-			PlacePlayer();
 			PlaceAnyGoblin(x, y, dungeon[x][y].X);
 			PlaceAnyItem(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G, dungeon[x][y].H);
 		}
 	}
+	
+	PlacePlayer();
 }
 
 // Remove any sprites that are "local" to a different dungeon level.
@@ -237,9 +238,21 @@ function PlacePlayer() : void
 		y = Number(startCoords.substring(3, 5));
 	}
 	
+	let coords : Coords = new Coords(x, y);
+	SetPlayerCoords(coords);
+
 	let xPixels : number = x * 45;
 	let yPixels : number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite player" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#grid").append('<div id="player" class="sprite player" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function MovePlayer(coords : Coords) : void
+{
+	SetPlayerCoords(coords);
+	let xPixels : number = coords.X * 45;
+	let yPixels : number = 630 - (coords.Y * 45);
+	$("#player").css("top", yPixels + "px");
+	$("#player").css("left", xPixels + "px");
 }
 
 // *** END PLAYER ***
@@ -404,6 +417,23 @@ function SetStartCoords(level : number, coords : string) : void
 	sessionStorage.setItem("start" + level.toString(), coords);
 }
 
+function GetPlayerCoords() : Coords
+{
+	let rawCoords = sessionStorage.getItem("playerCoords");
+	let x : number = Number(rawCoords.substring(0, 2));
+	let y : number = Number(rawCoords.substring(2, 4));
+	let coords : Coords = new Coords(x, y);
+	return coords;
+}
+
+function SetPlayerCoords(coords : Coords) : void
+{
+	let xPart : string = coords.X < 10 ? "0" + coords.X.toString() : coords.X.toString();
+	let yPart : string = coords.Y < 10 ? "0" + coords.Y.toString() : coords.Y.toString();
+	let coordsString : string = xPart + yPart;
+	sessionStorage.setItem("playerCoords", coordsString);
+}
+
 function GetDungeon(level : number) : object
 {
 	if (sessionStorage.getItem("dungeon" + level.toString()) === null)
@@ -424,3 +454,78 @@ function SetDungeon(level : number, dungeon: object) : void
 }
 
 // *** END ACCESSORS ***
+// *** BEGIN USER INPUT ***
+
+document.onkeydown = KeyPress;
+
+function KeyPress(e) 
+{
+    e = e || window.event;
+
+    if (e.keyCode == '38')
+	{
+		PlayerMove("U");
+    }
+    else if (e.keyCode == '40')
+	{
+        PlayerMove("D");
+    }
+    else if (e.keyCode == '37')
+	{
+       PlayerMove("L");
+    }
+    else if (e.keyCode == '39')
+	{
+       PlayerMove("R");
+    }
+}
+
+// *** END USER INPUT ***
+// *** BEGIN MOVEMENT ***
+
+function PlayerMove(dir : string)
+{
+	let coords : Coords = GetPlayerCoords();
+	
+	if (dir == "U" && coords.Y < 14)
+	{
+		coords.Y += 1;
+		MovePlayer(coords);
+	}
+	else if (dir == "D" && coords.Y > 0)
+	{
+		coords.Y -= 1;
+		MovePlayer(coords);
+	}
+	else if (dir == "L" && coords.X > 0)
+	{
+		coords.X -= 1;
+		MovePlayer(coords);
+	}
+	else if (dir == "R" && coords.X < 14)
+	{
+		coords.X += 1;
+		MovePlayer(coords);
+	}
+	else
+	{
+		// No move.
+	}
+}
+
+// *** END MOVEMENT ***
+// *** BEGIN CLASS DEFINITIONS ***
+
+class Coords
+{
+    X : number;
+    Y : number;
+
+	constructor(x : number, y : number) 
+	{
+        this.X = x;
+		this.Y = y;
+    }
+}
+
+// *** END CLASS DEFINITIONS ***
