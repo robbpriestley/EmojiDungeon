@@ -43,9 +43,10 @@ function RenderLevel(level : number)
 		let spinner : Spinner = SpinnerSetup();
 		spinner.spin($('#grid')[0]);
 
-		let sX : number = level == 1 ? 7 : Number(GetStartCoords(level).substring(1, 3));
-		let sY : number = level == 1 ? 0 : Number(GetStartCoords(level).substring(3, 5));
-		let sD : string = level == 1 ? "U" : GetStartCoords(level).substring(5, 6);
+		let startCoords : string = GetStartCoords(level);
+		let sX : number = level == 1 ? 7 : Number(startCoords.substring(1, 3));
+		let sY : number = level == 1 ? 0 : Number(startCoords.substring(3, 5));
+		let sD : string = level == 1 ? "U" : startCoords.substring(5, 6);
 		
 		$.ajax
 		({
@@ -92,7 +93,9 @@ function BuildDungeon(level : number, dungeon : object) : void
 				RecordStart(level, tileName, gridReference);
 			}
 
-			DoorsKeysGemsHearts(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G, dungeon[x][y].H);
+			PlacePlayer();
+			PlaceAnyGoblin(x, y, dungeon[x][y].X);
+			PlaceAnyItem(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G, dungeon[x][y].H);
 		}
 	}
 }
@@ -100,6 +103,30 @@ function BuildDungeon(level : number, dungeon : object) : void
 // Remove any sprites that are "local" to a different dungeon level.
 function RemoveSprites() : void
 {
+	$('.player').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.goblingreen').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.goblinblack').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+	
 	$('.doorh').each
 	(
 		function(i, obj) 
@@ -178,29 +205,80 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	SetStartCoords(level + 1, gridReference + direction);
 }
 
-// *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
+// *** BEGIN PLAYER ***
 
-function DoorsKeysGemsHearts(x : number, y : number, D : string, K : string, G : string, H : string) : void
+function PlacePlayer() : void
 {
-	if (D != "")
+	let level : number = GetLevel();
+	
+	let x : number = 7;
+	let y : number = 0;
+
+	if (level != 1)
 	{
-		AddDoor(x, y, D);
-	}		
-	else if (K != "")
-	{
-		AddKey(x, y);
+		let startCoords : string = GetStartCoords(level);
+		x = Number(startCoords.substring(1, 3));
+		y = Number(startCoords.substring(3, 5));
 	}
-	else if (G != "")
+	
+	let xPixels : number = x * 45;
+	let yPixels : number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite player" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+// *** END PLAYER ***
+// *** BEGIN GOBLINS ***
+
+function PlaceAnyGoblin(x : number, y : number, X : string) : void
+{
+	if (X == "G")
 	{
-		AddGem(x, y);
+		PlaceGoblin(x, y);
 	}
-	else if (H != "")
+	else if (X == "B")
 	{
-		AddHeart(x, y);
+		PlaceBlackGoblin(x, y);
 	}
 }
 
-function AddDoor(x : number, y : number, direction : string) : void
+function PlaceGoblin(x : number, y : number) : void
+{
+	let xPixels : number = x * 45;
+	let yPixels : number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite goblingreen" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function PlaceBlackGoblin(x : number, y : number) : void
+{
+	let xPixels : number = x * 45;
+	let yPixels : number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite goblinblack" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+// *** END GOBLINS ***
+// *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
+
+function PlaceAnyItem(x : number, y : number, D : string, K : string, G : string, H : string) : void
+{
+	if (D != "")
+	{
+		PlaceDoor(x, y, D);
+	}		
+	else if (K != "")
+	{
+		PlaceKey(x, y);
+	}
+	else if (G != "")
+	{
+		PlaceGem(x, y);
+	}
+	else if (H != "")
+	{
+		PlaceHeart(x, y);
+	}
+}
+
+function PlaceDoor(x : number, y : number, direction : string) : void
 {
 	let xPixels : number = x * 45 + DoorXFudge(direction);
 	let yPixels : number = 630 - (y * 45) + DoorYFudge(direction);
@@ -266,21 +344,21 @@ function DoorYFudge(direction : string) : number
 	return fudge;
 }
 
-function AddKey(x : number, y : number) : void
+function PlaceKey(x : number, y : number) : void
 {
 	let xPixels : number = x * 45;
 	let yPixels : number = 630 - (y * 45);
 	$("#grid").append('<div class="sprite key" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
-function AddGem(x : number, y : number) : void
+function PlaceGem(x : number, y : number) : void
 {
 	let xPixels : number = x * 45;
 	let yPixels : number = 630 - (y * 45);
 	$("#grid").append('<div class="sprite gem" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
-function AddHeart(x : number, y : number) : void
+function PlaceHeart(x : number, y : number) : void
 {
 	let xPixels : number = x * 45;
 	let yPixels : number = 630 - (y * 45);
