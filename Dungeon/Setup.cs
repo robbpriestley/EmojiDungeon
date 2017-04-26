@@ -4,7 +4,8 @@ namespace DigitalWizardry.Dungeon
 	{
 		public static readonly int GridWidth = 15;
 		public static readonly int GridHeight = 15;
-		public static readonly int GemProb = 5;
+		// *** PROBS ***
+		public static readonly int GemProb = 4;
 		public static readonly int HeartProb = 1;
 		// *** ROOMS ***
 		public static readonly int MinRooms = 10;

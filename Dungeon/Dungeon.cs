@@ -2325,7 +2325,7 @@ namespace DigitalWizardry.Dungeon
 						!cell.Type.IsStairsUp && 
 						!cell.Type.IsStairsDown && 
 						cell.Type != CellTypes.Entrance &&
-						RandomPercent() <= Reference.GemProb
+						RandomPercent() < Reference.GemProb
 					)
 					{
 						cell.HasGem = true;
