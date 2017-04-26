@@ -66,6 +66,22 @@ function RenderLevel(level : number)
 	}
 }
 
+function SpinnerSetup() : Spinner
+{
+	var opts = 
+	{
+		lines: 9,
+		length: 0,
+		width: 13,
+		radius: 21,
+		color: '#fff',
+		opacity: 0.25,
+		rotate: 33
+	}
+
+	return new Spinner(opts);
+}
+
 // This function is going to iterate through each div in the grid and determine its location. It will then
 // strip it of any existing CSS classes. This will clear any dungeon level currently being presented. That
 // also removes the "native" classes the div needs ("tile" and it's location class). Those classes are 
@@ -408,22 +424,3 @@ function SetDungeon(level : number, dungeon: object) : void
 }
 
 // *** END ACCESSORS ***
-// *** BEGIN UTILITY ***
-
-function SpinnerSetup() : Spinner
-{
-	var opts = 
-	{
-		lines: 9,
-		length: 0,
-		width: 13,
-		radius: 21,
-		color: '#fff',
-		opacity: 0.25,
-		rotate: 33
-	}
-
-	return new Spinner(opts);
-}
-
-// *** END UTILITY ***
