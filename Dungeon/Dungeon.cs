@@ -48,6 +48,7 @@ namespace DigitalWizardry.Dungeon
 					PlaceDoors();
 					DungeonSolve();
 					PlaceKeys();
+					PlaceGems();
 					PlaceDownStairs();
 					dungeonComplete = true;
 				}
@@ -2144,7 +2145,7 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		#endregion
-		#region Doors and Keys
+		#region Doors, Keys, and Gems
 			
 		private void PlaceDoors()
 		{
@@ -2305,6 +2306,31 @@ namespace DigitalWizardry.Dungeon
 			}
 			
 			return potentials;
+		}
+
+		private void PlaceGems()
+		{
+			Cell cell;
+			
+			for (int x = 0; x < Reference.GridWidth; x++)
+			{
+				for (int y = 0; y < Reference.GridHeight; y++) 
+				{
+					cell = _grid[x, y];
+					
+					if
+					(
+						!cell.HasKey &&
+						!cell.Type.IsStairsUp && 
+						!cell.Type.IsStairsDown && 
+						cell.Type != CellTypes.Entrance &&
+						RandomPercent() <= Reference.GemProb
+					)
+					{
+						cell.HasGem = true;
+					}
+				}
+			}
 		}
 
 		#endregion
@@ -2691,6 +2717,7 @@ namespace DigitalWizardry.Dungeon
 
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
+					modelCell.G = cell.HasGem ? "G" : "";
 					modelCell.K = cell.HasKey ? "K" : "";
 					modelCell.D = DungeonViewDoor(cell.Door);
 
