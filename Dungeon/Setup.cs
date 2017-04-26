@@ -12,9 +12,6 @@ namespace DigitalWizardry.Dungeon
 		public static readonly int MaxRoomWidth = 4;
 		public static readonly int MaxRoomHeight = 4;
 		public static readonly int RoomExitProb = 20;
-		// *** DOORS ***
-		public static readonly int DoorLockedProb = 35;
-		public static readonly int DoorOpenProb = 20;
 	}
 
 	public enum Direction
