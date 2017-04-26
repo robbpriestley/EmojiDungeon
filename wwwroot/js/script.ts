@@ -92,7 +92,7 @@ function BuildDungeon(level : number, dungeon : object) : void
 				RecordStart(level, tileName, gridReference);
 			}
 
-			DoorsKeysGems(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G);
+			DoorsKeysGemsHearts(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G, dungeon[x][y].H);
 		}
 	}
 }
@@ -125,6 +125,14 @@ function RemoveSprites() : void
 	);
 
 	$('.gem').each
+	(
+		function(i, obj) 
+		{
+			obj.remove();
+		}
+	);
+
+	$('.heartr').each
 	(
 		function(i, obj) 
 		{
@@ -170,23 +178,25 @@ function RecordStart(level : number, tileName : string, gridReference : string) 
 	SetStartCoords(level + 1, gridReference + direction);
 }
 
-// *** BEGIN DOORS, KEYS, and GEMS ***
+// *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
 
-function DoorsKeysGems(x : number, y : number, D : string, K : string, G : string) : void
+function DoorsKeysGemsHearts(x : number, y : number, D : string, K : string, G : string, H : string) : void
 {
 	if (D != "")
 	{
 		AddDoor(x, y, D);
-	}
-			
-	if (K != "")
+	}		
+	else if (K != "")
 	{
 		AddKey(x, y);
 	}
-
-	if (G != "")
+	else if (G != "")
 	{
 		AddGem(x, y);
+	}
+	else if (H != "")
+	{
+		AddHeart(x, y);
 	}
 }
 
@@ -270,7 +280,14 @@ function AddGem(x : number, y : number) : void
 	$("#grid").append('<div class="sprite gem" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
-// *** END DOORS, KEYS, and GEMS ***
+function AddHeart(x : number, y : number) : void
+{
+	let xPixels : number = x * 45;
+	let yPixels : number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite heartr" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+// *** END DOORS, KEYS, GEMS, and HEARTS ***
 // *** BEGIN ACCESSORS ***
 
 function GetLevel() : number

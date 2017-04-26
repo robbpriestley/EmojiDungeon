@@ -49,6 +49,7 @@ namespace DigitalWizardry.Dungeon
 					DungeonSolve();
 					PlaceKeys();
 					PlaceGems();
+					PlaceHearts();
 					PlaceDownStairs();
 					dungeonComplete = true;
 				}
@@ -2145,7 +2146,7 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		#endregion
-		#region Doors, Keys, and Gems
+		#region Doors, Keys, Gems, and Hearts
 			
 		private void PlaceDoors()
 		{
@@ -2328,6 +2329,32 @@ namespace DigitalWizardry.Dungeon
 					)
 					{
 						cell.HasGem = true;
+					}
+				}
+			}
+		}
+
+		private void PlaceHearts()
+		{
+			Cell cell;
+			
+			for (int x = 0; x < Reference.GridWidth; x++)
+			{
+				for (int y = 0; y < Reference.GridHeight; y++) 
+				{
+					cell = _grid[x, y];
+					
+					if
+					(
+						!cell.HasKey &&
+						!cell.HasGem &&
+						!cell.Type.IsStairsUp && 
+						!cell.Type.IsStairsDown && 
+						cell.Type != CellTypes.Entrance &&
+						RandomPercent() < Reference.HeartProb
+					)
+					{
+						cell.HasHeart = true;
 					}
 				}
 			}
@@ -2717,8 +2744,9 @@ namespace DigitalWizardry.Dungeon
 
 					modelCell.N = cell.CssName;
 					modelCell.L = cell.CssLocation;
-					modelCell.G = cell.HasGem ? "G" : "";
-					modelCell.K = cell.HasKey ? "K" : "";
+					modelCell.G = cell.HasGem ? "1" : "";
+					modelCell.H = cell.HasHeart ? "1" : "";
+					modelCell.K = cell.HasKey ? "1" : "";
 					modelCell.D = DungeonViewDoor(cell.Door);
 
 					modelCells[cell.X, cell.Y] = modelCell;
