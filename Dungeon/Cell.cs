@@ -9,6 +9,7 @@ namespace DigitalWizardry.Dungeon
 		public bool HasKey { get; set; }
 		public bool HasGem { get; set; }
 		public bool HasHeart { get; set; }
+		public bool HasGoblin { get; set; }
 		public int Sequence { get; set; }             // Sequence number used when solving the dungeon.
 		public bool Merged { get; set; }              // Used for room merge to record cells that have already been merged.
 		public bool Visited { get; set; }             // For use when traversing the dungeon.
@@ -36,6 +37,7 @@ namespace DigitalWizardry.Dungeon
 			Y = source.Y;
 			HasKey = source.HasKey;
 			HasGem = source.HasGem;
+			HasGoblin = source.HasGoblin;
 			Sequence = source.Sequence;
 			Merged = source.Merged;
 			Visited = source.Visited;

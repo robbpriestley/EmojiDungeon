@@ -8,6 +8,7 @@ namespace DigitalWizardry.Dungeon
 {	
 	public class Dungeon
 	{
+		private int _level;
 		private Cell[,] _grid;                     // Master grid data structure, a "simulated 2-D array".
 		private Random _r;                         // Re-usable random number generator.
 		private Cell _emptyCell;                   // This empty cell instance is re-used everywhere. It exists outside of "normal space" because its coords are -1,-1.
@@ -24,14 +25,15 @@ namespace DigitalWizardry.Dungeon
 
 		public Dungeon(int level, int startX, int startY, Direction start)
 		{	
+			_level = level;
 			_r = new Random();
 			_startCoords = new Coords(startX, startY);
 			_emptyCell = new Cell(-1, -1, CellTypes.EmptyCell);
 			_maxDistance = Math.Abs(Math.Sqrt(Math.Pow(Reference.GridWidth - 1, 2) + Math.Pow(Reference.GridHeight - 1, 2)));
-			Start(level, start);
+			Start(start);
 		}
 
-		private void Start(int level, Direction start)
+		private void Start(Direction start)
 		{
 			bool dungeonComplete = false;
 			DateTime startTime = DateTime.Now;
@@ -42,7 +44,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					_iterations++;
 					
-					Initialize(level, start);
+					Initialize(start);
 					PlaceRooms();
 					GenerateDungeon();
 					PlaceDoors();
@@ -50,6 +52,7 @@ namespace DigitalWizardry.Dungeon
 					PlaceKeys();
 					PlaceGems();
 					PlaceHearts();
+					PlaceGoblins();
 					PlaceDownStairs();
 					dungeonComplete = true;
 				}
@@ -63,7 +66,7 @@ namespace DigitalWizardry.Dungeon
 			_elapsedTime = DateTime.Now - startTime;
 		}
 
-		private void Initialize(int level, Direction start)
+		private void Initialize(Direction start)
 		{
 			_grid = new Cell[Reference.GridWidth, Reference.GridHeight];
 
@@ -77,7 +80,7 @@ namespace DigitalWizardry.Dungeon
 			}
 
 			// The first level (level 1) dungeon is outfitted with the start cell at bottom center.
-			if (level == 1) 
+			if (_level == 1) 
 			{
 				PlaceEntrance();
 			}
@@ -2168,7 +2171,7 @@ namespace DigitalWizardry.Dungeon
 			}
 		}
 
-		// Quite simply put: all rooms exits have doors. This is as opposed to more complex randomized door placement r
+		// Quite simply put: all rooms exits have doors. This is as opposed to more complex randomized door placement
 		// rules. See commented-out code block marked "HERE" in above subroutine.
 		private Door SimpleDoorPlacement(Cell cell)
 		{    
@@ -2353,6 +2356,7 @@ namespace DigitalWizardry.Dungeon
 					
 					if
 					(
+						cell.Door == null &&
 						!cell.HasKey &&
 						!cell.Type.IsStairsUp && 
 						!cell.Type.IsStairsDown && 
@@ -2378,6 +2382,7 @@ namespace DigitalWizardry.Dungeon
 					
 					if
 					(
+						cell.Door == null &&
 						!cell.HasKey &&
 						!cell.HasGem &&
 						!cell.Type.IsStairsUp && 
@@ -2388,6 +2393,32 @@ namespace DigitalWizardry.Dungeon
 					{
 						cell.HasHeart = true;
 					}
+				}
+			}
+		}
+
+		private void PlaceGoblins()
+		{		
+			int goblinCount = _level + 2;
+
+			while (goblinCount > 0)
+			{
+				Coords coords = RandomCell(false);
+				Cell cell = _grid[coords.X, coords.Y];
+
+				if
+				(
+					cell.Door == null &&
+					!cell.HasKey &&
+					!cell.HasHeart &&
+					!cell.HasGoblin &&
+					!cell.Type.IsStairsUp && 
+					!cell.Type.IsStairsDown && 
+					cell.Type != CellTypes.Entrance
+				)
+				{
+					cell.HasGoblin = true;
+					goblinCount--;
 				}
 			}
 		}
@@ -2440,7 +2471,7 @@ namespace DigitalWizardry.Dungeon
 				
 				Cell cell = _grid[x, y];
 				
-				if (empty)  // Cell must be occupied.
+				if (empty)  // Cell must be unoccupied.
 				{
 					if (cell.Type.IsEmpty) 
 					{
@@ -2776,9 +2807,10 @@ namespace DigitalWizardry.Dungeon
 
 					modelCell.CssName = cell.CssName;
 					modelCell.CssLocation = cell.CssLocation;
-					modelCell.Gem = cell.HasGem;
-					modelCell.Heart = cell.HasHeart;
-					modelCell.Key = cell.HasKey;
+					modelCell.HasGem = cell.HasGem;
+					modelCell.HasHeart = cell.HasHeart;
+					modelCell.HasKey = cell.HasKey;
+					modelCell.HasGoblin = cell.HasGoblin;
 					modelCell.DoorDirection = DungeonViewDoor(cell.Door);
 
 					modelCells[cell.X, cell.Y] = modelCell;

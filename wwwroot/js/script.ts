@@ -108,12 +108,12 @@ function BuildDungeon(level: number, dungeon: object): void
 				RecordStart(level, tileName, new Coords(x, y));
 			}
 
-			if (dungeon[x][y].Goblin)
+			if (dungeon[x][y].HasGoblin)
 			{
 				PlaceGoblin(x, y);
 			}
 			
-			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].Key, dungeon[x][y].Gem, dungeon[x][y].Heart);
+			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].HasKey, dungeon[x][y].HasGem, dungeon[x][y].HasHeart);
 		}
 	}
 	
@@ -132,14 +132,6 @@ function RemoveSprites(): void
 	);
 
 	$('.goblingreen').each
-	(
-		function(i, obj) 
-		{
-			obj.remove();
-		}
-	);
-
-	$('.goblinblack').each
 	(
 		function(i, obj) 
 		{
