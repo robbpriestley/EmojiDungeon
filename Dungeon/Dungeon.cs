@@ -2148,7 +2148,7 @@ namespace DigitalWizardry.Dungeon
 		#endregion
 		#region Doors, Keys, Gems, and Hearts
 			
-		private void PlaceDoors()
+		private void  PlaceDoors()
 		{
 			Cell cell;
 			
@@ -2157,15 +2157,46 @@ namespace DigitalWizardry.Dungeon
 				for (int y = 0; y < Reference.GridHeight; y++) 
 				{
 					cell = _grid[x, y];
-					
-					if (!SuppressDoor(cell)) 
-					{
-						cell.Door = RandomDoorSetup(cell);
-					}
+					cell.Door = SimpleDoorPlacement(cell);
+
+					// HERE
+					// if (!SuppressDoor(cell)) 
+					// {
+					// 	cell.Door = RandomDoorSetup(cell);
+					// }
 				}
 			}
 		}
 
+		// Quite simply put: all rooms exits have doors. This is as opposed to more complex randomized door placement r
+		// rules. See commented-out code block marked "HERE" in above subroutine.
+		private Door SimpleDoorPlacement(Cell cell)
+		{    
+			Door door = null;
+			
+			if (cell.Type == CellTypes.RoomExitU || cell.Type == CellTypes.RoomExitUL_U || cell.Type == CellTypes.RoomExitUR_U)
+			{
+				_cellsWithDoors.Add(cell);
+				door = new Door(Direction.Up);
+			}
+			else if (cell.Type == CellTypes.RoomExitD || cell.Type == CellTypes.RoomExitDL_D || cell.Type == CellTypes.RoomExitDR_D)
+			{
+				_cellsWithDoors.Add(cell);
+				door = new Door(Direction.Down);
+			}
+			else if (cell.Type == CellTypes.RoomExitL || cell.Type == CellTypes.RoomExitUL_L || cell.Type == CellTypes.RoomExitDL_L)
+			{
+				_cellsWithDoors.Add(cell);
+				door = new Door(Direction.Left);
+			}
+			else if (cell.Type == CellTypes.RoomExitR || cell.Type == CellTypes.RoomExitUR_R || cell.Type == CellTypes.RoomExitDR_R)
+			{
+				_cellsWithDoors.Add(cell);
+				door = new Door(Direction.Right);
+			}
+
+			return door;
+		}
 
 		// Don't allow two doors to appear side-by-side if the door is to be placed in a corridor.
 		// Also, don't allow a door to appear in the viscinity of the start cell, because it could
@@ -2743,14 +2774,12 @@ namespace DigitalWizardry.Dungeon
 				{
 					DungeonViewModelCell modelCell = new DungeonViewModelCell();
 
-					modelCell.N = cell.CssName;
-					modelCell.L = cell.CssLocation;
-					modelCell.G = cell.HasGem ? "1" : "";
-					modelCell.H = cell.HasHeart ? "1" : "";
-					modelCell.K = cell.HasKey ? "1" : "";
-					modelCell.D = DungeonViewDoor(cell.Door);
-
-					// modelCell.X goblin G: green, B: black
+					modelCell.CssName = cell.CssName;
+					modelCell.CssLocation = cell.CssLocation;
+					modelCell.Gem = cell.HasGem;
+					modelCell.Heart = cell.HasHeart;
+					modelCell.Key = cell.HasKey;
+					modelCell.DoorDirection = DungeonViewDoor(cell.Door);
 
 					modelCells[cell.X, cell.Y] = modelCell;
 				}

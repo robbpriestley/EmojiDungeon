@@ -21,7 +21,7 @@ td {
 }
 
 td.pad {	
-	width: 400px;
+	width: 300;
 	padding-right: 10px;
 }
 
@@ -46,9 +46,18 @@ a.btn:hover {
 	background: #3cb0fd;
 }
 
+p.small {
+	font-size: 8pt;
+	margin-top: 0px;
+}
+
 p.btn {
 	margin-top: 30px;
 	margin-bottom: 30px; 
+}
+
+h3 {
+	margin-bottom: 0px;
 }
 
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.

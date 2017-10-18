@@ -100,7 +100,7 @@ function BuildDungeon(level: number, dungeon: object): void
 			$(gridId).addClass("tile");                      // Add "native" class.
 			$(gridId).addClass(gridReference);               // Add "native" class.
 			
-			let tileName: string = dungeon[x][y].N
+			let tileName: string = dungeon[x][y].CssName;
 			$(gridId).addClass(tileName);                    // Add tile name class.
 
 			if (tileName == "e6" || tileName == "e7" || tileName == "e8" || tileName == "e9")
@@ -108,8 +108,12 @@ function BuildDungeon(level: number, dungeon: object): void
 				RecordStart(level, tileName, new Coords(x, y));
 			}
 
-			PlaceAnyGoblin(x, y, dungeon[x][y].X);
-			PlaceAnyItem(x, y, dungeon[x][y].D, dungeon[x][y].K, dungeon[x][y].G, dungeon[x][y].H);
+			if (dungeon[x][y].Goblin)
+			{
+				PlaceGoblin(x, y);
+			}
+			
+			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].Key, dungeon[x][y].Gem, dungeon[x][y].Heart);
 		}
 	}
 	
@@ -254,18 +258,6 @@ function MovePlayer(coords: Coords): void
 // *** END PLAYER ***
 // *** BEGIN GOBLINS ***
 
-function PlaceAnyGoblin(x: number, y: number, X: string): void
-{
-	if (X == "G")
-	{
-		PlaceGoblin(x, y);
-	}
-	else if (X == "B")
-	{
-		PlaceBlackGoblin(x, y);
-	}
-}
-
 function PlaceGoblin(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
@@ -273,31 +265,24 @@ function PlaceGoblin(x: number, y: number): void
 	$("#grid").append('<div class="sprite goblingreen" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
-function PlaceBlackGoblin(x: number, y: number): void
-{
-	let xPixels: number = x * 45;
-	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite goblinblack" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
-}
-
 // *** END GOBLINS ***
 // *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
 
-function PlaceAnyItem(x: number, y: number, D: string, K: string, G: string, H: string): void
+function PlaceItem(x: number, y: number, DoorDirection: string, Key: string, Gem: string, Heart: string): void
 {
-	if (D != "")
+	if (DoorDirection != "")
 	{
-		PlaceDoor(x, y, D);
+		PlaceDoor(x, y, DoorDirection);
 	}		
-	else if (K != "")
+	else if (Key != "")
 	{
 		PlaceKey(x, y);
 	}
-	else if (G != "")
+	else if (Gem != "")
 	{
 		PlaceGem(x, y);
 	}
-	else if (H != "")
+	else if (Heart != "")
 	{
 		PlaceHeart(x, y);
 	}
@@ -422,6 +407,38 @@ function KeyPress(e)
 
 function PlayerMove(dir: string)
 {	
+	if (dir == "U" && PlayerCoords.Y < 14)
+	{
+		PlayerCoords.Y += 1;
+		MovePlayer(PlayerCoords);
+	}
+	else if (dir == "D" && PlayerCoords.Y > 0)
+	{
+		PlayerCoords.Y -= 1;
+		MovePlayer(PlayerCoords);
+	}
+	else if (dir == "L" && PlayerCoords.X > 0)
+	{
+		PlayerCoords.X -= 1;
+		MovePlayer(PlayerCoords);
+	}
+	else if (dir == "R" && PlayerCoords.X < 14)
+	{
+		PlayerCoords.X += 1;
+		MovePlayer(PlayerCoords);
+	}
+	else
+	{
+		// No move.
+	}
+}
+
+function MoveAllowed(dir: string)
+{	
+	let dungeon : object = Dungeon[Level];
+
+
+	
 	if (dir == "U" && PlayerCoords.Y < 14)
 	{
 		PlayerCoords.Y += 1;
