@@ -183,6 +183,17 @@ function RemoveSprites(): void
 			}
 		}
 	);
+
+	$('.sword').each
+	(
+		function(i, obj) 
+		{
+			if (obj.id != "swordCountIcon")
+			{
+				obj.remove();
+			}
+		}
+	);
 }
 
 // Synthesize a grid reference given X and Y coords.
