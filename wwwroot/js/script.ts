@@ -433,19 +433,19 @@ function MoveAllowed(x: number, y: number, dir: string)
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
 
-	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14)
+	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14 && dungeon[x][y + 1].DoorDirection != "D")
 	{
 		allowed = true;
 	}
-	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0)
+	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0 && dungeon[x][y - 1].DoorDirection != "U")
 	{
 		allowed = true;
 	}
-	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0)
+	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0 && dungeon[x - 1][y].DoorDirection != "R")
 	{
 		allowed = true;
 	}
-	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14)
+	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14 && dungeon[x + 1][y].DoorDirection != "L")
 	{
 		allowed = true;
 	}
