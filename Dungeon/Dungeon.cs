@@ -2410,6 +2410,7 @@ namespace DigitalWizardry.Dungeon
 				(
 					cell.Door == null &&
 					!cell.HasKey &&
+					!cell.HasGem &&
 					!cell.HasHeart &&
 					!cell.HasGoblin &&
 					!cell.Type.IsStairsUp && 
