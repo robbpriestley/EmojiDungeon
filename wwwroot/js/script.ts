@@ -61,8 +61,8 @@ function RenderLevel()
 			success: function (result) 
 			{
 				dungeon = JSON.parse(result);  // As this is a reset, assign the JSON to element 0 of the dungeon array.
-				BuildDungeon(Level, dungeon);
 				Dungeon[Level] = dungeon;
+				BuildDungeon(Level, dungeon);
 				spinner.stop();
 			}
 		});
@@ -111,13 +111,8 @@ function BuildDungeon(level: number, dungeon: object): void
 			{
 				RecordStart(level, tileName, new Coords(x, y));
 			}
-
-			if (dungeon[x][y].HasGoblin)
-			{
-				PlaceGoblin(x, y);
-			}
 			
-			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].HasKey, dungeon[x][y].HasGem, dungeon[x][y].HasHeart, dungeon[x][y].HasSword);
+			PlaceContents(x, y);
 		}
 	}
 	
@@ -276,29 +271,33 @@ function PlaceGoblin(x: number, y: number): void
 }
 
 // *** END GOBLINS ***
-// *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
+// *** BEGIN CONTENTS ***
 
-function PlaceItem(x: number, y: number, DoorDirection: string, Key: string, Gem: string, Heart: string, Sword: string): void
+function PlaceContents(x: number, y: number): void
 {
-	if (DoorDirection != "")
+	if (Dungeon[Level][x][y].DoorDirection != "")
 	{
-		PlaceDoor(x, y, DoorDirection);
+		PlaceDoor(x, y, Dungeon[Level][x][y].DoorDirection);
 	}		
-	else if (Key != "")
+	else if (Dungeon[Level][x][y].HasKey)
 	{
 		PlaceKey(x, y);
 	}
-	else if (Gem != "")
+	else if (Dungeon[Level][x][y].HasGem != "")
 	{
 		PlaceGem(x, y);
 	}
-	else if (Heart != "")
+	else if (Dungeon[Level][x][y].HasHeart != "")
 	{
 		PlaceHeart(x, y);
 	}
-	else if (Sword != "")
+	else if (Dungeon[Level][x][y].HasSword != "")
 	{
 		PlaceSword(x, y);
+	}
+	else if (Dungeon[Level][x][y].HasGoblin != "")
+	{
+		PlaceGoblin(x, y);
 	}
 }
 
