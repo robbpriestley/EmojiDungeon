@@ -131,7 +131,7 @@ function RemoveSprites(): void
 		}
 	);
 
-	$('.goblingreen').each
+	$('.goblin').each
 	(
 		function(i, obj) 
 		{
@@ -171,7 +171,7 @@ function RemoveSprites(): void
 		}
 	);
 
-	$('.heartr').each
+	$('.heart').each
 	(
 		function(i, obj) 
 		{
@@ -254,7 +254,7 @@ function PlaceGoblin(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite goblingreen" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#grid").append('<div class="sprite goblin" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
 // *** END GOBLINS ***
@@ -364,7 +364,7 @@ function PlaceHeart(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite heartr" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#grid").append('<div class="sprite heart" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
 // *** END DOORS, KEYS, GEMS, and HEARTS ***
