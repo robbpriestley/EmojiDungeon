@@ -399,22 +399,25 @@ function KeyPress(e)
 
 function PlayerMove(dir: string)
 {	
-	if (dir == "U" && PlayerCoords.Y < 14)
+	let x: number = PlayerCoords.X;
+	let y: number = PlayerCoords.Y;
+	
+	if (dir == "U" && MoveAllowed(x, y, dir))
 	{
 		PlayerCoords.Y += 1;
 		MovePlayer(PlayerCoords);
 	}
-	else if (dir == "D" && PlayerCoords.Y > 0)
+	else if (dir == "D" && MoveAllowed(x, y, dir))
 	{
 		PlayerCoords.Y -= 1;
 		MovePlayer(PlayerCoords);
 	}
-	else if (dir == "L" && PlayerCoords.X > 0)
+	else if (dir == "L" && MoveAllowed(x, y, dir))
 	{
 		PlayerCoords.X -= 1;
 		MovePlayer(PlayerCoords);
 	}
-	else if (dir == "R" && PlayerCoords.X < 14)
+	else if (dir == "R" && MoveAllowed(x, y, dir))
 	{
 		PlayerCoords.X += 1;
 		MovePlayer(PlayerCoords);
@@ -425,36 +428,29 @@ function PlayerMove(dir: string)
 	}
 }
 
-function MoveAllowed(dir: string)
+function MoveAllowed(x: number, y: number, dir: string)
 {	
-	let dungeon : object = Dungeon[Level];
+	let allowed: boolean = false;
+	let dungeon: object = Dungeon[Level];
 
-
+	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14)
+	{
+		allowed = true;
+	}
+	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0)
+	{
+		allowed = true;
+	}
+	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0)
+	{
+		allowed = true;
+	}
+	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14)
+	{
+		allowed = true;
+	}
 	
-	if (dir == "U" && PlayerCoords.Y < 14)
-	{
-		PlayerCoords.Y += 1;
-		MovePlayer(PlayerCoords);
-	}
-	else if (dir == "D" && PlayerCoords.Y > 0)
-	{
-		PlayerCoords.Y -= 1;
-		MovePlayer(PlayerCoords);
-	}
-	else if (dir == "L" && PlayerCoords.X > 0)
-	{
-		PlayerCoords.X -= 1;
-		MovePlayer(PlayerCoords);
-	}
-	else if (dir == "R" && PlayerCoords.X < 14)
-	{
-		PlayerCoords.X += 1;
-		MovePlayer(PlayerCoords);
-	}
-	else
-	{
-		// No move.
-	}
+	return allowed;
 }
 
 // *** END MOVEMENT ***

@@ -2812,6 +2812,10 @@ namespace DigitalWizardry.Dungeon
 					modelCell.HasKey = cell.HasKey;
 					modelCell.HasGoblin = cell.HasGoblin;
 					modelCell.DoorDirection = DungeonViewDoor(cell.Door);
+					modelCell.TraversableUp = cell.Type.TraversableUp;
+					modelCell.TraversableDown = cell.Type.TraversableDown;
+					modelCell.TraversableLeft = cell.Type.TraversableLeft;
+					modelCell.TraversableRight = cell.Type.TraversableRight;
 
 					modelCells[cell.X, cell.Y] = modelCell;
 				}

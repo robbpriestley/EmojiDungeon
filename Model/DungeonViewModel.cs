@@ -10,5 +10,9 @@ namespace DigitalWizardry.Dungeon.Models
 		public bool HasGoblin { get; set; }
 		public string CssLocation { get; set; } 
 		public string CssName { get; set; }
+		public bool TraversableUp { get; set; }
+		public bool TraversableDown { get; set; }
+		public bool TraversableLeft { get; set; }
+		public bool TraversableRight { get; set; }
 	}
 }

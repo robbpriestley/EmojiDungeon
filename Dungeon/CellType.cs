@@ -621,7 +621,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDR.RoomWallDirection = Direction.DownRight;
 			RoomWallDR.Name = "c5";
 			
+			RoomWallULinv.TraversableUp = true;
 			RoomWallULinv.TraversableDown = true;
+			RoomWallULinv.TraversableLeft = true;
 			RoomWallULinv.TraversableRight = true;
 			RoomWallULinv.RoomConnectsDown = true;
 			RoomWallULinv.RoomConnectsRight = true;
@@ -632,8 +634,10 @@ namespace DigitalWizardry.Dungeon
 			RoomWallULinv.ForceGrowthCompatible = false;
 			RoomWallULinv.Name = "c6";
 			
+			RoomWallURinv.TraversableUp = true;
 			RoomWallURinv.TraversableDown = true;
 			RoomWallURinv.TraversableLeft = true;
+			RoomWallURinv.TraversableRight = true;
 			RoomWallURinv.RoomConnectsDown = true;
 			RoomWallURinv.RoomConnectsLeft = true;
 			RoomWallURinv.TextRep = "┐";
@@ -644,6 +648,8 @@ namespace DigitalWizardry.Dungeon
 			RoomWallURinv.Name = "c7";
 			
 			RoomWallDLinv.TraversableUp = true;
+			RoomWallDLinv.TraversableDown = true;
+			RoomWallDLinv.TraversableLeft = true;
 			RoomWallDLinv.TraversableRight = true;
 			RoomWallDLinv.RoomConnectsUp = true;
 			RoomWallDLinv.RoomConnectsRight = true;
@@ -654,7 +660,9 @@ namespace DigitalWizardry.Dungeon
 			RoomWallDLinv.Name = "c8";
 			
 			RoomWallDRinv.TraversableUp = true;
+			RoomWallDRinv.TraversableDown = true;
 			RoomWallDRinv.TraversableLeft = true;
+			RoomWallDRinv.TraversableRight = true;
 			RoomWallDRinv.RoomConnectsUp = true;
 			RoomWallDRinv.RoomConnectsLeft = true;
 			RoomWallDRinv.TextRep = "┘";
