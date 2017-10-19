@@ -66,6 +66,23 @@ h3 {
 	margin-bottom: 0px;
 }
 
+div.score {
+	margin-bottom: 25px;
+}
+
+span.score {
+	font-size: 30pt;
+	font-weight: bold;
+	margin-left: 5px;
+	margin-bottom: 20px;
+}
+
+span.count {
+	font-size: 30pt;
+	font-weight: bold;
+	margin-left: 47px;
+}
+
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.
 	 The grid div needs to be position: relative because position: absolute works by the principle of 
 	 "position yourself in relation to the nearest ancestor who has position: absolute or position: relative." 

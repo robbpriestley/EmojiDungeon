@@ -1,7 +1,10 @@
 "use strict";
 
 let Level: number;
+let Score: number = 0;
 let KeyCount: number = 0;
+let HeartCount: number = 3;
+let SwordCount: number = 0;
 let PlayerCoords: Coords;
 let Dungeon: Array<object> = new Array<object>();
 let StartCoords: Array<Coords> = new Array<Coords>();
@@ -10,8 +13,8 @@ window.onload = function(){Start();}
 
 function Start(): void
 {
-	sessionStorage.clear();
 	Level = 1;
+	UpdateCounts();
 	$("#level").text("1");
 	RenderLevel();
 }
@@ -160,7 +163,10 @@ function RemoveSprites(): void
 	(
 		function(i, obj) 
 		{
-			obj.remove();
+			if (obj.id != "keyCountIcon")
+			{
+				obj.remove();
+			}
 		}
 	);
 
@@ -176,7 +182,10 @@ function RemoveSprites(): void
 	(
 		function(i, obj) 
 		{
-			obj.remove();
+			if (obj.id != "heartCountIcon")
+			{
+				obj.remove();
+			}
 		}
 	);
 }
@@ -216,6 +225,14 @@ function RecordStart(level: number, tileName: string, coords: Coords): void
 	}
 
 	StartCoords[Level + 1] = coords;
+}
+
+function UpdateCounts(): void
+{
+	$("#scoreCount").html(Score.toString());
+	$("#keyCount").html(KeyCount.toString());
+	$("#heartCount").html(HeartCount.toString());
+	$("#swordCount").html(SwordCount.toString());
 }
 
 // *** BEGIN PLAYER ***
@@ -416,7 +433,8 @@ function PlayerMove(dir: string)
 		if (dungeon[x][y + 1].HasKey)
 		{
 			KeyCount++;
-			RemoveKey(x, y + 1);                    
+			RemoveKey(x, y + 1);
+			UpdateCounts();                  
 		}
 		
 		PlayerCoords.Y += 1;
@@ -428,6 +446,7 @@ function PlayerMove(dir: string)
 		{
 			KeyCount++;
 			RemoveKey(x, y - 1);
+			UpdateCounts();
 		}
 		
 		PlayerCoords.Y -= 1;
@@ -439,6 +458,7 @@ function PlayerMove(dir: string)
 		{
 			KeyCount++;
 			RemoveKey(x - 1, y);
+			UpdateCounts();
 		}
 		
 		PlayerCoords.X -= 1;
@@ -450,6 +470,7 @@ function PlayerMove(dir: string)
 		{
 			KeyCount++;
 			RemoveKey(x + 1, y);
+			UpdateCounts();
 		}
 		
 		PlayerCoords.X += 1;
