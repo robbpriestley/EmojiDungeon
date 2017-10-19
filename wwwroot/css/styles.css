@@ -11,6 +11,12 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
+/* Prevent horizontal scroll on left and right arrow key press despite page being narrower than viewport. https://stackoverflow.com/a/17756714/1348592 */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 table { 
 	margin: 0 auto;
 	border-collapse: collapse; 
