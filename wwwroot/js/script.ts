@@ -117,7 +117,7 @@ function BuildDungeon(level: number, dungeon: object): void
 				PlaceGoblin(x, y);
 			}
 			
-			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].HasKey, dungeon[x][y].HasGem, dungeon[x][y].HasHeart);
+			PlaceItem(x, y, dungeon[x][y].DoorDirection, dungeon[x][y].HasKey, dungeon[x][y].HasGem, dungeon[x][y].HasHeart, dungeon[x][y].HasSword);
 		}
 	}
 	
@@ -278,7 +278,7 @@ function PlaceGoblin(x: number, y: number): void
 // *** END GOBLINS ***
 // *** BEGIN DOORS, KEYS, GEMS, and HEARTS ***
 
-function PlaceItem(x: number, y: number, DoorDirection: string, Key: string, Gem: string, Heart: string): void
+function PlaceItem(x: number, y: number, DoorDirection: string, Key: string, Gem: string, Heart: string, Sword: string): void
 {
 	if (DoorDirection != "")
 	{
@@ -295,6 +295,10 @@ function PlaceItem(x: number, y: number, DoorDirection: string, Key: string, Gem
 	else if (Heart != "")
 	{
 		PlaceHeart(x, y);
+	}
+	else if (Sword != "")
+	{
+		PlaceSword(x, y);
 	}
 }
 
@@ -390,6 +394,13 @@ function PlaceHeart(x: number, y: number): void
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
 	$("#grid").append('<div class="sprite heart" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function PlaceSword(x: number, y: number): void
+{
+	let xPixels: number = x * 45;
+	let yPixels: number = 630 - (y * 45);
+	$("#grid").append('<div class="sprite sword" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
 // *** END DOORS, KEYS, GEMS, and HEARTS ***

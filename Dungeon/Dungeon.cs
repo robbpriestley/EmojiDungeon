@@ -52,6 +52,7 @@ namespace DigitalWizardry.Dungeon
 					PlaceKeys();
 					PlaceGems();
 					PlaceHearts();
+					PlaceSwords();
 					PlaceGoblins();
 					PlaceDownStairs();
 					dungeonComplete = true;
@@ -2300,6 +2301,22 @@ namespace DigitalWizardry.Dungeon
 			return door;
 		}
 
+		// Cell available for placement of item (key, heart, gem, etc).
+		private bool CellAvailableForItem(Cell cell)
+		{
+			return
+
+			cell.Door == null &&
+			!cell.HasKey &&
+			!cell.HasGem &&
+			!cell.HasHeart &&
+			!cell.HasSword && 
+			!cell.HasGoblin &&
+			!cell.Type.IsStairsUp && 
+			!cell.Type.IsStairsDown && 
+			cell.Type != CellTypes.Entrance;
+		}
+
 		private void PlaceKeys()
 		{
 			Cell keyCell;
@@ -2326,15 +2343,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if 
-					(
-						cell.Sequence >= 0 &&
-						cell.Sequence < endSequence &&
-						cell.Door == null && 
-						cell.Type != CellTypes.Entrance &&
-						!cell.Type.IsStairsDown &&
-						!cell.Type.IsStairsUp
-					)
+					if (cell.Sequence >= 0 && cell.Sequence < endSequence && CellAvailableForItem(cell))
 					{
 						potentials.Add(cell);
 					}
@@ -2354,15 +2363,7 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if
-					(
-						cell.Door == null &&
-						!cell.HasKey &&
-						!cell.Type.IsStairsUp && 
-						!cell.Type.IsStairsDown && 
-						cell.Type != CellTypes.Entrance &&
-						RandomPercent() < Reference.GemProb
-					)
+					if (CellAvailableForItem(cell) && RandomPercent() < Reference.GemProb)
 					{
 						cell.HasGem = true;
 					}
@@ -2380,19 +2381,27 @@ namespace DigitalWizardry.Dungeon
 				{
 					cell = _grid[x, y];
 					
-					if
-					(
-						cell.Door == null &&
-						!cell.HasKey &&
-						!cell.HasGem &&
-						!cell.Type.IsStairsUp && 
-						!cell.Type.IsStairsDown && 
-						cell.Type != CellTypes.Entrance &&
-						RandomPercent() < Reference.HeartProb
-					)
+					if (CellAvailableForItem(cell) && RandomPercent() < Reference.HeartProb)
 					{
 						cell.HasHeart = true;
 					}
+				}
+			}
+		}
+
+		private void PlaceSwords()
+		{		
+			int swordCount = _level + 2;
+
+			while (swordCount > 0)
+			{
+				Coords coords = RandomCell(false);
+				Cell cell = _grid[coords.X, coords.Y];
+
+				if (CellAvailableForItem(cell))
+				{
+					cell.HasSword = true;
+					swordCount--;
 				}
 			}
 		}
@@ -2406,17 +2415,7 @@ namespace DigitalWizardry.Dungeon
 				Coords coords = RandomCell(false);
 				Cell cell = _grid[coords.X, coords.Y];
 
-				if
-				(
-					cell.Door == null &&
-					!cell.HasKey &&
-					!cell.HasGem &&
-					!cell.HasHeart &&
-					!cell.HasGoblin &&
-					!cell.Type.IsStairsUp && 
-					!cell.Type.IsStairsDown && 
-					cell.Type != CellTypes.Entrance
-				)
+				if(CellAvailableForItem(cell))
 				{
 					cell.HasGoblin = true;
 					goblinCount--;
@@ -2808,9 +2807,10 @@ namespace DigitalWizardry.Dungeon
 
 					modelCell.CssName = cell.CssName;
 					modelCell.CssLocation = cell.CssLocation;
+					modelCell.HasKey = cell.HasKey;
 					modelCell.HasGem = cell.HasGem;
 					modelCell.HasHeart = cell.HasHeart;
-					modelCell.HasKey = cell.HasKey;
+					modelCell.HasSword = cell.HasSword;
 					modelCell.HasGoblin = cell.HasGoblin;
 					modelCell.DoorDirection = DungeonViewDoor(cell.Door);
 					modelCell.TraversableUp = cell.Type.TraversableUp;

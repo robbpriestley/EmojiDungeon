@@ -11,7 +11,7 @@
 .e0, .e1, .e2, .e3, .e4, 
 .e5, .e6, .e7, .e8, .e9, 
 .gem, .goblin, .heart, .key, .player, 
-.doorh, .doorv
+.sword, .doorh, .doorv
 { display: inline-block; background: url('/images/sprites.png') no-repeat; overflow: hidden; text-indent: -9999px; text-align: left; }
  
 .a0 { background-position: -0px -0px; width: 45px; height: 45px; }
@@ -69,5 +69,6 @@
 .heart { background-position: -0px -2340px; width: 45px; height: 45px; }
 .key { background-position: -0px -2385px; width: 45px; height: 45px; }
 .player { background-position: -0px -2430px; width: 45px; height: 45px; }
-.doorh { background-position: -0px -2475px; width: 32px; height: 13px; }
-.doorv { background-position: -32px -2475px; width: 13px; height: 32px; }
+.sword { background-position: -0px -2475px; width: 45px; height: 45px; }
+.doorh { background-position: -0px -2520px; width: 32px; height: 13px; }
+.doorv { background-position: -32px -2520px; width: 13px; height: 32px; }
