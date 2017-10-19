@@ -1,6 +1,7 @@
 "use strict";
 
 let Level: number;
+let KeyCount: number = 0;
 let PlayerCoords: Coords;
 let Dungeon: Array<object> = new Array<object>();
 let StartCoords: Array<Coords> = new Array<Coords>();
@@ -238,7 +239,7 @@ function PlacePlayer(): void
 	$("#grid").append('<div id="player" class="sprite player" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
-function MovePlayer(coords: Coords): void
+function RepositionPlayer(coords: Coords): void
 {
 	PlayerCoords = coords;
 	let xPixels: number = coords.X * 45;
@@ -350,7 +351,14 @@ function PlaceKey(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite key" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "key" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite key" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveKey(x: number, y: number): void
+{
+	Dungeon[Level][x][y].HasKey = false;
+	$("#key" + GridReference(x, y)).remove();
 }
 
 function PlaceGem(x: number, y: number): void
@@ -401,26 +409,51 @@ function PlayerMove(dir: string)
 {	
 	let x: number = PlayerCoords.X;
 	let y: number = PlayerCoords.Y;
+	let dungeon: object = Dungeon[Level];
 	
 	if (dir == "U" && MoveAllowed(x, y, dir))
 	{
+		if (dungeon[x][y + 1].HasKey)
+		{
+			KeyCount++;
+			RemoveKey(x, y + 1);                    
+		}
+		
 		PlayerCoords.Y += 1;
-		MovePlayer(PlayerCoords);
+		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "D" && MoveAllowed(x, y, dir))
 	{
+		if (dungeon[x][y - 1].HasKey)
+		{
+			KeyCount++;
+			RemoveKey(x, y - 1);
+		}
+		
 		PlayerCoords.Y -= 1;
-		MovePlayer(PlayerCoords);
+		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "L" && MoveAllowed(x, y, dir))
 	{
+		if (dungeon[x - 1][y].HasKey)
+		{
+			KeyCount++;
+			RemoveKey(x - 1, y);
+		}
+		
 		PlayerCoords.X -= 1;
-		MovePlayer(PlayerCoords);
+		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "R" && MoveAllowed(x, y, dir))
 	{
+		if (dungeon[x + 1][y].HasKey)
+		{
+			KeyCount++;
+			RemoveKey(x + 1, y);
+		}
+		
 		PlayerCoords.X += 1;
-		MovePlayer(PlayerCoords);
+		RepositionPlayer(PlayerCoords);
 	}
 	else
 	{
