@@ -306,7 +306,14 @@ function PlaceDoor(x: number, y: number, direction: string): void
 	let xPixels: number = x * 45 + DoorXFudge(direction);
 	let yPixels: number = 630 - (y * 45) + DoorYFudge(direction);
 	let doorClass: string = direction == "U" || direction == "D" ? "doorh": "doorv";
-	$("#grid").append('<div class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "door" + GridReference(x, y);	
+	$("#grid").append('<div id="' + reference + '" class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveDoor(x: number, y: number): void
+{
+	Dungeon[Level][x][y].DoorDirection = "";
+	$("#door" + GridReference(x, y)).remove();
 }
 
 function DoorXFudge(direction: string): number
@@ -385,21 +392,42 @@ function PlaceGem(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite gem" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "gem" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite gem" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveGem(x: number, y: number): void
+{
+	Dungeon[Level][x][y].HasGem = false;
+	$("#gem" + GridReference(x, y)).remove();
 }
 
 function PlaceHeart(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite heart" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "heart" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite heart" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveHeart(x: number, y: number): void
+{
+	Dungeon[Level][x][y].HasHeart = false;
+	$("#heart" + GridReference(x, y)).remove();
 }
 
 function PlaceSword(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite sword" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "sword" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite sword" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveSword(x: number, y: number): void
+{
+	Dungeon[Level][x][y].HasSword = false;
+	$("#sword" + GridReference(x, y)).remove();
 }
 
 // *** END DOORS, KEYS, GEMS, and HEARTS ***
@@ -440,49 +468,29 @@ function PlayerMove(dir: string)
 	
 	if (dir == "U" && MoveAllowed(x, y, dir))
 	{
-		if (dungeon[x][y + 1].HasKey)
-		{
-			KeyCount++;
-			RemoveKey(x, y + 1);
-			UpdateCounts();                  
-		}
-		
+		DoorCheck(x, y, dir);
+		ItemCheck(x, y + 1);
 		PlayerCoords.Y += 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "D" && MoveAllowed(x, y, dir))
 	{
-		if (dungeon[x][y - 1].HasKey)
-		{
-			KeyCount++;
-			RemoveKey(x, y - 1);
-			UpdateCounts();
-		}
-		
+		DoorCheck(x, y, dir);
+		ItemCheck(x, y - 1);
 		PlayerCoords.Y -= 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "L" && MoveAllowed(x, y, dir))
 	{
-		if (dungeon[x - 1][y].HasKey)
-		{
-			KeyCount++;
-			RemoveKey(x - 1, y);
-			UpdateCounts();
-		}
-		
+		DoorCheck(x, y, dir);
+		ItemCheck(x - 1, y);
 		PlayerCoords.X -= 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "R" && MoveAllowed(x, y, dir))
 	{
-		if (dungeon[x + 1][y].HasKey)
-		{
-			KeyCount++;
-			RemoveKey(x + 1, y);
-			UpdateCounts();
-		}
-		
+		DoorCheck(x, y, dir);
+		ItemCheck(x + 1, y);
 		PlayerCoords.X += 1;
 		RepositionPlayer(PlayerCoords);
 	}
@@ -497,24 +505,132 @@ function MoveAllowed(x: number, y: number, dir: string)
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
 
-	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14 && dungeon[x][y + 1].DoorDirection != "D")
+	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14)
 	{
-		allowed = true;
+		if (dungeon[x][y].DoorDirection != "U" && dungeon[x][y + 1].DoorDirection != "D")
+		{
+			allowed = true;
+		}
+		else if (KeyCount > 0)
+		{
+			allowed = true;
+		}
 	}
-	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0 && dungeon[x][y - 1].DoorDirection != "U")
+	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0)
 	{
-		allowed = true;
+		if (dungeon[x][y].DoorDirection != "D" && dungeon[x][y - 1].DoorDirection != "U")
+		{
+			allowed = true;
+		}
+		else if (KeyCount > 0)
+		{
+			allowed = true;
+		}
 	}
-	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0 && dungeon[x - 1][y].DoorDirection != "R")
+	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0)
 	{
-		allowed = true;
+		if (dungeon[x][y].DoorDirection != "L" && dungeon[x - 1][y].DoorDirection != "R")
+		{
+			allowed = true;
+		}
+		else if (KeyCount > 0)
+		{
+			allowed = true;
+		}
 	}
-	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14 && dungeon[x + 1][y].DoorDirection != "L")
+	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14)
 	{
-		allowed = true;
+		if (dungeon[x][y].DoorDirection != "R" && dungeon[x + 1][y].DoorDirection != "L")
+		{
+			allowed = true;
+		}
+		else if (KeyCount > 0)
+		{
+			allowed = true;
+		}
 	}
 	
 	return allowed;
+}
+
+function DoorCheck(x: number, y: number, dir: string)
+{
+	if (dir == "U" && Dungeon[Level][x][y].DoorDirection == "U" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y);
+		UpdateCounts();
+	} 
+	if (dir == "U" && Dungeon[Level][x][y + 1].DoorDirection == "D" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y + 1);
+		UpdateCounts();
+	} 
+	if (dir == "D" && Dungeon[Level][x][y].DoorDirection == "D" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y);
+		UpdateCounts();
+	} 
+	if (dir == "D" && Dungeon[Level][x][y - 1].DoorDirection == "U" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y - 1);
+		UpdateCounts();
+	} 
+	if (dir == "L" && Dungeon[Level][x][y].DoorDirection == "L" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y);
+		UpdateCounts();
+	} 
+	if (dir == "L" && Dungeon[Level][x - 1][y].DoorDirection == "R" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x - 1, y);
+		UpdateCounts();
+	} 
+	if (dir == "R" && Dungeon[Level][x][y].DoorDirection == "R" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x, y);
+		UpdateCounts();
+	} 
+	if (dir == "R" && Dungeon[Level][x + 1][y].DoorDirection == "L" && KeyCount > 0)
+	{
+		KeyCount--;
+		RemoveDoor(x + 1, y);
+		UpdateCounts();
+	} 
+}
+
+function ItemCheck(x: number, y: number): void
+{
+	if (Dungeon[Level][x][y].HasKey)
+	{
+		KeyCount++;
+		RemoveKey(x, y);
+		UpdateCounts();                
+	}
+	else if (Dungeon[Level][x][y].HasGem)
+	{
+		Score++;
+		RemoveGem(x, y);
+		UpdateCounts();                  
+	}
+	else if (Dungeon[Level][x][y].HasHeart)
+	{
+		HeartCount++;
+		RemoveHeart(x, y);
+		UpdateCounts();                  
+	}
+	else if (Dungeon[Level][x][y].HasSword)
+	{
+		SwordCount++;
+		RemoveSword(x, y);
+		UpdateCounts();                  
+	}
 }
 
 // *** END MOVEMENT ***

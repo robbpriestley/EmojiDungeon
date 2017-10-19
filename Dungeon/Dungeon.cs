@@ -2173,30 +2173,47 @@ namespace DigitalWizardry.Dungeon
 		}
 
 		// Quite simply put: all rooms exits have doors. This is as opposed to more complex randomized door placement
-		// rules. See commented-out code block marked "HERE" in above subroutine.
+		// rules. See commented-out code block marked "HERE" in above subroutine. BUG FIX: don't allow two adjacent cells
+		// or occasionally the dungeon will have "doubled up" doors that mess up the flow of control.
 		private Door SimpleDoorPlacement(Cell cell)
 		{    
 			Door door = null;
 			
 			if (cell.Type == CellTypes.RoomExitU || cell.Type == CellTypes.RoomExitUL_U || cell.Type == CellTypes.RoomExitUR_U)
 			{
-				_cellsWithDoors.Add(cell);
-				door = new Door(Direction.Up);
+				Cell adjacentCell = _grid[cell.X, cell.Y + 1];
+				if (!_cellsWithDoors.Contains(adjacentCell))
+				{
+					_cellsWithDoors.Add(cell);
+					door = new Door(Direction.Up);
+				}
 			}
 			else if (cell.Type == CellTypes.RoomExitD || cell.Type == CellTypes.RoomExitDL_D || cell.Type == CellTypes.RoomExitDR_D)
 			{
-				_cellsWithDoors.Add(cell);
-				door = new Door(Direction.Down);
+				Cell adjacentCell = _grid[cell.X, cell.Y - 1];
+				if (!_cellsWithDoors.Contains(adjacentCell))
+				{
+					_cellsWithDoors.Add(cell);
+					door = new Door(Direction.Down);
+				}
 			}
 			else if (cell.Type == CellTypes.RoomExitL || cell.Type == CellTypes.RoomExitUL_L || cell.Type == CellTypes.RoomExitDL_L)
 			{
-				_cellsWithDoors.Add(cell);
-				door = new Door(Direction.Left);
+				Cell adjacentCell = _grid[cell.X - 1, cell.Y];
+				if (!_cellsWithDoors.Contains(adjacentCell))
+				{
+					_cellsWithDoors.Add(cell);
+					door = new Door(Direction.Left);
+				}
 			}
 			else if (cell.Type == CellTypes.RoomExitR || cell.Type == CellTypes.RoomExitUR_R || cell.Type == CellTypes.RoomExitDR_R)
 			{
-				_cellsWithDoors.Add(cell);
-				door = new Door(Direction.Right);
+				Cell adjacentCell = _grid[cell.X + 1, cell.Y];
+				if (!_cellsWithDoors.Contains(adjacentCell))
+				{
+					_cellsWithDoors.Add(cell);
+					door = new Door(Direction.Right);
+				}
 			}
 
 			return door;
