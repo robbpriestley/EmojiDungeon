@@ -278,7 +278,14 @@ function PlaceGoblin(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	$("#grid").append('<div class="sprite goblin" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	let reference = "goblin" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite goblin" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+}
+
+function RemoveGoblin(x: number, y: number): void
+{
+	Dungeon[Level][x][y].HasGoblin = false;
+	$("#goblin" + GridReference(x, y)).remove();
 }
 
 // *** END GOBLINS ***
@@ -317,7 +324,7 @@ function PlaceDoor(x: number, y: number, direction: string): void
 	let xPixels: number = x * 45 + DoorXFudge(direction);
 	let yPixels: number = 630 - (y * 45) + DoorYFudge(direction);
 	let doorClass: string = direction == "U" || direction == "D" ? "doorh": "doorv";
-	let reference = "door" + GridReference(x, y);	
+	let reference = "door" + GridReference(x, y); 	
 	$("#grid").append('<div id="' + reference + '" class="sprite ' + doorClass + '" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 }
 
@@ -479,28 +486,36 @@ function PlayerMove(dir: string)
 	
 	if (dir == "U" && MoveAllowed(x, y, dir))
 	{
+		MoveGoblins();
 		DoorCheck(x, y, dir);
+		GoblinCheck(x, y + 1);
 		ItemCheck(x, y + 1);
 		PlayerCoords.Y += 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "D" && MoveAllowed(x, y, dir))
 	{
+		MoveGoblins();
 		DoorCheck(x, y, dir);
+		GoblinCheck(x, y - 1);
 		ItemCheck(x, y - 1);
 		PlayerCoords.Y -= 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "L" && MoveAllowed(x, y, dir))
 	{
+		MoveGoblins();
 		DoorCheck(x, y, dir);
+		GoblinCheck(x - 1, y);
 		ItemCheck(x - 1, y);
 		PlayerCoords.X -= 1;
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "R" && MoveAllowed(x, y, dir))
 	{
+		MoveGoblins();
 		DoorCheck(x, y, dir);
+		GoblinCheck(x + 1, y);
 		ItemCheck(x + 1, y);
 		PlayerCoords.X += 1;
 		RepositionPlayer(PlayerCoords);
@@ -508,6 +523,43 @@ function PlayerMove(dir: string)
 	else
 	{
 		// No move.
+	}
+}
+
+function MoveGoblins(): void
+{
+	for (var i = 1; i <= Level; i++)
+	{
+		for (var j = 0; j < 14; j++)
+		{
+			for (var k = 0; k < 14; k++)
+			{
+				if (Dungeon[i][j][k].HasGoblin && !Dungeon[i][j][k].GoblinMoved)
+				{
+					if (i == Level)
+					{
+						RemoveGoblin(j, k);
+						PlaceGoblin(j + 1, k);
+						Dungeon[i][j + 1][k].HasGoblin = true;
+						Dungeon[i][j + 1][k].GoblinMoved = true;  // Otherwise, if it moves up or right, it could get caught in a seuence of moves.
+					}
+				}
+			}
+		}
+	}
+
+	for (var i = 1; i <= Level; i++)
+	{
+		for (var j = 0; j < 14; j++)
+		{
+			for (var k = 0; k < 14; k++)
+			{
+				if (Dungeon[i][j][k].HasGoblin)
+				{
+					Dungeon[i][j][k].GoblinMoved = false;  // Reset all.
+				}
+			}
+		}
 	}
 }
 
@@ -641,6 +693,31 @@ function ItemCheck(x: number, y: number): void
 		SwordCount++;
 		RemoveSword(x, y);
 		UpdateCounts();                  
+	}
+}
+
+function GoblinCheck(x: number, y: number): void
+{
+	if (Dungeon[Level][x][y].HasGoblin)
+	{
+		if (SwordCount > 0)
+		{
+			SwordCount--;
+			Score += 10;
+			RemoveGoblin(x, y);
+			UpdateCounts();
+		}
+		else
+		{
+			HeartCount--;
+			RemoveGoblin(x, y);
+			UpdateCounts();
+
+			if (HeartCount <= 0)
+			{
+				alert("Game Over!");
+			}
+		}
 	}
 }
 
