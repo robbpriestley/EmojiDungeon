@@ -15,5 +15,7 @@ namespace DigitalWizardry.Dungeon.Models
 		public bool TraversableDown { get; set; }
 		public bool TraversableLeft { get; set; }
 		public bool TraversableRight { get; set; }
+		public bool IsStairsUp { get; set; }
+		public bool IsStairsDown { get; set; }
 	}
 }

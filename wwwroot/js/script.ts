@@ -2,6 +2,7 @@
 
 let Level: number;
 let Score: number = 0;
+let GridMax: number = 15;
 let KeyCount: number = 0;
 let HeartCount: number = 3;
 let SwordCount: number = 0;
@@ -94,9 +95,9 @@ function BuildDungeon(level: number, dungeon: object): void
 {
 	RemoveSprites();
 	
-	for (var x = 0; x <= 14; x++) 
+	for (var x = 0; x < GridMax; x++) 
 	{
-		for (let y = 0; y <= 14; y++)
+		for (let y = 0; y < GridMax; y++)
 		{
 			let gridReference: string = GridReference(x, y);
 			let gridId: string = "#" + gridReference;       // Prepend the "#" because jQuery needs it for the id attribute.
@@ -457,19 +458,19 @@ function KeyPress(e)
 {
     e = e || window.event;
 
-    if (e.keyCode == '38')
+    if (e.keyCode == "38")
 	{
 		PlayerMove("U");
     }
-    else if (e.keyCode == '40')
+    else if (e.keyCode == "40")
 	{
         PlayerMove("D");
     }
-    else if (e.keyCode == '37')
+    else if (e.keyCode == "37")
 	{
        PlayerMove("L");
     }
-    else if (e.keyCode == '39')
+    else if (e.keyCode == "39")
 	{
        PlayerMove("R");
     }
@@ -528,35 +529,491 @@ function PlayerMove(dir: string)
 
 function MoveGoblins(): void
 {
-	for (var i = 1; i <= Level; i++)
+	ResetGoblinMovement();
+	
+	for (var level = 1; level <= Level; level++)
 	{
-		for (var j = 0; j < 14; j++)
+		for (var x = 0; x < GridMax; x++)
 		{
-			for (var k = 0; k < 14; k++)
+			for (var y = 0; y < GridMax; y++)
 			{
-				if (Dungeon[i][j][k].HasGoblin && !Dungeon[i][j][k].GoblinMoved)
+				if (Dungeon[level][x][y].HasGoblin && !Dungeon[level][x][y].GoblinMoved)
 				{
-					if (i == Level)
-					{
-						RemoveGoblin(j, k);
-						PlaceGoblin(j + 1, k);
-						Dungeon[i][j + 1][k].HasGoblin = true;
-						Dungeon[i][j + 1][k].GoblinMoved = true;  // Otherwise, if it moves up or right, it could get caught in a seuence of moves.
-					}
+					MoveGoblin(level, x, y);
 				}
 			}
 		}
 	}
+}
 
-	for (var i = 1; i <= Level; i++)
+function MoveGoblin(level: number, x: number, y: number): void
+{
+	let coords: Coords = GoblinMoveLocation(level, x, y);
+	
+	let dir: string;
+
+	if (coords.X > x) dir = "R";
+	else if (coords.X < x) dir = "L";
+	else if (coords.Y > y) dir = "U";
+	else dir = "D";
+
+	if (!MoveAllowed(x, y, dir))
 	{
-		for (var j = 0; j < 14; j++)
+		return;
+	}
+
+	if (level == Level)
+	{
+		RemoveGoblin(x, y);
+		PlaceGoblin(coords.X, coords.Y);
+	}
+	else
+	{
+		Dungeon[level][x][y].HasGoblin = false;
+	}
+
+	Dungeon[level][coords.X][coords.Y].HasGoblin = true;
+	Dungeon[level][coords.X][coords.Y].GoblinMoved = true;  // Otherwise, if it moves up or right, it could get caught in a seuence of moves.
+}
+
+function GoblinMoveLocation(level: number, x: number, y: number): Coords
+{
+	ResetPath(level);
+	let destination: Coords = level == Level ? PlayerCoords : DownStairsLocation(level);
+	let queue: Array<Coords> = new Array<Coords>();
+	queue.push(new Coords(x, y));
+	let arrived: boolean = false;
+	Dungeon[level][x][y].Visited = true;
+
+    do 
+    {
+		let coords: Coords = queue.pop();
+		
+        if (coords.X == destination.X && coords.Y == destination.Y)
+        {
+            arrived = true; 
+        }
+        else 
+        {
+			// Visit all the adjacent cells to the current one, if possible, and in a random sequence. Randomness is 
+			// required or else for paths of equal lengths, certain favoured directions and patterns will become evident 
+			// during game play.
+			VisitAdjacents(level, coords, queue);
+        }
+        
+    } while (!arrived);
+    
+    // Search complete. Now decode and return results.
+	let path: Array<Coords> = PathSearchDecode(level, destination);
+	//DebugGoblinMovementSearch(level, x, y, destination.X, destination.Y);
+	//DebugGoblinMovementPath(path);
+
+	return path.pop();
+}
+
+function DebugGoblinMovementSearch(level: number, startX: number, startY: number, destX: number, destY: number): void
+{
+	let line: string = "";
+	
+	for (var y = GridMax - 1; y >= 0; y--)
+	{
+		for (var x = 0; x < GridMax; x++)
 		{
-			for (var k = 0; k < 14; k++)
+			let xs: string = "..";
+			let ys: string = "..";
+			
+			if (x == startX && y == startY)
 			{
-				if (Dungeon[i][j][k].HasGoblin)
+				xs = "SS";
+				ys = "SS";
+			}
+			else if (x == destX && y == destY)
+			{
+				xs = "DD";
+				ys = "DD";
+			}
+			else if (Dungeon[level][x][y].SourceCoords)
+			{
+				if (Dungeon[level][x][y].SourceCoords.X < 10)
 				{
-					Dungeon[i][j][k].GoblinMoved = false;  // Reset all.
+					xs = "0" + Dungeon[level][x][y].SourceCoords.X.toString();
+				}
+				else
+				{
+					xs = Dungeon[level][x][y].SourceCoords.X.toString();
+				}
+
+				if (Dungeon[level][x][y].SourceCoords.Y < 10)
+				{
+					ys = "0" + Dungeon[level][x][y].SourceCoords.Y.toString();
+				}
+				else
+				{
+					ys = Dungeon[level][x][y].SourceCoords.Y.toString();
+				}
+			}
+
+			line = line + xs + "," + ys + " ";
+		}
+		console.log(line + "\n");
+		line = "";
+	}
+}
+
+function DebugGoblinMovementPath(path: Array<Coords>)
+{
+	let xs: string;
+	let ys: string;
+	let line: string = "";
+
+	for (let i = 0; i < path.length; i++)
+	{
+		if (path[i].X < 10)
+		{
+			xs = "0" + path[i].X.toString();
+		}
+		else
+		{
+			xs = path[i].X.toString();
+		}
+
+		if (path[i].Y < 10)
+		{
+			ys = "0" + path[i].Y.toString();
+		}
+		else
+		{
+			ys = path[i].Y.toString();
+		}
+		
+		line = line + "[" + xs + "," + ys + "] ";
+	}
+
+	console.log(line);
+}
+
+function VisitAdjacents(level: number, coords: Coords, queue: Array<Coords>): void
+{
+	let visitationProfile = Math.floor(Math.random() * 24);  // Random number between 0 and 23
+    
+    switch (visitationProfile) 
+    {
+        case 0:
+		// UDLR
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 1:
+		// UDRL
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 2:
+		// ULDR
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 3:
+		// ULRD
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+		
+	case 4:
+		// URDL
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 5:
+		// URLD
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+		
+	case 6:
+		// DURL
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 7:
+		// DULR
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 8:
+		// DLRU
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 9:
+		// DLUR
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 10:
+		// DRLU
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 11:
+		// DRUL
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 12:
+		// LUDR
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 13:
+		// LURD
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+		
+	case 14:
+		// LDUR
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		break;
+		
+	case 15:
+		// LDRU
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 16:
+		// LRUD
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+		
+	case 17:
+		// LRDU
+		PathVisitLeft(level, coords, queue);
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 18:
+		// RULD
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+		
+	case 19:
+		// RUDL
+		PathVisitRight(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 20:
+		// RDLU
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 21:
+		// RDUL
+		PathVisitRight(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		break;
+		
+	case 22:
+		// RLDU
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		break;
+		
+	case 23:
+		// RLUD
+		PathVisitRight(level, coords, queue);
+		PathVisitLeft(level, coords, queue);
+		PathVisitUp(level, coords, queue);
+		PathVisitDown(level, coords, queue);
+		break;
+    }
+}
+
+function PathVisitUp(level: number, coords: Coords, queue: Array<Coords>): void
+{
+    if (Dungeon[level][coords.X][coords.Y].TraversableUp && coords.Y + 1 < GridMax)
+    {
+        if (!Dungeon[level][coords.X][coords.Y + 1].Visited)
+        {
+			Dungeon[level][coords.X][coords.Y + 1].Visited = true;
+			Dungeon[level][coords.X][coords.Y + 1].SourceCoords = coords;
+			queue.push(new Coords(coords.X, coords.Y + 1));
+        }
+    }
+}
+
+function PathVisitDown(level: number, coords: Coords, queue: Array<Coords>): void
+{
+    if (Dungeon[level][coords.X][coords.Y].TraversableDown && coords.Y - 1 >= 0)
+    {
+        if (!Dungeon[level][coords.X][coords.Y - 1].Visited)
+        {
+			Dungeon[level][coords.X][coords.Y - 1].Visited = true;
+			Dungeon[level][coords.X][coords.Y - 1].SourceCoords = coords;
+			queue.push(new Coords(coords.X, coords.Y - 1));
+        }
+    }
+}
+
+function PathVisitLeft(level: number, coords: Coords, queue: Array<Coords>): void
+{
+    if (Dungeon[level][coords.X][coords.Y].TraversableLeft && coords.X - 1 >= 0)
+    {
+        if (!Dungeon[level][coords.X - 1][coords.Y].Visited)
+        {
+			Dungeon[level][coords.X - 1][coords.Y].Visited = true;
+			Dungeon[level][coords.X - 1][coords.Y].SourceCoords = coords;
+			queue.push(new Coords(coords.X - 1, coords.Y));
+        }
+    }
+}
+
+function PathVisitRight(level: number, coords: Coords, queue: Array<Coords>): void
+{
+    if (Dungeon[level][coords.X][coords.Y].TraversableRight && coords.X + 1 < GridMax)
+    {
+        if (!Dungeon[level][coords.X + 1][coords.Y].Visited)
+        {
+			Dungeon[level][coords.X + 1][coords.Y].Visited = true;
+			Dungeon[level][coords.X + 1][coords.Y].SourceCoords = coords;
+			queue.push(new Coords(coords.X + 1, coords.Y));
+        }
+    }
+}
+
+function PathSearchDecode(level: number, destination: Coords): Array<Coords>
+{
+    let pathComplete: boolean = false;
+	let path: Array<Coords> = new Array<Coords>();
+	
+	path.push(destination);
+	
+	if (Dungeon[level][destination.X][destination.Y].SourceCoords == null)
+	{
+		return path;  // It's just a shorty.
+	}
+	
+	let coords: Coords = Dungeon[level][destination.X][destination.Y].SourceCoords;
+
+    do 
+    {
+        if (Dungeon[level][coords.X][coords.Y].SourceCoords)
+        {
+			path.push(coords);
+        }
+        else 
+        {
+			//path.pop();  // Don't actually need the source location in the path.
+            pathComplete = true;
+		}
+		
+		coords = Dungeon[level][coords.X][coords.Y].SourceCoords;
+        
+    } while (!pathComplete);
+    
+    return path;
+}
+
+function DownStairsLocation(level: number): Coords
+{
+	for (var x = 0; x < GridMax; x++)
+	{
+		for (var y = 0; y < GridMax; y++)
+		{
+			if (Dungeon[level][x][y].IsStairsDown)
+			{
+				return new Coords(x, y);
+			}
+		}
+	}
+}
+
+function ResetPath(level)
+{
+	for (var x = 0; x < GridMax; x++)
+	{
+		for (var y = 0; y < GridMax; y++)
+		{
+			Dungeon[level][x][y].Visited = false;
+			Dungeon[level][x][y].SourceCoords = null;
+		}
+	}
+}
+
+function ResetGoblinMovement()
+{
+	for (var level = 1; level <= Level; level++)
+	{
+		for (var x = 0; x < GridMax; x++)
+		{
+			for (var y = 0; y < GridMax; y++)
+			{
+				if (Dungeon[level][x][y].HasGoblin)
+				{
+					Dungeon[level][x][y].GoblinMoved = false;  // Reset all goblin movements.
 				}
 			}
 		}
@@ -568,7 +1025,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
 
-	if (dir == "U" && dungeon[x][y].TraversableUp && y < 14)
+	if (dir == "U" && dungeon[x][y].TraversableUp && y < GridMax)
 	{
 		if (dungeon[x][y].DoorDirection != "U" && dungeon[x][y + 1].DoorDirection != "D")
 		{
@@ -601,7 +1058,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 			allowed = true;
 		}
 	}
-	else if (dir == "R" && dungeon[x][y].TraversableRight && x < 14)
+	else if (dir == "R" && dungeon[x][y].TraversableRight && x < GridMax)
 	{
 		if (dungeon[x][y].DoorDirection != "R" && dungeon[x + 1][y].DoorDirection != "L")
 		{

@@ -2834,6 +2834,8 @@ namespace DigitalWizardry.Dungeon
 					modelCell.TraversableDown = cell.Type.TraversableDown;
 					modelCell.TraversableLeft = cell.Type.TraversableLeft;
 					modelCell.TraversableRight = cell.Type.TraversableRight;
+					modelCell.IsStairsUp = cell.Type.IsStairsUp;
+					modelCell.IsStairsDown = cell.Type.IsStairsDown;
 
 					modelCells[cell.X, cell.Y] = modelCell;
 				}
