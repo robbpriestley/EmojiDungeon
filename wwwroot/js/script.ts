@@ -687,6 +687,19 @@ function GoblinCheck(x: number, y: number): void
 
 // *** END PLAYER MOVEMENT ***
 // *** BEGIN GOBLIN MOVEMENT ***
+/*
+	There are currently several issues with goblin movement and goblins.
+	1) Goblins can move through doors some of the time.
+	2) The shortest-path algorithm currently in use was developed for Robot Attack Maze where there were no rooms.
+	   In this case, there are rooms. The algorithm still works, but goblins seem to get stuck in little room vortices
+	   and don't take a direct path where one is available. This might not actually be a problem because it could add some
+	   interesting unpredictability to the goblin's movements.
+	3) I believe that in Robot Attack Maze, the path that was computed for a robot was "programmed" into the robot and 
+	   it would follow that path without re-computing it each "turn". In this case, goblin paths are being re-computed
+	   each time. I think as well because of the issue outlined in 2) above, this is causing the goblins to follow wildly
+	   erratic paths that are random-seeming and therefore interesting, but very ineffective.
+    4) Goblin-player collisions are not working in many cases (although they do work in some of the cases).
+*/
 
 function MoveGoblins(): void
 {
