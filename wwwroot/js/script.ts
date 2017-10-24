@@ -690,15 +690,8 @@ function GoblinCheck(x: number, y: number): void
 /*
 	There are currently several issues with goblin movement and goblins.
 	1) Goblins can move through doors some of the time.
-	2) The shortest-path algorithm currently in use was developed for Robot Attack Maze where there were no rooms.
-	   In this case, there are rooms. The algorithm still works, but goblins seem to get stuck in little room vortices
-	   and don't take a direct path where one is available. This might not actually be a problem because it could add some
-	   interesting unpredictability to the goblin's movements.
-	3) I believe that in Robot Attack Maze, the path that was computed for a robot was "programmed" into the robot and 
-	   it would follow that path without re-computing it each "turn". In this case, goblin paths are being re-computed
-	   each time. I think as well because of the issue outlined in 2) above, this is causing the goblins to follow wildly
-	   erratic paths that are random-seeming and therefore interesting, but very ineffective.
-    4) Goblin-player collisions are not working in many cases (although they do work in some of the cases).
+	2) Goblins blocked by doors don't make alternate (longer) route decisions.
+    3) Goblin-player collisions are not working in many cases (although they do work in some of the cases).
 */
 
 function MoveGoblins(): void
@@ -761,7 +754,7 @@ function GoblinMoveLocation(level: number, x: number, y: number): Coords
 
     do 
     {
-		let coords: Coords = queue.pop();
+		let coords: Coords = queue.shift();  // shift() is a queue operation. pop() doesn't work here!
 		
         if (coords.X == destination.X && coords.Y == destination.Y)
         {
@@ -779,8 +772,9 @@ function GoblinMoveLocation(level: number, x: number, y: number): Coords
     
     // Search complete. Now decode and return results.
 	let path: Array<Coords> = PathSearchDecode(level, destination);
-	//DebugGoblinMovementSearch(level, x, y, destination.X, destination.Y);
-	//DebugGoblinMovementPath(path);
+	
+	// DebugGoblinMovementSearch(level, x, y, destination.X, destination.Y);
+	// DebugGoblinMovementPath(level, x, y, path);
 
 	return path.pop();
 }
@@ -834,11 +828,11 @@ function DebugGoblinMovementSearch(level: number, startX: number, startY: number
 	}
 }
 
-function DebugGoblinMovementPath(path: Array<Coords>)
+function DebugGoblinMovementPath(level: number, startX: number, startY: number, path: Array<Coords>)
 {
 	let xs: string;
 	let ys: string;
-	let line: string = "";
+	let line: string = "Goblin L: " + level + " [" + startX + "," + startY + "] Path: ";
 
 	for (let i = 0; i < path.length; i++)
 	{
