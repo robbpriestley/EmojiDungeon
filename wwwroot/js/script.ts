@@ -515,7 +515,7 @@ function PlayerMove(dir: string)
 	let y: number = PlayerCoords.Y;
 	let dungeon: object = Dungeon[Level];
 	
-	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount))
+	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount > 0))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y + 1);
@@ -525,7 +525,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount))
+	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount > 0))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y - 1);
@@ -535,7 +535,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount))
+	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount > 0))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x - 1, y);
@@ -545,7 +545,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount))
+	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount > 0))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x + 1, y);
@@ -561,7 +561,7 @@ function PlayerMove(dir: string)
 	}
 }
 
-function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
+function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean)
 {	
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
@@ -572,7 +572,7 @@ function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
 		{
 			allowed = true;
 		}
-		else if (keyCount > 0)
+		else if (hasKey)
 		{
 			allowed = true;
 		}
@@ -583,7 +583,7 @@ function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
 		{
 			allowed = true;
 		}
-		else if (keyCount > 0)
+		else if (hasKey)
 		{
 			allowed = true;
 		}
@@ -594,7 +594,7 @@ function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
 		{
 			allowed = true;
 		}
-		else if (keyCount > 0)
+		else if (hasKey)
 		{
 			allowed = true;
 		}
@@ -605,7 +605,7 @@ function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
 		{
 			allowed = true;
 		}
-		else if (keyCount > 0)
+		else if (hasKey)
 		{
 			allowed = true;
 		}
@@ -754,7 +754,7 @@ function MoveGoblin(level: number, x: number, y: number): void
 	else if (coords.Y > y) dir = "U";
 	else dir = "D";
 
-	if (!MoveAllowed(x, y, dir, 0))
+	if (!MoveAllowed(x, y, dir, false))
 	{
 		return;
 	}
