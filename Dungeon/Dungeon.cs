@@ -2337,6 +2337,8 @@ namespace DigitalWizardry.Dungeon
 		private void PlaceKeys()
 		{
 			Cell keyCell;
+			int keyCount = 0;
+			int keyMax = _cellsWithDoors.Count() / 2;
 			List<Cell> potentials;
 
 			_cellsWithDoors = _cellsWithDoors.OrderBy(cell => cell.Sequence).ToList();
@@ -2346,6 +2348,12 @@ namespace DigitalWizardry.Dungeon
 				potentials = KeyLocationPotentials(cell.Sequence);
 				keyCell = potentials[_r.Next(potentials.Count)];  // Pick a key cell at random.
 				keyCell.HasKey = true;
+				keyCount++;
+
+				if (keyCount > keyMax)
+				{
+					break;
+				}
 			}
 		}
 
@@ -2425,7 +2433,7 @@ namespace DigitalWizardry.Dungeon
 
 		private void PlaceGoblins()
 		{		
-			int goblinCount = _level + 2;
+			int goblinCount = _level + 5;
 
 			while (goblinCount > 0)
 			{
