@@ -515,7 +515,7 @@ function PlayerMove(dir: string)
 	let y: number = PlayerCoords.Y;
 	let dungeon: object = Dungeon[Level];
 	
-	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount > 0))
+	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y + 1);
@@ -525,7 +525,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount > 0))
+	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y - 1);
@@ -535,7 +535,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount > 0))
+	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x - 1, y);
@@ -545,7 +545,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount > 0))
+	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x + 1, y);
@@ -561,14 +561,18 @@ function PlayerMove(dir: string)
 	}
 }
 
-function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean)
+function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGoblin: boolean)
 {	
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
 
 	if (dir == "U" && dungeon[x][y].TraversableUp && y < GridMax)
 	{
-		if (dungeon[x][y].DoorDirection != "U" && dungeon[x][y + 1].DoorDirection != "D")
+		if (isGoblin && dungeon[x][y + 1].HasGoblin)
+		{
+			allowed = false;
+		}
+		else if (dungeon[x][y].DoorDirection != "U" && dungeon[x][y + 1].DoorDirection != "D")
 		{
 			allowed = true;
 		}
@@ -579,7 +583,11 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean)
 	}
 	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0)
 	{
-		if (dungeon[x][y].DoorDirection != "D" && dungeon[x][y - 1].DoorDirection != "U")
+		if (isGoblin && dungeon[x][y - 1].HasGoblin)
+		{
+			allowed = false;
+		}
+		else if (dungeon[x][y].DoorDirection != "D" && dungeon[x][y - 1].DoorDirection != "U")
 		{
 			allowed = true;
 		}
@@ -590,7 +598,11 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean)
 	}
 	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0)
 	{
-		if (dungeon[x][y].DoorDirection != "L" && dungeon[x - 1][y].DoorDirection != "R")
+		if (isGoblin && dungeon[x - 1][y].HasGoblin)
+		{
+			allowed = false;
+		}
+		else if (dungeon[x][y].DoorDirection != "L" && dungeon[x - 1][y].DoorDirection != "R")
 		{
 			allowed = true;
 		}
@@ -601,7 +613,11 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean)
 	}
 	else if (dir == "R" && dungeon[x][y].TraversableRight && x < GridMax)
 	{
-		if (dungeon[x][y].DoorDirection != "R" && dungeon[x + 1][y].DoorDirection != "L")
+		if (isGoblin && dungeon[x + 1][y].HasGoblin)
+		{
+			allowed = false;
+		}
+		else if (dungeon[x][y].DoorDirection != "R" && dungeon[x + 1][y].DoorDirection != "L")
 		{
 			allowed = true;
 		}
@@ -754,7 +770,7 @@ function MoveGoblin(level: number, x: number, y: number): void
 	else if (coords.Y > y) dir = "U";
 	else dir = "D";
 
-	if (!MoveAllowed(x, y, dir, false))
+	if (!MoveAllowed(x, y, dir, false, true))
 	{
 		return;
 	}
