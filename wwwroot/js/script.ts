@@ -449,6 +449,34 @@ function RemoveSword(x: number, y: number): void
 	$("#sword" + GridReference(x, y)).remove();
 }
 
+function PlaceAttackSword(x: number, y: number): void
+{
+	let xPixels: number = x * 45;
+	let yPixels: number = 630 - (y * 45);
+	let reference = "exp" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite sword attack" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#" + reference).fadeOut();
+}
+
+function RemoveAttackSwords(): void
+{
+	$("attack").remove();
+}
+
+function PlaceExplosion(x: number, y: number): void
+{
+	let xPixels: number = x * 45;
+	let yPixels: number = 630 - (y * 45);
+	let reference = "exp" + GridReference(x, y);
+	$("#grid").append('<div id="' + reference + '" class="sprite exp" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
+	$("#" + reference).fadeOut();
+}
+
+function RemoveExplosions(): void
+{
+	$("exp").remove();
+}
+
 // *** END DOORS, KEYS, GEMS, and HEARTS ***
 // *** BEGIN USER INPUT ***
 
@@ -481,6 +509,8 @@ function KeyPress(e)
 
 function PlayerMove(dir: string)
 {	
+	RemoveExplosions();
+
 	let x: number = PlayerCoords.X;
 	let y: number = PlayerCoords.Y;
 	let dungeon: object = Dungeon[Level];
@@ -492,6 +522,7 @@ function PlayerMove(dir: string)
 		ItemCheck(x, y + 1);
 		PlayerCoords.Y += 1;
 		MoveGoblins();
+		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "D" && MoveAllowed(x, y, dir))
@@ -501,6 +532,7 @@ function PlayerMove(dir: string)
 		ItemCheck(x, y - 1);
 		PlayerCoords.Y -= 1;
 		MoveGoblins();
+		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "L" && MoveAllowed(x, y, dir))
@@ -510,6 +542,7 @@ function PlayerMove(dir: string)
 		ItemCheck(x - 1, y);
 		PlayerCoords.X -= 1;
 		MoveGoblins();
+		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
 	else if (dir == "R" && MoveAllowed(x, y, dir))
@@ -519,6 +552,7 @@ function PlayerMove(dir: string)
 		ItemCheck(x + 1, y);
 		PlayerCoords.X += 1;
 		MoveGoblins();
+		GoblinCheck(x + 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
 	else
@@ -669,12 +703,14 @@ function GoblinCheck(x: number, y: number): void
 			SwordCount--;
 			Score += 10;
 			RemoveGoblin(x, y);
+			PlaceAttackSword(x, y);
 			UpdateCounts();
 		}
 		else
 		{
 			HeartCount--;
 			RemoveGoblin(x, y);
+			PlaceExplosion(x, y);
 			UpdateCounts();
 
 			if (HeartCount <= 0)
