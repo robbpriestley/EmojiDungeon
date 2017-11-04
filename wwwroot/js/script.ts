@@ -776,7 +776,7 @@ function MoveGoblin(level: number, x: number, y: number): void
 	}
 
 	Dungeon[level][coords.X][coords.Y].HasGoblin = true;
-	Dungeon[level][coords.X][coords.Y].GoblinMoved = true;  // Otherwise, if it moves up or right, it could get caught in a seuence of moves.
+	Dungeon[level][coords.X][coords.Y].GoblinMoved = true;  // Otherwise, if it moves up or right, it could get caught in a sequence of moves.
 }
 
 function GoblinMoveLocation(level: number, x: number, y: number): Coords
