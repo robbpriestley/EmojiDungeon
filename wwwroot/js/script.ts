@@ -1,6 +1,5 @@
 "use strict";
 
-let Debug: boolean = true;
 let Level: number;
 let Score: number = 0;
 let GridMax: number = 15;
@@ -509,9 +508,7 @@ function KeyPress(e)
 // *** BEGIN PLAYER MOVEMENT ***
 
 function PlayerMove(dir: string)
-{	
-	if (Debug) console.log("MOVE");
-	
+{		
 	RemoveExplosions();
 
 	let x: number = PlayerCoords.X;
@@ -726,12 +723,6 @@ function GoblinCheck(x: number, y: number): void
 
 // *** END PLAYER MOVEMENT ***
 // *** BEGIN GOBLIN MOVEMENT ***
-/*
-	There are currently several issues with goblin movement and goblins.
-	1) Goblins can move through doors some of the time.
-	2) Goblins blocked by doors don't make alternate (longer) route decisions.
-    3) Goblin-player collisions are not working in many cases (although they do work in some of the cases).
-*/
 
 function MoveGoblins(): void
 {
@@ -765,13 +756,11 @@ function MoveGoblin(level: number, x: number, y: number): void
 
 	if (!MoveAllowed(x, y, dir, 0))
 	{
-		if (Debug && level == Level) console.log("GOBLIN: (" + x.toString() + "," + y.toString() + ") to (" + coords.X.toString() + "," + coords.Y.toString() + ") NOT ALLOWED");
 		return;
 	}
 
 	if (level == Level)
 	{
-		if (Debug) console.log("GOBLIN: (" + x.toString() + "," + y.toString() + ") to (" + coords.X.toString() + "," + coords.Y.toString() + ") ALLOWED");
 		RemoveGoblin(x, y);
 		PlaceGoblin(coords.X, coords.Y);
 	}
