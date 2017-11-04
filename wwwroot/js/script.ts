@@ -1,5 +1,6 @@
 "use strict";
 
+let Debug: boolean = true;
 let Level: number;
 let Score: number = 0;
 let GridMax: number = 15;
@@ -509,13 +510,15 @@ function KeyPress(e)
 
 function PlayerMove(dir: string)
 {	
+	if (Debug) console.log("MOVE");
+	
 	RemoveExplosions();
 
 	let x: number = PlayerCoords.X;
 	let y: number = PlayerCoords.Y;
 	let dungeon: object = Dungeon[Level];
 	
-	if (dir == "U" && MoveAllowed(x, y, dir))
+	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y + 1);
@@ -525,7 +528,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "D" && MoveAllowed(x, y, dir))
+	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y - 1);
@@ -535,7 +538,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "L" && MoveAllowed(x, y, dir))
+	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x - 1, y);
@@ -545,7 +548,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "R" && MoveAllowed(x, y, dir))
+	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x + 1, y);
@@ -561,7 +564,7 @@ function PlayerMove(dir: string)
 	}
 }
 
-function MoveAllowed(x: number, y: number, dir: string)
+function MoveAllowed(x: number, y: number, dir: string, keyCount: number)
 {	
 	let allowed: boolean = false;
 	let dungeon: object = Dungeon[Level];
@@ -572,7 +575,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 		{
 			allowed = true;
 		}
-		else if (KeyCount > 0)
+		else if (keyCount > 0)
 		{
 			allowed = true;
 		}
@@ -583,7 +586,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 		{
 			allowed = true;
 		}
-		else if (KeyCount > 0)
+		else if (keyCount > 0)
 		{
 			allowed = true;
 		}
@@ -594,7 +597,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 		{
 			allowed = true;
 		}
-		else if (KeyCount > 0)
+		else if (keyCount > 0)
 		{
 			allowed = true;
 		}
@@ -605,7 +608,7 @@ function MoveAllowed(x: number, y: number, dir: string)
 		{
 			allowed = true;
 		}
-		else if (KeyCount > 0)
+		else if (keyCount > 0)
 		{
 			allowed = true;
 		}
@@ -760,13 +763,15 @@ function MoveGoblin(level: number, x: number, y: number): void
 	else if (coords.Y > y) dir = "U";
 	else dir = "D";
 
-	if (!MoveAllowed(x, y, dir))
+	if (!MoveAllowed(x, y, dir, 0))
 	{
+		if (Debug && level == Level) console.log("GOBLIN: (" + x.toString() + "," + y.toString() + ") to (" + coords.X.toString() + "," + coords.Y.toString() + ") NOT ALLOWED");
 		return;
 	}
 
 	if (level == Level)
 	{
+		if (Debug) console.log("GOBLIN: (" + x.toString() + "," + y.toString() + ") to (" + coords.X.toString() + "," + coords.Y.toString() + ") ALLOWED");
 		RemoveGoblin(x, y);
 		PlaceGoblin(coords.X, coords.Y);
 	}
