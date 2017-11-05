@@ -12,26 +12,19 @@
 				by Robb Priestley 
 				<br>©️ 2017 Digital Wizardry Software Solutions Ltd.
 			</p>
-			<p class="btn">
-				Level: <span id="level">1</span>
-			</p>
-			<p class="btn">
-				<button onclick="Start()">Start</button>
-			</p>
-			<p class="btn">
-				<button onclick="LevelDown();">Down</button>
-			</p>
-			<p class="btn">
-				<button onclick="LevelUp(true);">Up</button>
-			</p>
-			<p>
+			<p style="margin-top: 25px;">
 				<div><div id="heartCountIcon" class="sprite heart"></div><span id="heartCount" class="count">0</span></div>
 				<div><div id="keyCountIcon" class="sprite key"></div><span id="keyCount" class="count">0</span></div>
 				<div><div id="swordCountIcon" class="sprite sword"></div><span id="swordCount" class="count">0</span></div>
+				<div class="score">Level</div>
+				<div><span id="level" class="score">1</span></div>
 				<div class="score">Score</div>
 				<div><span id="scoreCount" class="score">0</span></div>
 				<div class="score">High Score</div>
 				<div><span id="highScore" class="score">0</span></div>
+			</p>
+			<p class="btn">
+				<button onclick="Reset()">Reset</button>
 			</p>
 		</td>
 		<td>

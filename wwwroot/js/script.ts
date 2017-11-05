@@ -1,23 +1,30 @@
 "use strict";
 
-let Level: number;
-let Score: number = 0;
 let GridMax: number = 15;
-let KeyCount: number = 0;
-let HeartCount: number = 3;
-let SwordCount: number = 0;
+let Level: number;
+let Score: number;
+let KeyCount: number;
+let HeartCount: number;
+let SwordCount: number;
 let PlayerCoords: Coords;
+let StartCoords: Array<Coords>;
 let Dungeon: Array<object> = new Array<object>();
-let StartCoords: Array<Coords> = new Array<Coords>();
 
-window.onload = function(){Start();}
+window.onload = function(){ Reset(); }
 
-function Start(): void
+function Reset(): void
 {
 	Level = 1;
+	Score = 0;
+	KeyCount = 0;
+	HeartCount = 3;
+	SwordCount = 0;
 	UpdateCounts();
 	UpdateHighScore();
 	$("#level").text("1");
+	StartCoords = new Array<Coords>();
+	StartCoords[1] = new Coords(7, 0);
+	Dungeon = new Array<object>();
 	RenderLevel();
 }
 
@@ -30,6 +37,7 @@ function LevelUp(): void
 
 function LevelDown(): void
 {
+	StartCoords[Level] = new Coords(PlayerCoords.X, PlayerCoords.Y);
 	Level++;
 	RenderLevel();
 	$("#level").text(Level);  // Add 1 for display as _level is zero-indexed.
@@ -49,9 +57,9 @@ function RenderLevel()
 		spinner.spin($('#grid')[0]);
 
 		let startCoords: Coords = StartCoords[Level];
-		let sX: number = Level == 1 ? 7: Number(startCoords.X);
-		let sY: number = Level == 1 ? 0: Number(startCoords.Y);
-		let sD: string = Level == 1 ? "U": startCoords.Dir;
+		let sX: number = Level == 1 ? 7 : Number(startCoords.X);
+		let sY: number = Level == 1 ? 0 : Number(startCoords.Y);
+		let sD: string = Level == 1 ? "U" : startCoords.Dir;
 		
 		$.ajax
 		({
@@ -247,15 +255,9 @@ function UpdateCounts(): void
 
 function PlacePlayer(): void
 {	
-	let x: number = 7;
-	let y: number = 0;
-
-	if (Level != 1)
-	{
-		let startCoords: Coords = StartCoords[Level];
-		x = Number(startCoords.X);
-		y = Number(startCoords.Y);
-	}
+	let startCoords: Coords = StartCoords[Level];
+	let x: number = Number(startCoords.X);
+	let y: number = Number(startCoords.Y);
 	
 	PlayerCoords = new Coords(x, y);
 
@@ -526,6 +528,7 @@ function PlayerMove(dir: string)
 		MoveGoblins();
 		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
+		StairsCheck(x, y + 1);
 	}
 	else if (dir == "D" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
@@ -536,6 +539,7 @@ function PlayerMove(dir: string)
 		MoveGoblins();
 		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
+		StairsCheck(x, y - 1);
 	}
 	else if (dir == "L" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
@@ -546,6 +550,7 @@ function PlayerMove(dir: string)
 		MoveGoblins();
 		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
+		StairsCheck(x - 1, y);
 	}
 	else if (dir == "R" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
@@ -556,6 +561,7 @@ function PlayerMove(dir: string)
 		MoveGoblins();
 		GoblinCheck(x + 1, y);
 		RepositionPlayer(PlayerCoords);
+		StairsCheck(x + 1, y);
 	}
 	else
 	{
@@ -741,6 +747,18 @@ function GoblinCheck(x: number, y: number): void
 	}
 }
 
+function StairsCheck(x: number, y: number)
+{
+	if (Dungeon[Level][x][y].IsStairsDown)
+	{
+		LevelDown();
+	}
+	else if  (Dungeon[Level][x][y].IsStairsUp)
+	{
+		LevelUp();
+	}
+}
+
 // *** END PLAYER MOVEMENT ***
 // *** BEGIN GOBLIN MOVEMENT ***
 
@@ -748,7 +766,7 @@ function MoveGoblins(): void
 {
 	ResetGoblinMovement();
 	
-	for (var level = 1; level <= Level; level++)
+	for (var level = 1; level <= Dungeon.length - 1; level++)
 	{
 		for (var x = 0; x < GridMax; x++)
 		{
@@ -796,7 +814,22 @@ function MoveGoblin(level: number, x: number, y: number): void
 function GoblinMoveLocation(level: number, x: number, y: number): Coords
 {
 	ResetPath(level);
-	let destination: Coords = level == Level ? PlayerCoords : DownStairsLocation(level);
+	
+	let destination: Coords;
+	
+	if (level == Level)
+	{
+		destination = PlayerCoords;
+	}
+	else if (level > Level)
+	{
+		destination = UpStairsLocation(level);
+	}
+	else
+	{
+		destination = DownStairsLocation(level);
+	}
+	
 	let queue: Array<Coords> = new Array<Coords>();
 	queue.push(new Coords(x, y));
 	let arrived: boolean = false;
@@ -1209,6 +1242,20 @@ function PathSearchDecode(level: number, destination: Coords): Array<Coords>
     return path;
 }
 
+function UpStairsLocation(level: number): Coords
+{
+	for (var x = 0; x < GridMax; x++)
+	{
+		for (var y = 0; y < GridMax; y++)
+		{
+			if (Dungeon[level][x][y].IsStairsUp)
+			{
+				return new Coords(x, y);
+			}
+		}
+	}
+}
+
 function DownStairsLocation(level: number): Coords
 {
 	for (var x = 0; x < GridMax; x++)
@@ -1223,12 +1270,14 @@ function DownStairsLocation(level: number): Coords
 	}
 }
 
-// Goblins cannot move into locations where another Goblin already is, or where combat just occurred.
+// Goblins cannot move into locations where another Goblin already is, where there are stairs, or where combat just occurred.
 function GoblinCanMove(level: number, x: number, y: number)
 {
-	return !Dungeon[level][x][y].HasGoblin && 
-		   !(level == Level && $("#exp" + GridReference(x, y)).length > 0) &&
-		   !(level == Level && $("#attack" + GridReference(x, y)).length > 0)
+	return 	!Dungeon[level][x][y].IsStairsDown && 
+			!Dungeon[level][x][y].IsStairsUp && 
+			!Dungeon[level][x][y].HasGoblin && 
+			!(level == Level && $("#exp" + GridReference(x, y)).length > 0) &&
+			!(level == Level && $("#attack" + GridReference(x, y)).length > 0)
 }
 
 function ResetPath(level)
