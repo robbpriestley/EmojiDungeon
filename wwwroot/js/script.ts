@@ -455,12 +455,12 @@ function PlaceAttackSword(x: number, y: number): void
 	let yPixels: number = 630 - (y * 45);
 	let reference = "exp" + GridReference(x, y);
 	$("#grid").append('<div id="' + reference + '" class="sprite sword attack" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
-	$("#" + reference).fadeOut();
+	$(".attack").fadeOut();  // Keep it generic so if there are any overlapped sprites they all get faded out.
 }
 
 function RemoveAttackSwords(): void
 {
-	$("attack").remove();
+	$(".attack").remove();
 }
 
 function PlaceExplosion(x: number, y: number): void
@@ -469,12 +469,12 @@ function PlaceExplosion(x: number, y: number): void
 	let yPixels: number = 630 - (y * 45);
 	let reference = "exp" + GridReference(x, y);
 	$("#grid").append('<div id="' + reference + '" class="sprite exp" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
-	$("#" + reference).fadeOut();
+	$(".exp").fadeOut();  // Keep it generic so if there are any overlapped sprites they all get faded out.
 }
 
 function RemoveExplosions(): void
 {
-	$("exp").remove();
+	$(".exp").remove();
 }
 
 // *** END DOORS, KEYS, GEMS, and HEARTS ***
