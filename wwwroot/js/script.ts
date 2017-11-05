@@ -6,6 +6,7 @@ let Score: number;
 let KeyCount: number;
 let HeartCount: number;
 let SwordCount: number;
+let IsGameOver: boolean;
 let PlayerCoords: Coords;
 let StartCoords: Array<Coords>;
 let Dungeon: Array<object> = new Array<object>();
@@ -19,8 +20,11 @@ function Reset(): void
 	KeyCount = 0;
 	HeartCount = 3;
 	SwordCount = 0;
+	IsGameOver = false;
 	UpdateCounts();
 	UpdateHighScore();
+	$("#gameOver").hide();
+	$("#newHighScore").hide();
 	$("#level").text("1");
 	StartCoords = new Array<Coords>();
 	StartCoords[1] = new Coords(7, 0);
@@ -466,13 +470,17 @@ function RemoveAttackSwords(): void
 	$(".attack").remove();
 }
 
-function PlaceExplosion(x: number, y: number): void
+function PlaceExplosion(x: number, y: number, fade: boolean): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
 	let reference = "exp" + GridReference(x, y);
 	$("#grid").append('<div id="' + reference + '" class="sprite exp" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
-	$(".exp").fadeOut();  // Keep it generic so if there are any overlapped sprites they all get faded out.
+	
+	if (fade)
+	{
+		$(".exp").fadeOut();  // Keep it generic so if there are any overlapped sprites they all get faded out.
+	}
 }
 
 function RemoveExplosions(): void
@@ -512,6 +520,12 @@ function KeyPress(e)
 
 function PlayerMove(dir: string)
 {		
+	if (IsGameOver)
+	{
+		GameOver();
+		return;
+	}
+
 	RemoveExplosions();
 	RemoveAttackSwords();
 
@@ -521,47 +535,19 @@ function PlayerMove(dir: string)
 	
 	if (dir == "U" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
-		DoorCheck(x, y, dir);
-		GoblinCheck(x, y + 1);
-		ItemCheck(x, y + 1);
-		PlayerCoords.Y += 1;
-		MoveGoblins();
-		GoblinCheck(x, y + 1);
-		RepositionPlayer(PlayerCoords);
-		StairsCheck(x, y + 1);
+		MoveSequence(x, y, x, y + 1, dir);
 	}
 	else if (dir == "D" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
-		DoorCheck(x, y, dir);
-		GoblinCheck(x, y - 1);
-		ItemCheck(x, y - 1);
-		PlayerCoords.Y -= 1;
-		MoveGoblins();
-		GoblinCheck(x, y - 1);
-		RepositionPlayer(PlayerCoords);
-		StairsCheck(x, y - 1);
+		MoveSequence(x, y, x, y - 1, dir);
 	}
 	else if (dir == "L" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
-		DoorCheck(x, y, dir);
-		GoblinCheck(x - 1, y);
-		ItemCheck(x - 1, y);
-		PlayerCoords.X -= 1;
-		MoveGoblins();
-		GoblinCheck(x - 1, y);
-		RepositionPlayer(PlayerCoords);
-		StairsCheck(x - 1, y);
+		MoveSequence(x, y, x - 1, y, dir);
 	}
 	else if (dir == "R" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
-		DoorCheck(x, y, dir);
-		GoblinCheck(x + 1, y);
-		ItemCheck(x + 1, y);
-		PlayerCoords.X += 1;
-		MoveGoblins();
-		GoblinCheck(x + 1, y);
-		RepositionPlayer(PlayerCoords);
-		StairsCheck(x + 1, y);
+		MoveSequence(x, y, x + 1, y, dir);
 	}
 	else
 	{
@@ -638,6 +624,34 @@ function MoveAllowed(level: number, x: number, y: number, dir: string, hasKey: b
 	}
 	
 	return allowed;
+}
+
+function MoveSequence(fromX: number, fromY: number, toX: number, toY: number, dir): void
+{
+	DoorCheck(fromX, fromY, dir);
+
+	PlayerCoords.X = toX;
+	PlayerCoords.Y = toY;
+	RepositionPlayer(PlayerCoords);
+	
+	if (!GoblinCheck(toX, toY))
+	{
+		ItemCheck(toX, toY);
+		MoveGoblins();
+
+		if (!GoblinCheck(toX, toY))
+		{
+			StairsCheck(toX, toY);
+		}
+		else
+		{
+			GameOver();
+		}
+	}
+	else
+	{
+		GameOver();
+	}
 }
 
 function DoorCheck(x: number, y: number, dir: string)
@@ -720,8 +734,10 @@ function ItemCheck(x: number, y: number): void
 	}
 }
 
-function GoblinCheck(x: number, y: number): void
+function GoblinCheck(x: number, y: number): boolean
 {
+	let gameOver: boolean = false;
+	
 	if (Dungeon[Level][x][y].HasGoblin)
 	{
 		if (SwordCount > 0)
@@ -736,15 +752,21 @@ function GoblinCheck(x: number, y: number): void
 		{
 			HeartCount--;
 			RemoveGoblin(x, y);
-			PlaceExplosion(x, y);
 			UpdateCounts();
 
 			if (HeartCount <= 0)
 			{
-				alert("Game Over!");
+				PlaceExplosion(x, y, false);
+				gameOver = true;
+			}
+			else
+			{
+				PlaceExplosion(x, y, true);
 			}
 		}
 	}
+
+	return gameOver;
 }
 
 function StairsCheck(x: number, y: number)
@@ -1326,6 +1348,21 @@ function UpdateHighScore()
 	{
 		$("#highScore").html(highScore);
 	}
+}
+
+function GameOver()
+{
+	let highScore: string = localStorage.getItem("highScore");
+	let highScoreNum: number = Number(highScore);
+
+	$("#gameOver").show();
+
+	if (!isNaN(highScoreNum) && Score >= highScoreNum)
+	{
+		$("#newHighScore").show();
+	}
+
+	IsGameOver = true;
 }
 
 // *** END MISC ***

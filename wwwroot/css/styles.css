@@ -84,6 +84,20 @@ span.count {
 	margin-left: 47px;
 }
 
+span.gameOver {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: orange;
+	background: red;
+}
+
+span.newHighScore {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: greenyellow;
+	background: blue;
+}
+
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.
 	 The grid div needs to be position: relative because position: absolute works by the principle of 
 	 "position yourself in relation to the nearest ancestor who has position: absolute or position: relative." 
