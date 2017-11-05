@@ -16,6 +16,7 @@ function Start(): void
 {
 	Level = 1;
 	UpdateCounts();
+	UpdateHighScore();
 	$("#level").text("1");
 	RenderLevel();
 }
@@ -559,6 +560,8 @@ function PlayerMove(dir: string)
 	{
 		// No move.
 	}
+
+	UpdateHighScore();
 }
 
 function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGoblin: boolean)
@@ -1235,6 +1238,25 @@ function ResetGoblinMovement()
 }
 
 // *** END GOBLIN MOVEMENT ***
+// *** BEGIN MISC ***
+
+function UpdateHighScore()
+{
+	let highScore: string = localStorage.getItem("highScore");
+	let highScoreNum: number = Number(highScore);
+
+	if (isNaN(highScoreNum) || Score > highScoreNum)
+	{
+		$("#highScore").html(Score.toString());
+		localStorage.setItem("highScore", Score.toString());
+	}
+	else
+	{
+		$("#highScore").html(highScore);
+	}
+}
+
+// *** END MISC ***
 // *** BEGIN CLASS DEFINITIONS ***
 
 class Coords

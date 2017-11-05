@@ -67,7 +67,8 @@ h3 {
 }
 
 div.score {
-	margin-bottom: 25px;
+	font-size: 1em;
+	margin-top: 25px;
 }
 
 span.score {
