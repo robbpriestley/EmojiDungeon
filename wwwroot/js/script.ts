@@ -454,7 +454,7 @@ function PlaceAttackSword(x: number, y: number): void
 {
 	let xPixels: number = x * 45;
 	let yPixels: number = 630 - (y * 45);
-	let reference = "exp" + GridReference(x, y);
+	let reference = "attack" + GridReference(x, y);
 	$("#grid").append('<div id="' + reference + '" class="sprite sword attack" style="top: ' + yPixels + 'px; left: ' + xPixels + 'px;"></div>');
 	$(".attack").fadeOut();  // Keep it generic so if there are any overlapped sprites they all get faded out.
 }
@@ -511,12 +511,13 @@ function KeyPress(e)
 function PlayerMove(dir: string)
 {		
 	RemoveExplosions();
+	RemoveAttackSwords();
 
 	let x: number = PlayerCoords.X;
 	let y: number = PlayerCoords.Y;
 	let dungeon: object = Dungeon[Level];
 	
-	if (dir == "U" && MoveAllowed(x, y, dir, KeyCount > 0, false))
+	if (dir == "U" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y + 1);
@@ -526,7 +527,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y + 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "D" && MoveAllowed(x, y, dir, KeyCount > 0, false))
+	else if (dir == "D" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x, y - 1);
@@ -536,7 +537,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x, y - 1);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "L" && MoveAllowed(x, y, dir, KeyCount > 0, false))
+	else if (dir == "L" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x - 1, y);
@@ -546,7 +547,7 @@ function PlayerMove(dir: string)
 		GoblinCheck(x - 1, y);
 		RepositionPlayer(PlayerCoords);
 	}
-	else if (dir == "R" && MoveAllowed(x, y, dir, KeyCount > 0, false))
+	else if (dir == "R" && MoveAllowed(Level, x, y, dir, KeyCount > 0, false))
 	{
 		DoorCheck(x, y, dir);
 		GoblinCheck(x + 1, y);
@@ -564,16 +565,16 @@ function PlayerMove(dir: string)
 	UpdateHighScore();
 }
 
-function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGoblin: boolean)
+function MoveAllowed(level: number, x: number, y: number, dir: string, hasKey: boolean, isGoblin: boolean)
 {	
 	let allowed: boolean = false;
-	let dungeon: object = Dungeon[Level];
+	let dungeon: object = Dungeon[level];
 
 	if (dir == "U" && dungeon[x][y].TraversableUp && y < GridMax)
 	{
-		if (isGoblin && dungeon[x][y + 1].HasGoblin)
+		if (isGoblin && !GoblinCanMove(level, x, y + 1))
 		{
-			allowed = false;
+			allowed = false;  // Don't mess with this boolean logic or Goblins will start moving through doors, etc. 
 		}
 		else if (dungeon[x][y].DoorDirection != "U" && dungeon[x][y + 1].DoorDirection != "D")
 		{
@@ -586,7 +587,7 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGobli
 	}
 	else if (dir == "D" && dungeon[x][y].TraversableDown && y > 0)
 	{
-		if (isGoblin && dungeon[x][y - 1].HasGoblin)
+		if (isGoblin && !GoblinCanMove(level, x, y - 1))
 		{
 			allowed = false;
 		}
@@ -601,7 +602,7 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGobli
 	}
 	else if (dir == "L" && dungeon[x][y].TraversableLeft && x > 0)
 	{
-		if (isGoblin && dungeon[x - 1][y].HasGoblin)
+		if (isGoblin && !GoblinCanMove(level, x - 1, y))
 		{
 			allowed = false;
 		}
@@ -616,7 +617,7 @@ function MoveAllowed(x: number, y: number, dir: string, hasKey: boolean, isGobli
 	}
 	else if (dir == "R" && dungeon[x][y].TraversableRight && x < GridMax)
 	{
-		if (isGoblin && dungeon[x + 1][y].HasGoblin)
+		if (isGoblin && !GoblinCanMove(level, x + 1, y))
 		{
 			allowed = false;
 		}
@@ -773,7 +774,7 @@ function MoveGoblin(level: number, x: number, y: number): void
 	else if (coords.Y > y) dir = "U";
 	else dir = "D";
 
-	if (!MoveAllowed(x, y, dir, false, true))
+	if (!MoveAllowed(level, x, y, dir, false, true))
 	{
 		return;
 	}
@@ -907,6 +908,20 @@ function DebugGoblinMovementPath(level: number, startX: number, startY: number, 
 	}
 
 	console.log(line);
+}
+
+function DebugGoblinLocations(level: number)
+{
+	for (var x = 0; x < GridMax; x++)
+	{
+		for (var y = 0; y < GridMax; y++)
+		{
+			if (Dungeon[level][x][y].HasGoblin)
+			{
+				console.log("GOBLIN: " + GridReference(x, y));
+			}
+		}
+	}
 }
 
 function VisitAdjacents(level: number, coords: Coords, queue: Array<Coords>): void
@@ -1206,6 +1221,14 @@ function DownStairsLocation(level: number): Coords
 			}
 		}
 	}
+}
+
+// Goblins cannot move into locations where another Goblin already is, or where combat just occurred.
+function GoblinCanMove(level: number, x: number, y: number)
+{
+	return !Dungeon[level][x][y].HasGoblin && 
+		   !(level == Level && $("#exp" + GridReference(x, y)).length > 0) &&
+		   !(level == Level && $("#attack" + GridReference(x, y)).length > 0)
 }
 
 function ResetPath(level)
