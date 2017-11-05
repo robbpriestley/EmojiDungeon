@@ -23,6 +23,8 @@ function Reset(): void
 	IsGameOver = false;
 	UpdateCounts();
 	UpdateHighScore();
+	RemoveExplosions();
+	RemoveAttackSwords();
 	$("#gameOver").hide();
 	$("#newHighScore").hide();
 	$("#level").text("1");
