@@ -12,7 +12,24 @@ let PlayerCoords: Coords;
 let StartCoords: Array<Coords>;
 let Dungeon: Array<object> = new Array<object>();
 
-window.onload = function(){ Reset(); }
+window.onload = function(){ 
+	
+	(<any>$("#dialog")).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 500,
+		height: 300,
+		open: function (event, ui) {
+			$('.ui-dialog').css('z-index',103);
+			$('.ui-widget-overlay').css('z-index',102);
+			$(".ui-widget-overlay").on("click", function() {
+				(<any>$("#dialog")).dialog("close");
+			});
+		}
+	});
+			
+	Reset();
+}
 
 function Reset(): void
 {
@@ -1399,6 +1416,11 @@ function GameOver()
 	}
 
 	IsGameOver = true;
+}
+
+function ShowDialog()
+{
+	(<any>$("#dialog")).dialog("open");
 }
 
 // *** END MISC ***
