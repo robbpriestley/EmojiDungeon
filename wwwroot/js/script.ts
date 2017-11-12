@@ -498,7 +498,8 @@ document.onkeydown = KeyPress;
 
 function KeyPress(e) 
 {
-    e = e || window.event;
+	e = e || window.event;
+	e.preventDefault();  // Added to prevent arrow keys from scrolling.
 
     if (e.keyCode == "38")
 	{
