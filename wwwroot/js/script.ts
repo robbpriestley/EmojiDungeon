@@ -499,23 +499,26 @@ document.onkeydown = KeyPress;
 function KeyPress(e) 
 {
 	e = e || window.event;
-	e.preventDefault();  // Added to prevent arrow keys from scrolling.
 
     if (e.keyCode == "38")
 	{
+		e.preventDefault();  // Prevents arrow keys from scrolling.
 		PlayerMove("U");
     }
     else if (e.keyCode == "40")
 	{
-        PlayerMove("D");
+		e.preventDefault();
+		PlayerMove("D");
     }
     else if (e.keyCode == "37")
 	{
-       PlayerMove("L");
+		e.preventDefault();
+		PlayerMove("L");
     }
     else if (e.keyCode == "39")
 	{
-       PlayerMove("R");
+		e.preventDefault();
+		PlayerMove("R");
     }
 }
 
