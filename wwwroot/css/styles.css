@@ -87,7 +87,7 @@ span.count {
 span.gameOver {
 	font-size: 1.5em;
 	font-weight: bold;
-	color: orange;
+	color: yellow;
 	background: red;
 }
 
@@ -96,6 +96,26 @@ span.newHighScore {
 	font-weight: bold;
 	color: greenyellow;
 	background: blue;
+}
+
+span.plus {
+	font-size: 20pt;
+	font-weight: bold;
+	margin-left: 30px;
+	margin-bottom: 20px;
+	color: greenyellow;
+	background: blue;
+	display: none;
+}
+
+span.minus {
+	font-size: 20pt;
+	font-weight: bold;
+	margin-left: 30px;
+	margin-bottom: 20px;
+	color: yellow;
+	background: red;
+	display: none;
 }
 
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.

@@ -1,5 +1,6 @@
 "use strict";
 
+let FadeTime: number = 2000;
 let GridMax: number = 15;
 let Level: number;
 let Score: number;
@@ -661,48 +662,64 @@ function DoorCheck(x: number, y: number, dir: string)
 	if (dir == "U" && Dungeon[Level][x][y].DoorDirection == "U" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y);
 		UpdateCounts();
 	} 
 	if (dir == "U" && Dungeon[Level][x][y + 1].DoorDirection == "D" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y + 1);
 		UpdateCounts();
 	} 
 	if (dir == "D" && Dungeon[Level][x][y].DoorDirection == "D" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y);
 		UpdateCounts();
 	} 
 	if (dir == "D" && Dungeon[Level][x][y - 1].DoorDirection == "U" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y - 1);
 		UpdateCounts();
 	} 
 	if (dir == "L" && Dungeon[Level][x][y].DoorDirection == "L" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y);
 		UpdateCounts();
 	} 
 	if (dir == "L" && Dungeon[Level][x - 1][y].DoorDirection == "R" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x - 1, y);
 		UpdateCounts();
 	} 
 	if (dir == "R" && Dungeon[Level][x][y].DoorDirection == "R" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x, y);
 		UpdateCounts();
 	} 
 	if (dir == "R" && Dungeon[Level][x + 1][y].DoorDirection == "L" && KeyCount > 0)
 	{
 		KeyCount--;
+		$("#keyMinus").show();
+		$("#keyMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveDoor(x + 1, y);
 		UpdateCounts();
 	} 
@@ -713,24 +730,31 @@ function ItemCheck(x: number, y: number): void
 	if (Dungeon[Level][x][y].HasKey)
 	{
 		KeyCount++;
+		$("#keyPlus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveKey(x, y);
 		UpdateCounts();                
 	}
 	else if (Dungeon[Level][x][y].HasGem)
 	{
 		Score++;
+		$("#scorePlusOne").show();
+		$("#scorePlusOne").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveGem(x, y);
 		UpdateCounts();                  
 	}
 	else if (Dungeon[Level][x][y].HasHeart)
 	{
 		HeartCount++;
+		$("#heartPlus").show();
+		$("#heartPlus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveHeart(x, y);
 		UpdateCounts();                  
 	}
 	else if (Dungeon[Level][x][y].HasSword)
 	{
 		SwordCount++;
+		$("#swordPlus").show();
+		$("#swordPlus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 		RemoveSword(x, y);
 		UpdateCounts();                  
 	}
@@ -745,7 +769,11 @@ function GoblinCheck(x: number, y: number): boolean
 		if (SwordCount > 0)
 		{
 			SwordCount--;
+			$("#swordMinus").show();
+			$("#swordMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 			Score += 10;
+			$("#scorePlusTen").show();
+			$("#scorePlusTen").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 			RemoveGoblin(x, y);
 			PlaceAttackSword(x, y);
 			UpdateCounts();
@@ -753,6 +781,8 @@ function GoblinCheck(x: number, y: number): boolean
 		else
 		{
 			HeartCount--;
+			$("#heartMinus").show();
+			$("#heartMinus").stop(true).show().css("opacity", 1).fadeOut(FadeTime);
 			RemoveGoblin(x, y);
 			UpdateCounts();
 
