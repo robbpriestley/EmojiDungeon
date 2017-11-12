@@ -69,13 +69,13 @@ h3 {
 }
 
 div.title {
-	font-size: 30pt;
+	font-size: 27pt;
 	font-weight: bold;
 }
 
 div.score {
 	font-size: 1em;
-	margin-top: 25px;
+	margin-top: 8px;
 }
 
 span.score {
@@ -123,6 +123,47 @@ span.minus {
 	color: yellow;
 	background: red;
 	display: none;
+}
+
+div.controls {
+	width: 220px;
+	margin: auto;
+}
+
+div.dirup {
+	margin-top: 45px;
+	margin-left: 73px;
+}
+
+div.dirup:hover {
+    opacity: 0.75;
+}
+
+div.dirdown {
+	margin-top: 119px;	
+	margin-left: 74px;
+}
+
+div.dirdown:hover {
+    opacity: 0.75;
+}
+
+div.dirleft {
+	margin-top: 119px;
+	margin-left: 0px;
+}
+
+div.dirleft:hover {
+    opacity: 0.75;
+}
+
+div.dirright {
+	margin-top: 119px;
+	margin-left: 148px;
+}
+
+div.dirright:hover {
+    opacity: 0.75;
 }
 
 /* position: absolute is used for the tile and sprite divs in relation to the grid div.

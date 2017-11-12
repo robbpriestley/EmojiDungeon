@@ -23,14 +23,20 @@
 				<div class="score">High Score</div>
 				<div><span id="highScore" class="score">0</span></div>
 			</p>
-			<p class="btn">
-				<a class="btn" href="" onclick="Reset(); return false;">Reset</a>
-				<a class="btn" href="" onclick="ShowDialog(); return false;">How to Play</a>
-			</p>
 			<p>
 				<div><span id="gameOver" class="gameOver">&nbsp;GAME OVER&nbsp;</span></div>
 				<div><span id="newHighScore" class="newHighScore">&nbsp;NEW HIGH SCORE!&nbsp;</span></div>
 			</p>
+			<div class="controls">
+				<div id="dirup" class="sprite dirup" onclick="PlayerMove('U')"></div>
+				<div id="dirleft" class="sprite dirleft" onclick="PlayerMove('L')"></div>
+				<div id="dirdown" class="sprite dirdown" onclick="PlayerMove('D')"></div>
+				<div id="dirright" class="sprite dirright" onclick="PlayerMove('R')"></div>
+			</div>
+			<div class="controls">
+				<a class="btn" href="" onclick="Reset(); return false;">Reset</a>
+				<a class="btn" href="" onclick="ShowDialog(); return false;">How to Play</a>
+			</div>
 		</td>
 		<td>
 			<div id="grid" class="grid">
@@ -50,8 +56,7 @@
 	</tr>
 </table>
 
-<div id="dialog" title="Basic dialog" style="z-index: 100;">
-  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.
-	  This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.
+<div id="dialog" title="How to Play">
+  <p><span class="sprite player"></span>This is you (the player).
   </p>
 </div>
