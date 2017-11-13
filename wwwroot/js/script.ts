@@ -36,25 +36,23 @@ function Reset(): void
 	StartCoords = new Array<Coords>();
 	StartCoords[1] = new Coords(7, 0);
 	Dungeon = new Array<object>();
-	RenderLevel();
+	RenderLevel(true);
 }
 
 function LevelUp(): void
 {
 	Level--;  // Levels closer to the "surface" have smaller numbers.
-	RenderLevel();
-	$("#level").text(Level);
+	RenderLevel(false);
 }
 
 function LevelDown(): void
 {
 	StartCoords[Level] = new Coords(PlayerCoords.X, PlayerCoords.Y);
 	Level++;
-	RenderLevel();
-	$("#level").text(Level);  // Add 1 for display as _level is zero-indexed.
+	RenderLevel(false);
 }
 
-function RenderLevel()
+function RenderLevel(reset: boolean)
 {
 	let dungeon: object = Dungeon[Level];
 	
@@ -84,7 +82,8 @@ function RenderLevel()
 				dungeon = JSON.parse(result);  // As this is a reset, assign the JSON to element 0 of the dungeon array.
 				Dungeon[Level] = dungeon;
 				BuildDungeon(Level, dungeon);
-				ResetUi();
+				if (reset) ResetUi();
+				$("#level").text(Level);
 				spinner.stop();
 			}
 		});
