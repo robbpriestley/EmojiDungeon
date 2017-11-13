@@ -32,17 +32,7 @@ window.onload = function(){
 function Reset(): void
 {
 	Level = 1;
-	Score = 0;
-	KeyCount = 0;
-	HeartCount = 3;
-	SwordCount = 0;
-	IsGameOver = false;
-	UpdateCounts();
-	UpdateHighScore();
-	RemoveExplosions();
-	RemoveAttackSwords();
 	$("#gameOver").hide();
-	$("#level").text("1");
 	StartCoords = new Array<Coords>();
 	StartCoords[1] = new Coords(7, 0);
 	Dungeon = new Array<object>();
@@ -94,10 +84,25 @@ function RenderLevel()
 				dungeon = JSON.parse(result);  // As this is a reset, assign the JSON to element 0 of the dungeon array.
 				Dungeon[Level] = dungeon;
 				BuildDungeon(Level, dungeon);
+				ResetUi();
 				spinner.stop();
 			}
 		});
 	}
+}
+
+function ResetUi() {
+
+	Score = 0;
+	KeyCount = 0;
+	HeartCount = 3;
+	SwordCount = 0;
+	IsGameOver = false;
+	UpdateCounts();
+	UpdateHighScore();
+	RemoveAttackSwords();
+	$("#level").text("1");
+	RemoveExplosions();
 }
 
 function SpinnerSetup(): Spinner

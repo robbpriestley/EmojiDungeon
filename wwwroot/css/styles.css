@@ -103,6 +103,7 @@ span.gameOver {
 	color: yellow;
 	background: red;
 	margin-top: 5px;
+	display: none;
 }
 
 span.plus {
