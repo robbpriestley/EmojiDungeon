@@ -9,7 +9,7 @@ namespace DigitalWizardry.Dungeon
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-				.UseUrls("http://0.0.0.0:5000")  // Docker port forwarding
+				.UseUrls("http://0.0.0.0:5002")  // Docker port forwarding
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

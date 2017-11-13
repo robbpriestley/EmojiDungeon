@@ -10,5 +10,5 @@ RUN dotnet restore
 COPY . /DungeonGenerator/
 RUN dotnet build
 
-EXPOSE 5000/tcp
+EXPOSE 5002/tcp
 ENTRYPOINT ["dotnet", "run"]
