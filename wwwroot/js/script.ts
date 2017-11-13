@@ -42,7 +42,6 @@ function Reset(): void
 	RemoveExplosions();
 	RemoveAttackSwords();
 	$("#gameOver").hide();
-	$("#newHighScore").hide();
 	$("#level").text("1");
 	StartCoords = new Array<Coords>();
 	StartCoords[1] = new Coords(7, 0);
@@ -1406,12 +1405,16 @@ function GameOver()
 	let highScore: string = localStorage.getItem("highScore");
 	let highScoreNum: number = Number(highScore);
 
-	$("#gameOver").show();
-
 	if (!isNaN(highScoreNum) && Score >= highScoreNum)
 	{
-		$("#newHighScore").show();
+		$("#gameOver").html("GAME OVER! NEW HIGH SCORE!");
 	}
+	else
+	{
+		$("#gameOver").html("GAME OVER!");
+	}
+
+	$("#gameOver").show();
 
 	IsGameOver = true;
 }

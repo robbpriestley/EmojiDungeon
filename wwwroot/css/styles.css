@@ -91,18 +91,18 @@ span.count {
 	margin-left: 47px;
 }
 
+td.message span {
+	display:block; 
+	text-align:center; 
+	margin:0 auto;
+}
+
 span.gameOver {
 	font-size: 1.5em;
 	font-weight: bold;
 	color: yellow;
 	background: red;
-}
-
-span.newHighScore {
-	font-size: 1.5em;
-	font-weight: bold;
-	color: greenyellow;
-	background: blue;
+	margin-top: 5px;
 }
 
 span.plus {
