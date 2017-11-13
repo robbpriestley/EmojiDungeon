@@ -11,8 +11,10 @@
 .d6, .d7, .d8, .d9, .e0, 
 .e1, .e2, .e3, .e4, .e5, 
 .e6, .e7, .e8, .e9, .exp, 
-.gem, .goblin, .heart, .key, .player, 
-.sword, .doorh, .doorv
+.gem, .goblin, .heart, .infogem, .infogoblin, 
+.infoheart, .infokey, .infoplayer, .infostairsdown, .infostairsup, 
+.infosword, .key, .player, .sword, .doorh, 
+.infodoor, .doorv
 { display: inline-block; background: url('/images/sprites.png') no-repeat; overflow: hidden; text-indent: -9999px; text-align: left; }
  
 .dirdown { background-position: -0px -0px; width: 72px; height: 72px; }
@@ -73,8 +75,17 @@
 .gem { background-position: -0px -2583px; width: 45px; height: 45px; }
 .goblin { background-position: -0px -2628px; width: 45px; height: 45px; }
 .heart { background-position: -0px -2673px; width: 45px; height: 45px; }
-.key { background-position: -0px -2718px; width: 45px; height: 45px; }
-.player { background-position: -0px -2763px; width: 45px; height: 45px; }
-.sword { background-position: -0px -2808px; width: 45px; height: 45px; }
-.doorh { background-position: -0px -2853px; width: 32px; height: 13px; }
+.infogem { background-position: -0px -2718px; width: 45px; height: 45px; }
+.infogoblin { background-position: -0px -2763px; width: 45px; height: 45px; }
+.infoheart { background-position: -0px -2808px; width: 45px; height: 45px; }
+.infokey { background-position: -0px -2853px; width: 45px; height: 45px; }
+.infoplayer { background-position: -0px -2898px; width: 45px; height: 45px; }
+.infostairsdown { background-position: -0px -2943px; width: 45px; height: 45px; }
+.infostairsup { background-position: -0px -2988px; width: 45px; height: 45px; }
+.infosword { background-position: -0px -3033px; width: 45px; height: 45px; }
+.key { background-position: -0px -3078px; width: 45px; height: 45px; }
+.player { background-position: -0px -3123px; width: 45px; height: 45px; }
+.sword { background-position: -0px -3168px; width: 45px; height: 45px; }
+.doorh { background-position: -0px -3213px; width: 32px; height: 13px; }
+.infodoor { background-position: -32px -3213px; width: 32px; height: 13px; }
 .doorv { background-position: -45px -288px; width: 13px; height: 32px; }

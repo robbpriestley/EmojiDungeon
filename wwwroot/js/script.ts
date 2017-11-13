@@ -17,11 +17,9 @@ window.onload = function(){
 	(<any>$("#dialog")).dialog({
 		autoOpen: false,
 		modal: true,
-		width: 500,
-		height: 300,
+		width: 600,
+		height: 500,
 		open: function (event, ui) {
-			$('.ui-dialog').css('z-index',103);
-			$('.ui-widget-overlay').css('z-index',102);
 			$(".ui-widget-overlay").on("click", function() {
 				(<any>$("#dialog")).dialog("close");
 			});
