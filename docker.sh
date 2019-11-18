@@ -1,6 +1,6 @@
 ### HOW TO USE ###
 # 1) Make sure Docker is running
-# 2) "cd /Users/dwiz/Projects/DungeonGenerator/"
+# 2) "cd /Users/dwiz/Projects/EmojiDungeon/"
 # 3) "git tag" (determine next highest tag)
 # 4) Call this script with next highest tag as arg "./docker.sh v1.1.003"
 # 5) If no new tag is needed, call with "latest" ex: "./docker.sh latest"
@@ -22,4 +22,4 @@ git for-each-ref refs/tags --sort=-taggerdate --format='%(refname:short)' --coun
 
 echo "*** DOCKER BUILD ***"
 
-docker build -t digitalwizardry/dungeongenerator .
+docker build -t digitalwizardry/EmojiDungeon .
