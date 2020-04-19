@@ -8,6 +8,12 @@ namespace DigitalWizardry.Dungeon
     public class Program
     {
         // *** HEROKU ***
+
+        public static void Main(string[] args)
+        {
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
             .UseStartup<Startup>()
@@ -22,7 +28,7 @@ namespace DigitalWizardry.Dungeon
         {
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://0.0.0.0:5000")  // Docker port forwarding
+				.UseUrls("http://0.0.0.0:5000")  // Docker port forwarding
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
