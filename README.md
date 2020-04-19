@@ -2,7 +2,7 @@
 
 ### Functional Demo
 
-[http://www.digitalwizardry.ca:5002](http://www.digitalwizardry.ca:5002)
+[https://dwiz-emojidungeon.herokuapp.com/](https://dwiz-emojidungeon.herokuapp.com/)
 
 ### Overview
 
